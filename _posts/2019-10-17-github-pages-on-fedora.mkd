@@ -190,3 +190,8 @@ Need some kind of style/structure that I like. Steal from someone?
 ## Site layout
 
 drafts?
+
+## Guides
+
+[bens guide]: https://ben.balter.com/jekyll-style-guide/
+[sylvains guide]: https://www.sylvaindurand.org/using-github-to-serve-jekyll/
