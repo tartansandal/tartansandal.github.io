@@ -26,7 +26,7 @@ plugins:
 minima:
   date_format: "%-d %B %Y"
 
-header_pages: []
+header_pages:
   - about.md
 
 show_excerpts: true
