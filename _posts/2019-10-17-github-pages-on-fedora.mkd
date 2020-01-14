@@ -99,60 +99,122 @@ _RubyGems_, and _Bundler_.
 
 There are a number of installation guides including [Testing your GitHub Pages
 Locally with Jekyll][Github Pages Locally] by GitHub and [Jekyll on Linux] by
-Jekyll. Unfortunately these two do not agree.
+Jekyll. Unfortunately these two (and many others) do not strictly agree, so we
+have to make some careful decisions.
 
-Fedora has patched _RubyGems_ so that `gem` automatically performs
-a 'user-install' if run by a normal user (see
-`/usr/share/rubygems/rubygems/defaults/operating_system.rb` for details). In
-particular, executable files are deployed to `~/bin` and gems are deployed to
-`~/.gem/`, so following the [Jekyll on Linux] instructions is going to break any
-exiting.
+Firstly, I don't do any Ruby development, so this took a bit of digging into
+that environment to sort out.
 
-I don't do any Ruby development and don't want to have to worry about managing
-`jekyll` and `bundler` updates.
+Now, Fedora has patched _RubyGems_ so that `gem` automatically performs a "user
+install" if run by a normal user. (See your local `operating_system.rb` file for
+details). In particular,
+
+* Gems are deployed to `~/.gem`
+* Executable files to `~/bin`
+
+The Jekyll instructions suggest setting your environment so that
+
+* Gems are deployed to `~/.gems`
+* Executable files to `~/.gems/bin`
+
+Following that advice is going to break any existing local gem installs. Not
+good.
+
+Managing local gem installations is a well known path to [dependency hell] and one
+I'd rather avoid. [Bundler] has a nice solution to this: allow for multiple
+versions of gems to be installed, but use a special command wrapper to ensure
+the only the correct versions are used by your project.  In short:
+
+* The project uses a `Gemfile` to specify the required top level gems and
+  perhaps their minimal versions.
+
+* The `bundle install` command installs those gems, along with any dependencies,
+  to the default locations (see above).
+
+* That command automatically creates a `Gemfile.lock` which contains the names
+  and versions of those gems and their dependencies.
+
+* The `bundle exec` command can then be used to run any programs under the
+  version constraints specified by the `Gemfile.lock` file.
+
+Now the GitHub instructions suggest installing Bundler using the `gem` command,
+and using the `bundler` command to install Jekyll for your project.  I gather
+this is to ensure the version of Jekyll matches the one used by your site, and
+in particular GitHub Pages. The details of how exactly to do this are not
+explained though.
+
+On the other hand, the Jekyll guide suggests installing both Bundler and Jekyll
+with the `gem` command, which is more straight-forward, but it is not clear what
+version of `jekyll` is going to be used by your site and whether it is going to
+be appropriately pinned to the version used by GitHub Pages.
+
+There is also the option of installing distribution versions of either Bundler
+or Jekyll. The Fedora versions are relatively modern and (after reading the
+respective Changelogs) seem to be appropriately stable. We would not have to
+worry about managing updates, but the versions are out of out control.
+
+(A Docker image is another possibility, but we still have to come to terms with
+version pinning before we could explore that).
+
+A resolution to all this comes thinking about bootstrapping a new Github Pages
+site.
 
 [GitHub Pages Locally]: https://help.github.com/en/github/working-with-github-pages/testing-your-github-pages-site-locally-with-jekyll
-[
 [Jekyll on Linux]: https://jekyllrb.com/docs/installation/other-linux
+[dependency hell]: https://en.wikipedia.org/wiki/Dependency_hell
+[Bundler]: https://bundler.io
 
-I came up with the following requirements for my Fedora setup:
+## Bootstrapping GitHub Pages with Jekyll
 
-* Easily install Jekyll and its dependencies in a "safe" way.
-* Maintain compatibility with GitHub Pages.
-* Manage updates while pinning versions.
+Talk about the gem-pages thing somehow.
 
-* Bootstrap a new site with the default scaffolding.
+
+
+If you already have Jekyll installed, then you can create a simple skeleton site
+under `PATH` with:
+
+```shell
+jekyll new PATH
+cd PATH
+```
+
+This generates scaffolding similar to the following:
+
+```text
+/
+├── 404.html
+├── about.md
+├── _config.yml
+├── Gemfile
+├── index.md
+└── _posts
+    └── 2020-01-14-welcome-to-jekyll.markdown
+```
+
+This is a great start for a simple blog.
+
+The `Gemfile` provides the basic requirements for a Jekyll, but most is Windows
+specific.
+
+3. Strip the Gemfile back to:
+
+    ```Gemfile
+    source "https://rubygems.org"
+
+    gem "github-pages", group: :jekyll_plugins
+
+    # If you have any plugins, put them here!
+    group :jekyll_plugins do
+      gem "jekyll-feed", "~> 0.6"
+    end
+    ```
+
 
 Installation options:
 
-1. Use `sudo gem install bundler` to install bundler as root, then use `bundler` to
-   install dependencies as root. That seems very unsafe to me.  Very surprised
-   that this option is suggested.
-
-2. Configure the `gem` command to install bundler and dependencies as a normal
-   'user'.  This lead to a whole rabbit-hole of decisions about how to manage
-   a growing set of 'user' gems.  I'm not a regular Ruby user so this seemed
-   overkill and I'd probably make some mistakes. Using RVM to manage this would
-   be more robust. Plus Fedora's
-
-3. Install the distribution version of `bundler`, then use the `bundler` command
-   with the `--path` argument to install to a _project-local_ directory. This
-   had the nice advantage of locking and supplying gems for a particular project
-   in one place. A creating the scaffolding for a new site still required
-   installing `jekyll` via bundler, then running `bundle exec new`, then
-   updating the resulting site to install jekyll again.  Or manually shuffling
-   files around would work but did not seem very elegant.  Chicken and egg.
-
-4. Cloning the GitHub `pages-gem` repository and building a Docker image from
-   which to to run jekyll commands.  This gave nice OS isolation, however,
-   I would be responsible for updating the Docker image and I was still left
-   with the bootstrapping issue.
-
-5. Install the distribution version of `bundler` and `jekyll`, then bootstrap
-   from there.  The Fedora versions are relatively modern and (after reading the
-   respective Changelogs) seem to be appropriately stable.
-
 This last option seems to be the simplest and most elegant.
+
+### Fedora process
 
 1. Install distribution packages
 
@@ -163,18 +225,6 @@ This last option seems to be the simplest and most elegant.
   jekyll new path-to-new-site
   cd path-to-new-site
 
-This gives the following scaffolding:
-
-```text
-/
-├── 404.html
-├── about.md
-├── _config.yml
-├── Gemfile
-├── index.md
-└── _posts
-    └── 2019-09-27-welcome-to-jekyll.markdown
-```
 
 3. Strip the Gemfile back to:
 
@@ -186,7 +236,7 @@ This gives the following scaffolding:
 4. Run bundler to install and pin our working set of gems:
 
     ```
-    bundle install --path vendor/bundle
+    bundle install
     ```
 
 5. Serve the content with
@@ -194,15 +244,6 @@ This gives the following scaffolding:
     ```
     bundle exec jekyll server
     ```
-
-6. Or create a Makefile with the following content
-
-  ~~~~Makefile
-  server:
-      bundle exec jekyll server
-  ~~~~
-
-  then simply run `make`. (The first target is the default)
 
 ## Choosing a Theme
 
