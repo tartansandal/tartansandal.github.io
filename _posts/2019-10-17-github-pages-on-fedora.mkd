@@ -6,98 +6,126 @@ categories: jekyll fedora
 comments: true
 ---
 
-This is a sort of meta-blog about how I set up this blog site, being a record of
-various decisions I made along the way and includes some Fedora Desktop specific
-advice.
+This is a sort of meta-post describing how I set up this blog, with some Fedora
+Desktop specific advice.
 
-I first stumbled on GitHub and Jekyll while researching [Asciidoctor] and was
-intrigued. It seemed to occupy a sweet spot in the world of website publishing.
+I first stumbled on [GitHub Pages] and [Jekyll] while researching [Asciidoctor]
+and was intrigued. It seemed to occupy a sweet spot in the world of technical
+publishing:
 
-* very low bar of entry
-  * free hosting
-  * integrated with a tool (GitHub) that I used extensively
+* A very low bar of entry with free hosting via your existing GitHub account and
+  automatic conversion of (the well known) GitHub Flavoured Markdown.
 
-* low friction
-  * automatic publishing
-  * attractive output themes
-  * plugins for extra integrations
-  * [x] flexibility (few constraints) for advanced users
+* Being built around Git, content could be developed, reviewed, and deployed
+  just as you would 'code'. (No need to compose in clunky web editors or cut and
+  paste from your favourite editor into web forms).
 
-...FIXME
+* A flexible, low-friction environment, with [Jekyll] and [Liquid] providing
+  attractive and flexible layout and themes, plus plugins for extra features and
+  few constraints for advanced users. You can even use your own domain name if
+  you want to.
 
-The starting point for this adventure was, well, a page that no longer exists.
-It seems
-some well needed documentation clean up was in order.  An equivalent starting point
-might be [Working with GitHub Pages] which provides a list of related articles
-ordered into a somewhat reasonable narrative.
+This looked like much more fun than the [Movable Type] based [blogs.perl.org]
+I had previously used, and that kind of rekindled my desire to write a technical
+blog again.
 
-There are a lot of cross-links to other articles, both internal and external,
-and a lot of repeated content, so it can be a bit confusing and even daunting if
-you try to follow too many cross-links.  Following the pages in the order
-listed, rather than following cross-links, gave me a narrative I could follow
-without too much trouble. Scanning through the articles to get a handle on some
-key concepts before digging deeper was definitely worthwhile.
+The starting point for this adventure was, well, a page that no longer
+exists. To be honest, I first started looking at this four months ago and I kind
+of got distracted by "life". By the time I had got back to it, things had
+changed--fortunately for the better.
 
-[Working with GitHub Pages]: https://help.github.com/en/categories/working-with-github-pages
+The [GitHub Pages] front page now gives you a nice video introduction and
+interactive set up details, plus some links to various [Working with GitHub
+Pages] guides. The quality of these guides has improved greatly. My only
+criticism is, while the main contents page suggests a reasonable narrative,
+the individual articles lack the navigation links to make that narrative easy to
+follow--you have to keep going back to the contents page to make sure you
+haven't missed anything.
+
+[GitHub Pages]: https://pages.github.com
+[Jekyll]: https://jekyllrb.com
 [Asciidoctor]: https://asciidoctor.org
+[Liquid]: https://shopify.github.io/liquid
+[Movable Type]: https://www.movabletype.org
+[blogs.perl.org]:http://blogs.perl.orgusers/kahlil_kal_hodgson
+[Working with GitHub Pages]: https://help.github.com/en/categories/working-with-github-pages
 
-## Choosing a "site type"
+## Some basic setup
 
-The two options are "User/Organization" and "Project".
+First I needed to choose a "site type".
 
-This distinction is repeated constantly, so once I figured out which one I was using
-I could skip over a lot of irrelevant instructions.
+> There are three types of GitHub Pages sites: project, user, and organization.
+> Project sites are connected to a specific project hosted on GitHub, such as
+> a JavaScript library or a recipe collection. User and organization sites are
+> connected to a specific GitHub account.
 
-The _User/Organization_ type are for _top level_ sites relating to that
-particular user or organization. There can only be one of these for each user or
-organisation.
-
-The _Project_ type is for any _project level_ sites that a user or organization may
-have. There can only be one of there for each _project_, though a user or organization
-may have a number of projects.
+This distinction is repeated constantly throughout the documentation, so once
+I figured out which one I was using I could skip over a lot of irrelevant
+instructions.  For example, any references to a `gh-pages` branch only apply to
+_Project_ site types.
 
 I'm building a site to host a professional blog, ostensibly for gratuitous
-self-promotion, so the "User/Organization" type is definitely what I want.
+self-promotion, so the _User_ type is definitely what I want.
 
-## Configuring a "publishing source" for my GitHub pages
-
-Now that I know what site type I'm using, I simply need to create a new git repo
-called "tartansandal.github.io" with the understanding that the `master` branch
-of that repo will be the one that is published.
+Now that I know what site type I'm using, I can set up a "publishing source" by
+simply creating a new git repository called "tartansandal.github.io", with the
+understanding that the `master` branch of that repository will be the one that
+will be automatically published to <https://tartansandal.github.io>.
 
 That was pretty easy.
 
 ## Learning about Jekyll
 
-GitHub pages is pushing Jekyll as the preferred static site generator.
-<https://help.github.com/en/articles/using-jekyll-as-a-static-site-generator-with-github-pages>
+GitHub pages uses Jekyll as its preferred static site generator and has
+extensive set up and usage [documentation][GitHub Pages with Jekyll].  After
+scanning that, I decided on running through the official [Jekyll Docs], in
+order to get a better handle on its requirements and capabilities. This all
+seemed quite reasonable.
 
-So I started out running through the official tutorial.
-<https://jekyllrb.com/docs/step-by-step/01-setup/>
+One key point that was somewhat obscured by all the set up and configuration
+instructions was that pushing any new content to the `master` branch of my
+repository was going to make that content publicly available (almost)
+immediately. If I wanted to review my updates before publishing, I would have to
+install and run Jekyll locally. I'm definitely going to want to this for new
+content, major edits, and layout changes.
 
-This all seemed quite cool and reasonable.
-
-A key part of that was running jekyll locally on my laptop, so I could see the results
-of the site generation without having to push my master branch.
-
-I was able to make everything work, but ran into some issues with installation.
+[GitHub Pages with Jekyll]: https://help.github.com/en/github/working-with-github-pages/setting-up-a-github-pages-site-with-jekyll
+[Jekyll Docs]: https://jekyllrb.com/docs
 
 ## Installing Jekyll locally
 
-After experimenting with a variety of guides including
+This is where I ran into some personal and Fedora specific wrinkles with _Ruby_,
+_RubyGems_, and _Bundler_.
 
-<https://help.github.com/en/articles/setting-up-your-github-pages-site-locally-with-jekyll>
+There are a number of installation guides including [Testing your GitHub Pages
+Locally with Jekyll][Github Pages Locally] by GitHub and [Jekyll on Linux] by
+Jekyll. Unfortunately these two do not agree.
+
+Fedora has patched _RubyGems_ so that `gem` automatically performs
+a 'user-install' if run by a normal user (see
+`/usr/share/rubygems/rubygems/defaults/operating_system.rb` for details). In
+particular, executable files are deployed to `~/bin` and gems are deployed to
+`~/.gem/`, so following the [Jekyll on Linux] instructions is going to break any
+exiting.
+
+I don't do any Ruby development and don't want to have to worry about managing
+`jekyll` and `bundler` updates.
+
+[GitHub Pages Locally]: https://help.github.com/en/github/working-with-github-pages/testing-your-github-pages-site-locally-with-jekyll
+[
+[Jekyll on Linux]: https://jekyllrb.com/docs/installation/other-linux
 
 I came up with the following requirements for my Fedora setup:
 
 * Easily install Jekyll and its dependencies in a "safe" way.
 * Maintain compatibility with GitHub Pages.
 * Manage updates while pinning versions.
+
 * Bootstrap a new site with the default scaffolding.
 
 Installation options:
 
-1. Use the `gem` command to install bundler as root, then use `bundler` to
+1. Use `sudo gem install bundler` to install bundler as root, then use `bundler` to
    install dependencies as root. That seems very unsafe to me.  Very surprised
    that this option is suggested.
 
@@ -105,7 +133,7 @@ Installation options:
    'user'.  This lead to a whole rabbit-hole of decisions about how to manage
    a growing set of 'user' gems.  I'm not a regular Ruby user so this seemed
    overkill and I'd probably make some mistakes. Using RVM to manage this would
-   be more robust.
+   be more robust. Plus Fedora's
 
 3. Install the distribution version of `bundler`, then use the `bundler` command
    with the `--path` argument to install to a _project-local_ directory. This
@@ -113,9 +141,9 @@ Installation options:
    in one place. A creating the scaffolding for a new site still required
    installing `jekyll` via bundler, then running `bundle exec new`, then
    updating the resulting site to install jekyll again.  Or manually shuffling
-   files around would work but did not seem very elegant.  Chicken and egg
+   files around would work but did not seem very elegant.  Chicken and egg.
 
-4. Cloning the Github `pages-gem` repository and building a Docker image from
+4. Cloning the GitHub `pages-gem` repository and building a Docker image from
    which to to run jekyll commands.  This gave nice OS isolation, however,
    I would be responsible for updating the Docker image and I was still left
    with the bootstrapping issue.
