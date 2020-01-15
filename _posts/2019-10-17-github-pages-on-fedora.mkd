@@ -94,75 +94,123 @@ content, major edits, and layout changes.
 
 ## Installing Jekyll locally
 
-This is where I ran into some personal and Fedora specific wrinkles with _Ruby_,
-_RubyGems_, and _Bundler_.
-
 There are a number of installation guides including [Testing your GitHub Pages
-Locally with Jekyll][Github Pages Locally] by GitHub and [Jekyll on Linux] by
-Jekyll. Unfortunately these two (and many others) do not strictly agree, so we
+Locally with Jekyll][Github Pages Locally] by "GitHub" and [Jekyll on Linux] by
+"Jekyll". Unfortunately these two (and many others) do not strictly agree, so we
 have to make some careful decisions.
 
-Firstly, I don't do any Ruby development, so this took a bit of digging into
-that environment to sort out.
-
-Now, Fedora has patched _RubyGems_ so that `gem` automatically performs a "user
-install" if run by a normal user. (See your local `operating_system.rb` file for
-details). In particular,
-
-* Gems are deployed to `~/.gem`
-* Executable files to `~/bin`
-
-The Jekyll instructions suggest setting your environment so that
-
-* Gems are deployed to `~/.gems`
-* Executable files to `~/.gems/bin`
-
-Following that advice is going to break any existing local gem installs. Not
-good.
-
-Managing local gem installations is a well known path to [dependency hell] and one
-I'd rather avoid. [Bundler] has a nice solution to this: allow for multiple
-versions of gems to be installed, but use a special command wrapper to ensure
-the only the correct versions are used by your project.  In short:
-
-* The project uses a `Gemfile` to specify the required top level gems and
-  perhaps their minimal versions.
-
-* The `bundle install` command installs those gems, along with any dependencies,
-  to the default locations (see above).
-
-* That command automatically creates a `Gemfile.lock` which contains the names
-  and versions of those gems and their dependencies.
-
-* The `bundle exec` command can then be used to run any programs under the
-  version constraints specified by the `Gemfile.lock` file.
-
-Now the GitHub instructions suggest installing Bundler using the `gem` command,
-and using the `bundler` command to install Jekyll for your project.  I gather
-this is to ensure the version of Jekyll matches the one used by your site, and
-in particular GitHub Pages. The details of how exactly to do this are not
-explained though.
-
-On the other hand, the Jekyll guide suggests installing both Bundler and Jekyll
-with the `gem` command, which is more straight-forward, but it is not clear what
-version of `jekyll` is going to be used by your site and whether it is going to
-be appropriately pinned to the version used by GitHub Pages.
-
-There is also the option of installing distribution versions of either Bundler
-or Jekyll. The Fedora versions are relatively modern and (after reading the
-respective Changelogs) seem to be appropriately stable. We would not have to
-worry about managing updates, but the versions are out of out control.
-
-(A Docker image is another possibility, but we still have to come to terms with
-version pinning before we could explore that).
-
-A resolution to all this comes thinking about bootstrapping a new Github Pages
-site.
+This is where I ran into some personal and Fedora specific wrinkles with [Ruby],
+[RubyGems], and [Bundler].  I don't do any Ruby development myself, so this took
+a bit of digging and experimentation to sort out.
 
 [GitHub Pages Locally]: https://help.github.com/en/github/working-with-github-pages/testing-your-github-pages-site-locally-with-jekyll
 [Jekyll on Linux]: https://jekyllrb.com/docs/installation/other-linux
-[dependency hell]: https://en.wikipedia.org/wiki/Dependency_hell
+[Ruby]: https://www.ruby-lang.org/en/
+[RubyGems]: https://rubygems.org/
 [Bundler]: https://bundler.io
+
+### RubyGems
+
+The instructions from "Jekyll" suggest you first adjust your environment so that
+running the `gem` command as a normal user operates on user files rather than
+the default system files. In particular,
+
+* Gems are installed under `~/.gems`
+* Executable files are installed under `~/.gems/bin`.
+
+This is probably appropriate for Ubuntu and many other Linux systems.
+
+However, Fedora has patched RubyGems (see [`operating_system.rb`]) so that the
+`gem` command automatically performs a "user install" if run by a normal user.
+In particular,
+
+* Gems are installed under `~/.gem/ruby`
+* Executable files are installed under `~/bin`
+
+This make the `gem` command "just work" without the user having to change their
+environment, but uses incompatible paths to the "Jekyll" suggestion.
+
+If you are running Fedora and have already installed some local ruby gems, then
+blindly following the "Jekyll" suggestion is going to break them.
+
+[`operating_system.rb`]: file:///usr/share/rubygems/rubygems/defaults/operating_system.rb
+
+### Bundler
+
+The instructions from both "GitHub" and "Jekyll" suggest using [Bundler] to
+manage your sites dependencies.  Managing local gem installations is a well
+known "path" to [dependency hell] and one we'd rather avoid. [Bundler] is a nice
+solution that allows you to safely install multiple, potentially conflicting,
+versions of gems, by using a special command wrapper to ensure that only the
+correct versions are used by your project.  In short:
+
+* A `Gemfile` is used to specify the required gems and perhaps their minimal
+  versions.
+
+* The `bundle install` command installs those gems, plus any dependencies, whilst
+  automatically recording the required versions in `Gemfile.lock`.
+
+* The `bundle exec` command is used to run any programs under the version
+  constraints specified in `Gemfile.lock`.
+
+Unfortunately this does not work well with the Fedora patch to RubyGems
+mentioned above. However, we can get mutually compatible behaviour by adding the
+following our bash configuration:
+
+```bash
+export GEM_HOME=$HOME/.gem/ruby
+ln -sf $HOME/bin $HOME/.gem/ruby/
+```
+
+Bundler also has the option of installing gems inside your project directory,
+just like Python's `vitualenv` or Node's `node_modules`:
+
+```shell
+bundle config set path .bundle
+bundle install
+```
+
+One advantage of this is that you don't end up polluting your path with
+executables from bundled dependencies, and it can be easier to clean out old
+gems. This does cost some disk space (gems are no shared between projects) but
+its not that much unless you use use it a lot. For this site only 84MB were
+required.
+
+### Installation choices
+
+The "Jekyll" instructions suggests installing some system dependencies with
+
+```shell
+sudo dnf install ruby ruby-devel @development-tools
+```
+
+Then installing both Bundler and Jekyll with
+
+```shell
+gem install bundler jekyll
+```
+
+Using the configuration tweaks mentioned above, this is all very
+straight-forward.
+
+On the other hand the GitHub instructions suggest using the `bundler` command to
+install Jekyll for your project in order to ensure the version of Jekyll is
+compatible with the one used by GitHub. The details of how exactly to do this
+are not explained though.
+
+There is also the option of installing distribution versions of Bundler and
+Jekyll with
+
+```shell
+sudo dnf install rubygems-bundler rubygems-jekyll
+```
+which will automatically take care of any dependency requirements.
+These Fedora versions are relatively modern and (after reading the respective
+Changelogs) seem to be appropriately stable. We would not have to worry about
+managing updates, but the exact versions are out of out control.
+
+
+[dependency hell]: https://en.wikipedia.org/wiki/Dependency_hell
 
 ## Bootstrapping GitHub Pages with Jekyll
 
