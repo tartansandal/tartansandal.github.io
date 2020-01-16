@@ -15,14 +15,14 @@ markdown: kramdown
 kramdown:
   input: GFM
 
-discus:
-  shortname: tartansandal
-
+# Theme settings
 theme: minima
 plugins:
   - jekyll-feed
 
-# Theme settings
+discus:
+  shortname: tartansandal
+
 minima:
   date_format: "%-d %B %Y"
 
@@ -32,11 +32,17 @@ header_pages:
 show_excerpts: true
 
 # Exclude from processing.
-# The following items will not be processed, by default. Create a custom list
-# to override the default setting.
 exclude:
+  # defaults
   - Gemfile
   - Gemfile.lock
-  - vendor
+  - node_modules
+  - vendor/bundle/
+  - vendor/cache/
+  - vendor/gems/
+  - vendor/ruby/
+  - Gemfile
+  - Gemfile.lock
+  # my additions
+  - .bundle
   - README.md
-  - TODO.md

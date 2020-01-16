@@ -26,33 +26,26 @@ publishing:
   you want to.
 
 This looked like much more fun than the [Movable Type] based [blogs.perl.org]
-I had previously used, and that kind of rekindled my desire to write a technical
+I had previously used, and that rekindled my desire to write a technical
 blog again.
 
-The starting point for this adventure was, well, a page that no longer
-exists. To be honest, I first started looking at this four months ago and I kind
-of got distracted by "life". By the time I had got back to it, things had
-changed--fortunately for the better.
+## Learning about GitHub Pages
+
+The starting point for this adventure was, well, a page that no longer exists.
+To be honest, I first started looking at this four months ago, but I got
+distracted by "life" for a while. By the time I had got back to it, things
+had changed significantly, and fortunately, for the better.
 
 The [GitHub Pages] front page now gives you a nice video introduction and
 interactive set up details, plus some links to various [Working with GitHub
 Pages] guides. The quality of these guides has improved greatly. My only
-criticism is, while the main contents page suggests a reasonable narrative,
+criticism is that, while the main contents page suggests a reasonable narrative,
 the individual articles lack the navigation links to make that narrative easy to
 follow--you have to keep going back to the contents page to make sure you
 haven't missed anything.
 
-[GitHub Pages]: https://pages.github.com
-[Jekyll]: https://jekyllrb.com
-[Asciidoctor]: https://asciidoctor.org
-[Liquid]: https://shopify.github.io/liquid
-[Movable Type]: https://www.movabletype.org
-[blogs.perl.org]:http://blogs.perl.orgusers/kahlil_kal_hodgson
-[Working with GitHub Pages]: https://help.github.com/en/categories/working-with-github-pages
-
-## Some basic setup
-
-First I needed to choose a "site type".
+I discovered very quickly that would have to choose a "site type" before I could
+get much further.
 
 > There are three types of GitHub Pages sites: project, user, and organization.
 > Project sites are connected to a specific project hosted on GitHub, such as
@@ -62,17 +55,54 @@ First I needed to choose a "site type".
 This distinction is repeated constantly throughout the documentation, so once
 I figured out which one I was using I could skip over a lot of irrelevant
 instructions.  For example, any references to a `gh-pages` branch only apply to
-_Project_ site types.
+"project" site types.
 
-I'm building a site to host a professional blog, ostensibly for gratuitous
-self-promotion, so the _User_ type is definitely what I want.
+I was planning on building a site to host a professional blog, ostensibly for
+gratuitous self-promotion. This is not going to be tied to any particular
+project or organization, so the "user" site type is definitely what I want.
 
-Now that I know what site type I'm using, I can set up a "publishing source" by
-simply creating a new git repository called "tartansandal.github.io", with the
-understanding that the `master` branch of that repository will be the one that
-will be automatically published to <https://tartansandal.github.io>.
+The next step was to set up a "publishing source".
 
-That was pretty easy.
+For a "user" site I simply needed to
+
+* Create a GitHub repository called "tartansandal.github.io"
+* Browse to the "Settings" page for that repository
+* Under the "GitHub Pages" section, select "master branch" from the "Source"
+  drop-down menu.
+
+Any content that I commit to the `master` branch of that repository will be
+automatically published to <https://tartansandal.github.io>. For example I could
+add a simple `index.html` file containing:
+
+```html
+<html>
+<body>
+<h1>Hello World</h1>
+</body>
+</html>
+```
+
+To display "Hello World" in large bold text.
+
+That was pretty easy, but it gets better. If I add a `_config.yml` file with:
+
+```yaml
+name: My Site
+markdown: kramdown
+```
+
+GitHub will then use Jekyll to automatic convert any Markdown files I add into
+appropriately formatted HTML. Awesome!
+
+Now I just needed to learn how to use Jekyll to layout a blog.
+
+[GitHub Pages]: https://pages.github.com
+[Jekyll]: https://jekyllrb.com
+[Asciidoctor]: https://asciidoctor.org
+[Liquid]: https://shopify.github.io/liquid
+[Movable Type]: https://www.movabletype.org
+[blogs.perl.org]:http://blogs.perl.orgusers/kahlil_kal_hodgson
+[Working with GitHub Pages]: https://help.github.com/en/categories/working-with-github-pages
 
 ## Learning about Jekyll
 
@@ -82,45 +112,42 @@ scanning that, I decided on running through the official [Jekyll Docs], in
 order to get a better handle on its requirements and capabilities. This all
 seemed quite reasonable.
 
-One key point that was somewhat obscured by all the set up and configuration
-instructions was that pushing any new content to the `master` branch of my
-repository was going to make that content publicly available (almost)
-immediately. If I wanted to review my updates before publishing, I would have to
-install and run Jekyll locally. I'm definitely going to want to this for new
-content, major edits, and layout changes.
+One key point that was somewhat obscured by these guides was that pushing any
+new content to the `master` branch of my repository was going to make that
+content publicly available (almost) immediately. If I wanted to review my
+updates before publishing, I would have to install and run Jekyll locally. I'm
+definitely going to want to this for new content, major edits, and layout
+changes.
 
 [GitHub Pages with Jekyll]: https://help.github.com/en/github/working-with-github-pages/setting-up-a-github-pages-site-with-jekyll
 [Jekyll Docs]: https://jekyllrb.com/docs
 
-## Installing Jekyll locally
+## Installing and running Jekyll locally
 
-There are a number of installation guides including [Testing your GitHub Pages
-Locally with Jekyll][Github Pages Locally] by "GitHub" and [Jekyll on Linux] by
-"Jekyll". Unfortunately these two (and many others) do not strictly agree, so we
-have to make some careful decisions.
+There were a number of installation guides available, including a [GitHub Guide]
+and a [Jekyll Guide].  Unfortunately these guides do not strictly agree, so
+I was going to have to do some research and experimentation to find the best
+path forward. There were also some Fedora specific wrinkles with [Ruby],
+[RubyGems], and [Bundler] that I needed to sort out.
 
-This is where I ran into some personal and Fedora specific wrinkles with [Ruby],
-[RubyGems], and [Bundler].  I don't do any Ruby development myself, so this took
-a bit of digging and experimentation to sort out.
-
-[GitHub Pages Locally]: https://help.github.com/en/github/working-with-github-pages/testing-your-github-pages-site-locally-with-jekyll
-[Jekyll on Linux]: https://jekyllrb.com/docs/installation/other-linux
+[GitHub Guide]: https://help.github.com/en/github/working-with-github-pages/testing-your-github-pages-site-locally-with-jekyll
+[Jekyll Guide]: https://jekyllrb.com/docs/installation/other-linux
 [Ruby]: https://www.ruby-lang.org/en/
 [RubyGems]: https://rubygems.org/
 [Bundler]: https://bundler.io
 
 ### RubyGems
 
-The instructions from "Jekyll" suggest you first adjust your environment so that
-running the `gem` command as a normal user operates on user files rather than
-the default system files. In particular,
+The [Jekyll Guide] suggests you first adjust your environment so that running
+the `gem` command as a normal user operates on user files rather than the
+default system files. In particular,
 
 * Gems are installed under `~/.gems`
 * Executable files are installed under `~/.gems/bin`.
 
 This is probably appropriate for Ubuntu and many other Linux systems.
 
-However, Fedora has patched RubyGems (see [`operating_system.rb`]) so that the
+However, Fedora has modified RubyGems (see [`operating_system.rb`]) so that the
 `gem` command automatically performs a "user install" if run by a normal user.
 In particular,
 
@@ -128,21 +155,23 @@ In particular,
 * Executable files are installed under `~/bin`
 
 This make the `gem` command "just work" without the user having to change their
-environment, but uses incompatible paths to the "Jekyll" suggestion.
+environment, but uses incompatible paths to those suggested by the [Jekyll
+Guide].
 
-If you are running Fedora and have already installed some local ruby gems, then
-blindly following the "Jekyll" suggestion is going to break them.
+I'm running Fedora and already have some "user installed" ruby gems. If
+I blindly follow the [Jekyll Guide], those gems are going to break.
 
-[`operating_system.rb`]: file:///usr/share/rubygems/rubygems/defaults/operating_system.rb
+[`operating_system.rb`]: https://gist.github.com/tartansandal/f82322f7928b786432ab600804cae73e
 
 ### Bundler
 
-The instructions from both "GitHub" and "Jekyll" suggest using [Bundler] to
-manage your sites dependencies.  Managing local gem installations is a well
-known "path" to [dependency hell] and one we'd rather avoid. [Bundler] is a nice
-solution that allows you to safely install multiple, potentially conflicting,
-versions of gems, by using a special command wrapper to ensure that only the
-correct versions are used by your project.  In short:
+Managing local gem installations is a well known path to [Dependency Hell] and
+one I'd rather avoid.
+
+Both the [GitHub Guide] and the [Jekyll Guide] suggest using [Bundler] to manage
+your sites dependencies.  [Bundler] allows you to safely install multiple,
+potentially conflicting, versions of gems, by using a special command wrapper to
+ensure that only the correct versions are used by your project.  In short:
 
 * A `Gemfile` is used to specify the required gems and perhaps their minimal
   versions.
@@ -153,38 +182,39 @@ correct versions are used by your project.  In short:
 * The `bundle exec` command is used to run any programs under the version
   constraints specified in `Gemfile.lock`.
 
-Unfortunately this does not work well with the Fedora patch to RubyGems
-mentioned above. However, we can get mutually compatible behaviour by adding the
-following our bash configuration:
+Unfortunately this does not work well with the Fedora modifications to RubyGems
+mentioned above. We _can_ get mutually compatible behaviour, however, by adding
+the following our bash configuration:
 
 ```bash
 export GEM_HOME=$HOME/.gem/ruby
 ln -sf $HOME/bin $HOME/.gem/ruby/
 ```
 
-Bundler also has the option of installing gems inside your project directory,
+[Bundler] also has the option of installing gems inside your project directory,
 just like Python's `vitualenv` or Node's `node_modules`:
 
 ```shell
-bundle config set path .bundle
+bundle config set --local path .bundle
 bundle install
 ```
 
-One advantage of this is that you don't end up polluting your path with
-executables from bundled dependencies, and it can be easier to clean out old
-gems. This does cost some disk space (gems are no shared between projects) but
-its not that much unless you use use it a lot. For this site only 84MB were
-required.
+One advantage of this is that you don't end up polluting your `PATH` with
+executables from random bundled dependencies. There is a cost of some disk space
+(gems are no shared between projects) but its not that much unless you use it
+excessively. This site only required 84MB to store all its gems.
+
+[Dependency Hell]: https://en.wikipedia.org/wiki/Dependency_hell
 
 ### Installation choices
 
-The "Jekyll" instructions suggests installing some system dependencies with
+The [Jekyll Guide] suggests installing some system dependencies:
 
 ```shell
 sudo dnf install ruby ruby-devel @development-tools
 ```
 
-Then installing both Bundler and Jekyll with
+Then installing both Bundler and Jekyll as a normal user:
 
 ```shell
 gem install bundler jekyll
@@ -193,112 +223,175 @@ gem install bundler jekyll
 Using the configuration tweaks mentioned above, this is all very
 straight-forward.
 
-On the other hand the GitHub instructions suggest using the `bundler` command to
-install Jekyll for your project in order to ensure the version of Jekyll is
-compatible with the one used by GitHub. The details of how exactly to do this
-are not explained though.
+On the other hand the [GitHub Guide] suggest using Bundler to install Jekyll in
+order to ensure the version is compatible with the one used by GitHub. The
+details of how exactly to do this are not explained though and at this point the
+exposition starts to get a bit muddy.
 
-There is also the option of installing distribution versions of Bundler and
-Jekyll with
+The key to unravelling all this is that GitHub provides a [`github-pages`] gem:
+
+> A simple Ruby Gem to bootstrap dependencies for setting up and maintaining
+> a local Jekyll environment in sync with GitHub Pages
+
+So if we have [Bundler] installed and a `Gemfile` containing:
+
+```ruby
+gem 'github-pages', group: :jekyll_plugins
+```
+
+We can install Jekyll and its dependencies at the correct versions with
+
+```shell
+bundle install
+```
+
+We can keep this in sync with the current GitHub Pages by regularly running
+
+```shell
+bundle update
+```
+
+And we can generate and serve our content locally with
+
+```shell
+bundle exec jekyll server
+```
+
+The key point is that the version of Jekyll used by our project may be
+completely different from the version installed using the `gem` command.
+
+We could even choose to install and use the Fedora distribution versions with
 
 ```shell
 sudo dnf install rubygems-bundler rubygems-jekyll
 ```
-which will automatically take care of any dependency requirements.
-These Fedora versions are relatively modern and (after reading the respective
-Changelogs) seem to be appropriately stable. We would not have to worry about
-managing updates, but the exact versions are out of out control.
 
+This would automatically take care of any dependencies and we wouldn't have to
+worry about managing updates. The Fedora versions are relatively modern and
+(after reading the respective Changelogs) seem to be appropriately stable.
 
-[dependency hell]: https://en.wikipedia.org/wiki/Dependency_hell
-
-## Bootstrapping GitHub Pages with Jekyll
-
-Talk about the gem-pages thing somehow.
-
-
-
-If you already have Jekyll installed, then you can create a simple skeleton site
-under `PATH` with:
+The final wrinkle is the following very useful `jekyll` sub-command:
 
 ```shell
 jekyll new PATH
-cd PATH
 ```
 
-This generates scaffolding similar to the following:
+This generates a simple skeleton that can be used as a starting point for
+your site:
 
 ```text
-/
+.
 ├── 404.html
 ├── about.md
 ├── _config.yml
 ├── Gemfile
+├── .gitignore
 ├── index.md
 └── _posts
-    └── 2020-01-14-welcome-to-jekyll.markdown
+    └── 2020-01-16-welcome-to-jekyll.markdown
 ```
 
-This is a great start for a simple blog.
+Note that the `Gemfile` even contains (commented out) instructions for
+`github-pages` gem.
 
-The `Gemfile` provides the basic requirements for a Jekyll, but most is Windows
-specific.
+Phew! At this point I felt I had done enough research and experimentation to
+formulate a plan.
 
-3. Strip the Gemfile back to:
+[`github-pages`]: https://github.com/github/pages-gem
 
-    ```Gemfile
-    source "https://rubygems.org"
+## Bootstrapping GitHub Pages on Fedora 31
 
-    gem "github-pages", group: :jekyll_plugins
+First, I installed the Fedora distribution packages with
 
-    # If you have any plugins, put them here!
-    group :jekyll_plugins do
-      gem "jekyll-feed", "~> 0.6"
-    end
-    ```
+```shell
+sudo dnf install rubygem-bundler rubygem-jekyll
+```
+
+This installed the required gems, plus a bunch of dependencies, and most
+importantly, gave me access to reasonably up-to-date versions of the `bundle`
+and `jekyll` commands.
+
+Now I could generate some basic scaffolding for my site:
+
+```shell
+mkdir my-site
+cd my-site
+jekyll new --force .
+```
+
+The generated `Gemfile` contained a lot comments and Windows specific tweaks.
+I was able to confidently strip that back to
+
+```ruby
+source "https://rubygems.org"
+gem "github-pages", group: :jekyll_plugins
+```
+
+Next, I configured bundler to install gems into a local `.bundle`
+directory so the whole project was self-contained:
+
+```shell
+bundle config set --local path .bundle
+```
+
+I could now install all the required gems:
+
+```shell
+bundle install
+```
+
+And see that they are all installed under `./bundle/ruby`.
+
+Next, I generated and serve the content:
+
+```shell
+bundle exec jekyll server
+```
+
+Now I was ready to start working through the [Jekyll Docs] and developing
+content for my blog.
+
+## Initial Content
+
+It was simple enough to edit the `_config.yml` file to change the blog title,
+description, and various user details.  I was pretty happy with the default
+`minima` theme, but some minor [customization
+](<https://github.com/jekyll/minima#customizing-templates) was in order:
+
+* Changing the date format to Australian standard with
+
+  ```yaml
+  minima:
+    date_format: "%-d %B %Y"
+  ```
+
+* Enabling display of post "excerpts" in the main listing with
+
+  ```yaml
+  show_excerpts: true
+  ```
+
+* Setting up a Disqus account:
+
+  ```yaml
+  ```
+
+## Deployment
+
+Next I set up a local copy of my (currently empty) GitHub Pages repository:
+
+```shell
+git add remote git@github.com:tartansandal/tartansandal.github.io.git
+```
+
+```shell
+cd tartansandal.github.io
+jekyll new . --force
+```
 
 
-Installation options:
-
-This last option seems to be the simplest and most elegant.
-
-### Fedora process
-
-1. Install distribution packages
-
-  sudo dnf install rubygem-bundler rubygem-jekyll
-
-2. Initialize new site with
-
-  jekyll new path-to-new-site
-  cd path-to-new-site
-
-
-3. Strip the Gemfile back to:
-
-    ```
-    source "https://rubygems.org"
-    gem "github-pages", group: :jekyll_plugins
-    ```
-
-4. Run bundler to install and pin our working set of gems:
-
-    ```
-    bundle install
-    ```
-
-5. Serve the content with
-
-    ```
-    bundle exec jekyll server
-    ```
 
 ## Choosing a Theme
-
-I'm pretty happy with the minimal theme for the moment.  Though I have to wonder
-how this is going to pan out if I start blogging more STEM stuff.
-
-See <https://github.com/jekyll/minima> for advice on configuring and customizing.
 
 ## Plus AsciiDoc extensions
 
@@ -312,3 +405,4 @@ drafts?
 
 [bens guide]: https://ben.balter.com/jekyll-style-guide/
 [sylvains guide]: https://www.sylvaindurand.org/using-github-to-serve-jekyll/
+[Jekyll GitHub Pages]: https://jekyllrb.com/docs/github-pages/
