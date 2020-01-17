@@ -1,12 +1,13 @@
 # Development aliases
 .PHONY: all serve update
 
-# Ensure gems have been updated before launching the server
+# Ensure gems have been updated before serving content
 all: update serve
 
-# Launch a jekyll server to rebuild _site files
+# Launch a jekyll server to rebuild _site/ and serve content
+# include drafts and livereload code
 serve:
-	bundle exec jekyll serve
+	bundle exec jekyll serve --drafts --livereload
 
 # Update bundled gems to sync with GitHub Pages
 update:
