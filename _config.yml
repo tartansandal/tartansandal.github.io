@@ -31,9 +31,9 @@ header_pages:
 
 show_excerpts: true
 
-# Exclude from processing.
+# Paths excluded from processing
 exclude:
-  # defaults
+  # default excusions
   - Gemfile
   - Gemfile.lock
   - node_modules
@@ -41,8 +41,7 @@ exclude:
   - vendor/cache/
   - vendor/gems/
   - vendor/ruby/
-  - Gemfile
-  - Gemfile.lock
-  # my additions
-  - .bundle
+  # extra exclusions
+  #- .bundle
   - README.md
+  - Makefile
