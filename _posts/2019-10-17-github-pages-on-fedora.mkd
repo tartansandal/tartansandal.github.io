@@ -254,7 +254,7 @@ bundle update
 And we can generate and serve our content locally with
 
 ```shell
-bundle exec jekyll server
+bundle exec jekyll serve
 ```
 
 The key point is that the version of Jekyll used by our project may be
@@ -311,12 +311,18 @@ This installed the required gems, plus a bunch of dependencies, and most
 importantly, gave me access to reasonably up-to-date versions of the `bundle`
 and `jekyll` commands.
 
-Now I could generate some basic scaffolding for my site:
+Now I could set up a git project directory for developing the site
 
 ```shell
 mkdir my-site
 cd my-site
-jekyll new --force .
+git init
+```
+
+And generate some basic scaffolding:
+
+```shell
+jekyll new .
 ```
 
 The generated `Gemfile` contained a lot comments and Windows specific tweaks.
@@ -340,23 +346,60 @@ I could now install all the required gems:
 bundle install
 ```
 
-And see that they are all installed under `./bundle/ruby`.
+And see that they are all installed under `./bundle/ruby`.  I did not want those
+files tracked by Git, so I added an appropriate line to my `.ignore` directory.
 
 Next, I generated and serve the content:
 
 ```shell
-bundle exec jekyll server
+bundle exec jekyll serve
 ```
+
+I wanted to ensure my development environment was always kept in sync with
+GitHub Pages environment. I packaged up the following `Makefile`:
+
+```Makefile
+# Development aliases
+.PHONY: all serve update
+
+# Ensure gems have been updated before launching the server
+all: update serve
+
+# Update bundled gems to sync with GitHub Pages
+update:
+	bundle update
+
+# Launch a jekyll serve to rebuild _site files
+serve:
+	bundle exec jekyll serve
+```
+
+So I could just run `make` to set up my development environment.
 
 Now I was ready to start working through the [Jekyll Docs] and developing
 content for my blog.
 
-## Initial Content
+## Blogging with Jekyll
+
+* Theme's
+* `_` directories
+
+  ```text
+  _layout
+  _includes
+  _sass
+  _posts
+  ```
+
+* shadowing
+* `index.md`
+* `_site`
+
+## Wrapping things up
 
 It was simple enough to edit the `_config.yml` file to change the blog title,
 description, and various user details.  I was pretty happy with the default
-`minima` theme, but some minor [customization
-](<https://github.com/jekyll/minima#customizing-templates) was in order:
+`minima` theme, but some minor [customization][customizing minima] was in order:
 
 * Changing the date format to Australian standard with
 
@@ -374,35 +417,49 @@ description, and various user details.  I was pretty happy with the default
 * Setting up a Disqus account:
 
   ```yaml
+  discus:
+    shortname: tartansandal
   ```
+
+* Using <https://realfavicongenerator.net/> to build my own favicons.
+
+Updating the `about.md` content initially got out of hand, but I eventually
+decided to cut it back to something simple.
+
+Finally, I wrote this story and used it to replace the introductory
+'welcome-to-jekyll' post.
+
+Now it was time to deploy.
+
+[customizing minima]: https://github.com/jekyll/minima#customizing-templates
 
 ## Deployment
 
-Next I set up a local copy of my (currently empty) GitHub Pages repository:
+Enabling GH pages
+Create a Repository
+
+I had been using git to track the development of this project and had merged all
+my changes into the `master` branch. In order to deploy all I had to do was not
+attach it to the `tartansandal.github.io` repository, and push my changes.
 
 ```shell
-git add remote git@github.com:tartansandal/tartansandal.github.io.git
+git add remote origin git@github.com:tartansandal/tartansandal.github.io.git
+git push --force
 ```
-
-```shell
-cd tartansandal.github.io
-jekyll new . --force
-```
-
-
-
-## Choosing a Theme
-
-## Plus AsciiDoc extensions
-
-Need some kind of style/structure that I like. Steal from someone?
-
-## Site layout
-
-drafts?
 
 ## Guides
 
-[bens guide]: https://ben.balter.com/jekyll-style-guide/
-[sylvains guide]: https://www.sylvaindurand.org/using-github-to-serve-jekyll/
-[Jekyll GitHub Pages]: https://jekyllrb.com/docs/github-pages/
+Some useful guides I found a long the way.
+
+* Jonathan McGlone's excellent [Creating and Hosting a Personal Site on GitHub](
+  http://jmcglone.com/guides/github-pages/)
+
+* Ben Balter's oppinionated [Jekyll style guide](
+  https://ben.balter.com/jekyll-style-guide/)
+
+* Sylvain Durand's very straight-forward [Using GitHub to serve Jekyll](
+  https://www.sylvaindurand.org/using-github-to-serve-jekyll/). This was the
+  closest to the approach that I eventually ended up using.
+
+* Jekyll's hard to find [Jekyll GitHub Pages](
+  https://jekyllrb.com/docs/github-pages/)
