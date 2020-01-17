@@ -1,4 +1,4 @@
-# Blog about local user installs
+Blog about local user installs
 
 * ~/bin
 * ~/.local

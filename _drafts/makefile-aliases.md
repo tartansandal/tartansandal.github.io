@@ -1,4 +1,4 @@
-# Blog on Makefile for project command aliases
+Blog on using Makefile for project command aliases
 
 * Makefiles can be complex, but a simple usage can be powerful
 
@@ -56,4 +56,4 @@
 * mark aliases with .PHONY
 * figuring out details, getting it right, then forget about it
 
-
+<https://suva.sh/posts/well-documented-makefiles/>
