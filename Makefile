@@ -1,12 +1,12 @@
 # Development aliases
-.PHONY: all server update
+.PHONY: all serve update
 
 # Ensure gems have been updated before launching the server
-all: update server
+all: update serve
 
 # Launch a jekyll server to rebuild _site files
-server:
-	bundle exec jekyll server
+serve:
+	bundle exec jekyll serve
 
 # Update bundled gems to sync with GitHub Pages
 update:
