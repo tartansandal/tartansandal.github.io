@@ -1,8 +1,7 @@
 ---
 layout: post
 title:  "GitHub Pages with Fedora and Jekyll"
-date:   2019-09-24 22:54:58 +1000
-categories: jekyll fedora
+categories: github-pages jekyll fedora
 comments: true
 ---
 
@@ -42,9 +41,9 @@ Pages] guides.
 I discovered very quickly that would have to choose a "site
 type" before I could get much further.
 
-> There are three types of GitHub Pages sites: project, user, and organization.
+> There are three types of GitHub Pages sites: project, user, and organisation.
 > Project sites are connected to a specific project hosted on GitHub, such as
-> a JavaScript library or a recipe collection. User and organization sites are
+> a JavaScript library or a recipe collection. User and organisation sites are
 > connected to a specific GitHub account.
 
 This distinction is repeated constantly throughout the documentation, so once
@@ -54,15 +53,14 @@ instructions.  For example, any references to a `gh-pages` branch only apply to
 
 I was planning on building a site to host a professional blog, ostensibly for
 gratuitous self-promotion. This is not going to be tied to any particular
-project or organization, so the "user" site type is definitely what I want.
+project or organisation, so the "user" site type is definitely what I want.
 
-The next step was to set up a "publishing source".  For a "user" site I simply
+The next step was to set up a "publishing source".  For my "user" site I simply
 needed to
 
 * Create a GitHub repository called "tartansandal.github.io"
-* Browse to the "Settings" page for that repository
-* Under the "GitHub Pages" section, select "master branch" from the "Source"
-  drop-down menu.
+* Browse to the "Settings" page and find the "GitHub Pages" section
+* Select "master branch" from the "Source" drop-down menu
 
 Any content that I commit to the `master` branch of that repository will be
 automatically published to <https://tartansandal.github.io>. There was the
@@ -90,7 +88,7 @@ name: Just some notes...
 markdown: kramdown
 ```
 
-GitHub will then use Jekyll to automatic convert any Markdown files I add into
+GitHub will then use Jekyll to automatic convert any Markdown files to
 appropriately formatted HTML. So I could replace the `index.html` file with
 `index.md` file containing
 
@@ -112,11 +110,10 @@ Now I just needed to learn how to use Jekyll to layout a technical blog.
 
 ## Learning about Jekyll
 
-GitHub pages uses Jekyll as its preferred static site generator and has
-extensive set up and usage [documentation][GitHub Pages with Jekyll].  After
-scanning that, I decided on running through the official [Jekyll Docs], in
-order to get a better handle on its requirements and capabilities. This all
-seemed quite reasonable.
+GitHub pages uses Jekyll as its static site generator and has extensive set up
+and usage [documentation][GitHub Pages with Jekyll].  After scanning that,
+I decided on running through the official [Jekyll Docs], in order to get
+a better handle on its requirements and capabilities.
 
 One key point, somewhat obscured by the above guides, was that pushing any new
 content to the `master` branch of my repository would trigger that content
@@ -128,13 +125,13 @@ changes.
 [GitHub Pages with Jekyll]: https://help.github.com/en/github/working-with-github-pages/setting-up-a-github-pages-site-with-jekyll
 [Jekyll Docs]: https://jekyllrb.com/docs/
 
-## Installing and running Jekyll locally
+## Installing Jekyll on Fedora 31
 
-There were a number of installation guides available, including a [GitHub Guide]
-and a [Jekyll Guide].  Unfortunately these guides do not strictly agree, so some
-research and experimentation was required to find the best path forward. There
-were also some Fedora specific wrinkles with [Ruby], [RubyGems], and [Bundler]
-that I needed to sort out.
+I found a number of Jekyll installation guides, including a [GitHub Guide] and
+a [Jekyll Guide].  Unfortunately these guides do not strictly agree, so some
+research and experimentation was required to find the best path forward. In
+particular, there were some Fedora specific wrinkles with [Ruby], [RubyGems],
+and [Bundler] that I needed to sort out first.
 
 [GitHub Guide]: https://help.github.com/en/github/working-with-github-pages/testing-your-github-pages-site-locally-with-jekyll
 [Jekyll Guide]: https://jekyllrb.com/docs/installation/other-linux/
@@ -142,7 +139,7 @@ that I needed to sort out.
 [RubyGems]: https://rubygems.org
 [Bundler]: https://bundler.io
 
-### RubyGems
+### Local RubyGems
 
 The [Jekyll Guide] suggests you first adjust your environment so that running
 the `gem` command as a normal user operates on user files rather than the
@@ -169,7 +166,7 @@ I blindly follow the [Jekyll Guide], those gems are going to break.
 
 [`operating_system.rb`]: https://gist.github.com/tartansandal/f82322f7928b786432ab600804cae73e
 
-### Bundler
+### Using Bundler
 
 Managing local gem installations is a well known path to [Dependency Hell] and
 one I'd rather avoid.
@@ -216,7 +213,7 @@ for me, the effect was small.
 
 [Dependency Hell]: https://en.wikipedia.org/wiki/Dependency_hell
 
-### Installation choices
+### Different installation methods
 
 The [Jekyll Guide] suggests installing some system dependencies:
 
@@ -268,19 +265,6 @@ And we can generate and serve our content locally with
 bundle exec jekyll serve
 ```
 
-The key point is that the version of Jekyll used by our project can (and
-probably will) be different from the version installed using the `gem` command.
-In this case we could just install and use the versions that come with the
-Fedora distribution:
-
-```shell
-sudo dnf install rubygems-bundler rubygems-jekyll
-```
-
-This would automatically take care of any dependencies and we wouldn't have to
-worry about managing updates. The Fedora versions are relatively modern and
-(after reading the respective Changelogs) seem to be appropriately stable.
-
 The final wrinkle is the following very useful `jekyll` sub-command:
 
 ```shell
@@ -300,20 +284,34 @@ $ tree -a
 ├── .gitignore
 ├── index.md
 └── _posts
-    └── 2020-01-16-welcome-to-jekyll.markdown
+    └── 2020-01-20-welcome-to-jekyll.markdown
 ```
 
 Note that the `Gemfile` even contains (commented out) instructions for
-`github-pages` gem.
+`github-pages` gem. Using this requires having Jekyll installed first though.
 
-At this point I felt I had done enough research and experimentation to
-formulate a plan.
+The key take away from all this is that the version of Jekyll used by our
+project can (and probably will) be different from the version installed using
+the `gem` command.  If this is the case, than we could just install the version
+of Bundler and Jekyll that come with the Fedora distribution:
+
+```shell
+sudo dnf install rubygems-bundler rubygems-jekyll
+```
+
+This would automatically take care of any dependencies and we wouldn't have to
+worry about managing updates. The Fedora versions are relatively modern and
+(after reading the respective Changelogs) seem to be appropriately stable.
 
 [`github-pages`]: https://github.com/github/pages-gem
 
-## Bootstrapping GitHub Pages on Fedora 31
+## Bootstrapping GitHub Pages
 
-First, I cloned the GitHub Pages repository I set up earlier:
+At this point I felt I had done enough research and experimentation to formulate
+a reasonable plan.
+
+First, I cloned the GitHub Pages repository I set up earlier in [Learning about
+GitHub Pages](#learning-about-github-pages):
 
 ```shell
 git clone git@github.com:tartansandal/tartansandal.github.io.git
@@ -331,8 +329,8 @@ This gave me access to reasonably up-to-date versions of the `bundle` and
 
 I could now generate some basic scaffolding:
 
-```console
-$ jekyll new .
+```shell
+jekyll new .
 ```
 
 The generated `Gemfile` contained a lot comments and Windows specific tweaks, so
@@ -363,7 +361,7 @@ I could now safely install all the required gems with
 bundle install
 ```
 
-and could see that were all installed under `vendor/bundle/ruby`.  I didn't
+and verify that they were all installed under `vendor/bundle/ruby`.  I didn't
 want those files tracked by Git, so I added an appropriate line to the
 `.gitignore` file.
 
@@ -380,59 +378,242 @@ running:
 bundle update
 ```
 
-Finally, I made a `Makefile` so I could start up my environment by just running
-`make`:
-
-```make
-# Development aliases
-.PHONY: all serve update
-
-# Ensure gems have been updated before launching the server
-all: update serve
-
-# Update bundled gems to sync with GitHub Pages
-update:
-	bundle update
-
-# Launch a jekyll server to rebuild and serve _site files
-serve:
-	bundle exec jekyll serve
-```
-
 Now I was ready to start working through the [Jekyll Docs] and developing
 content for my blog.
 
 ## Blogging with Jekyll
 
-* Theme's
-* `_` directories
+The [Jekyll Docs] walked me through the details of building a Jekyll based site
+from scratch.  This was not strictly necessary, but gave me a bit more insight
+into what was going on.
 
-  ```text
-  _layout
-  _includes
-  _sass
-  _posts
-  ```
+### Processing files
 
-* shadowing
-* `index.md`
-* `_site`
+The basic operation of Jekyll is to recursively process all the files in the
+project and place the results in the `_site/` directory:
 
-* `_drafts`
+* Files or directories beginning with a `.` and `_` are excluded from direct
+  processing.  Additional exclusions, and exceptions to those exclusions, are
+  defined in project's `exclude`, `include`, and `keep_files` lists.
 
-<https://jekyllrb.com/docs/posts/#drafts>
+* HTML, Markdown, and SCCS files containing YAML [front matter] are processed
+  using the [Liquid] templating engine. This provides additional markup for the
+  interpolation of "objects", "tags", and "filters", as well as flow control
+  constructs.
+
+* If a `layout` name is set in a file's front matter, then the corresponding
+  layout template is used to wrap the file's content during processing.
+
+* The content of Markdown files are converted to HTML (using `kramdown`) and the
+  suffix of the resulting file is changed to `.html`
+
+* The content of SCCS files are converted to CSS (using `sassc`) and the suffix
+  of the resulting file is changed to `.css`
+
+* All other files and directories are copied over verbatim.
+
+Many aspects of this process can be modified via the project's [jekyll
+configuration] file `_config.yml`.
+
+Files under directories beginning with `_` provide additional "data" for use
+during processing.  For example,
+
+* `_include/` provides content fragments that can included in other files.
+
+* `_layout/` provides layout templates (which make extensive use of content
+  fragments).
+
+* `_sass/` provides style definitions for converting SCCS files.
+
+These three `_` directories, plus an additional `assets` directory, form the
+project's "theme".
+
+Themes generally make heavy use of [Jekyll Variables] via [Liquid] markup. For
+example:
+
+* `site` for site wide information configurations settings.
+* `page` for page specific information and variables set in a page's front
+  matter.
+* `content` for the rendered content being wrapped by a layout.
+
+While themes can be defined locally, they are more often packaged and imported
+as gems. If the theme has been published on [RubyGems], then it can simply be
+added to the `Gemfile` and corresponding theme name is set in `_config.yml`. In
+this case, files from the theme gem are (right) merged with files from the
+project, before the combined set of files are processed. This makes it very easy
+to use sophisticated 3rd party themes and to keep your project uncluttered. It
+also allows you to selectively override parts of a theme adding files with the
+same relative path to your project--the project files shadow the gem files.
+
+[Jekyll Variables]: https://jekyllrb.com/docs/variables/
+
+### The default theme
+
+The default gem-based theme used by Jekyll is "minima":
+
+```console
+$ tree vendor/bundle/ruby/2.6.0/gems/minima-2.5.1/
+vendor/bundle/ruby/2.6.0/gems/minima-2.5.1/
+├── assets
+│   ├── main.scss
+│   └── minima-social-icons.svg
+├── _includes
+│   ├── disqus_comments.html
+│   ├── footer.html
+│   ├── google-analytics.html
+│   ├── header.html
+│   ├── head.html
+│   ├── icon-github.html
+│   ├── icon-github.svg
+│   ├── icon-twitter.html
+│   ├── icon-twitter.svg
+│   └── social.html
+├── _layouts
+│   ├── default.html
+│   ├── home.html
+│   ├── page.html
+│   └── post.html
+├── LICENSE.txt
+├── README.md
+└── _sass
+    ├── minima
+    │   ├── _base.scss
+    │   ├── _layout.scss
+    │   └── _syntax-highlighting.scss
+    └── minima.scss
+```
+
+These are merged with the scaffolding files generated by the `jekyll new`
+command:
+
+```console
+$ tree
+.
+├── 404.html
+├── about.md
+├── _config.yml
+├── Gemfile
+├── index.md
+└── _posts
+    └── 2020-01-20-welcome-to-jekyll.markdown
+```
+
+The combined set of files are processed as follows:
+
+* `assets/main.scss` is compiled using the "minima" style defined in the themes
+  `_sass` directory. This produces `_site/assets/main.css` and that file is
+  referenced in the `head.html` fragment.
+
+* `404.html` uses the "default" layout (which includes the `head.html`,
+  `header.html` and `footer.html` fragments) to produce a well-formed HTML page
+  at `_site/404.html`
+
+* All the other layouts inherit the "default" layout to produce a consistent
+  well-formed HTML pages.
+
+* All markdown files are compiled into well-formed HTML fragments before being
+  wrapped in their respective layouts.
+
+* `about.md` uses the "page" layout and sets the `permalink` property. The
+  latter changes the destination file to `_site/about/index.html` so it can be
+  linked to with the path `/about/`.
+
+* `index.md` uses the "home" layout and the content of the `_post` directory
+  (via a `site.posts` object) to form a listing of links to posts. This
+  produces `_site/index.html`.
+
+* `2020-01-20-welcome-to-jekyll.markdown` uses the "post" layout and variables
+  set in the front matter (via the `page` object) to layout the posts content
+  and to produce `/_site/jekyll/update/2020/01/20/welcome-to-jekyll.html`.
+
+The result of all this is a minimal, attractive, and above all functional
+blogging site, all from simple `jekyll new` command.
+
+This can be personalised by setting the configuration variables `title`,
+`author`, `email`, `description`, and `github_username`, and by replacing the
+content of the `about.md` file.
+
+### Posts and drafts
+
+While [Jekyll] is great for generating many types of static sites, the default
+theme and scaffolding are focused on producing blogs. This was what I was
+really after.
+
+The section above introduced the `_posts` data directory which is handled
+specially. Files in this directory have a special naming convention:
+
+```text
+YEAR-MONTH-DAY-title.MARKUP
+```
+
+The `YEAR-MONTH-DAY` prefix corresponds to the intended publication date.  Posts
+are sorted by this date and allows for authoring posts with a planned future
+publication date (although this is a little more difficult in practice see [How
+to schedule posts with Jekyll][scheduling posts] and [Working with upcoming
+posts in Jekyll][upcoming posts]).
+
+The `title` is going to be
+a[slugified](https://en.wikipedia.org/wiki/Clean_URL#Slug) version of the posts
+title which we set in the pages front matter.
+
+I'm plan to be primarily use Markdown for my posts, so I'll use the `md` suffix
+for `MARKUP`. However, I may write some posts in [Asciidoctor] and manually
+convert them to HTML, so the `html` suffix is also a possibility.
+
+Individual post files require some minimal front matter:
+
+```yaml
+---
+layout: posts
+title: "Welcome to Jekyll!"
+categories: jekyll update
+---
+```
+
+The `categories` setting allows us to group related posts. This can be useful
+for SEO. In particular it changes the path part of the posts URL. For the above,
+it changes the path to `/jekyll/update/2020/01/20/welcome-to-jekyll.html`.
+This can make linking between posts complicated. The trick is to use the
+`post_url` tag to generate the correct path:
+
+```liquid
+{% raw %}{% post_url 2020-01-20-welcome-to-jekyll %}{% endraw %}
+```
+
+What about drafts?
+
+Most of my posts are going to take a while to polish and I expect
+be working on more than one post at a time. In this case I can use a `_drafts/`
+directory to store draft posts. Drafts are not visible in production and are
+only shown locally if you pass the `--drafts` option:
 
 ```shell
 bundle exec jekyll serve --drafts
 ```
 
-trigger browser reload on any changes with the `--livereload` option
+The naming convention is simpler as well:
+
+```text
+title.MARKUP
+```
+
+The `post.date` is automatically set to when the file was last changed on the
+file. Once I'm happy with the post, I can move it to and appropriately named
+file under `_posts`.
+
+[upcoming posts]: http://www.fizerkhan.com/blog/posts/Working-with-upcoming-posts-in-Jekyll.html
+[scheduling posts]: https://shot511.github.io/2018-12-03-how-to-schedule-posts-with-jekyll/
+[kramdown]: https://kramdown.gettalong.org
+[front matter]: https://jekyllrb.com/docs/step-by-step/03-front-matter/
+[jekyll configuration]: https://jekyllrb.com/docs/configuration/
+[jekyll posts]: https://jekyllrb.com/docs/posts/
+[jekyll drafts]: https://jekyllrb.com/docs/posts/#drafts
 
 ## Wrapping things up
 
-It was simple enough to edit the `_config.yml` file to change the blog title,
-description, and various user details.  I was pretty happy with the default
-`minima` theme, but some minor [customization][customizing minima] was in order:
+I was pretty happy with the default `minima` theme and it was simple enough to
+edit the `_config.yml` file to change the blog title, description, and various
+user details. I also made some minor [customizations][customizing minima]:
 
 * Changing the date format to Australian standard with
 
@@ -464,21 +645,17 @@ Finally, I wrote this story and used it to replace the introductory
 
 Now it was time to deploy.
 
-[customizing minima]: https://github.com/jekyll/minima#customizing-templates
-
-## Deployment
-
-Enabling GH pages
-Create a Repository
-
-I had been using git to track the development of this project and had merged all
-my changes into the `master` branch. In order to deploy all I had to do was not
-attach it to the `tartansandal.github.io` repository, and push my changes.
+I had already been using git to track the development of this project and had
+merged all my changes into the `master` branch. In order to deploy all I had to
+do was not attach it to the `tartansandal.github.io` repository, and push my
+changes:
 
 ```shell
 git add remote origin git@github.com:tartansandal/tartansandal.github.io.git
 git push --force
 ```
+
+[customizing minima]: https://github.com/jekyll/minima#customizing-templates
 
 ## Conclusions
 
@@ -496,7 +673,7 @@ Some useful guides I found a long the way.
 * Jonathan McGlone's excellent [Creating and Hosting a Personal Site on GitHub](
   http://jmcglone.com/guides/github-pages/)
 
-* Ben Balter's oppinionated [Jekyll style guide](
+* Ben Balter's opinionated [Jekyll style guide](
   https://ben.balter.com/jekyll-style-guide/)
 
 * Sylvain Durand's very straight-forward [Using GitHub to serve Jekyll](
@@ -504,4 +681,6 @@ Some useful guides I found a long the way.
   closest to the approach that I eventually ended up using.
 
 * Jekyll's hard to find [Jekyll GitHub Pages](
-  https://jekyllrb.com/docs/github-pages/)
+  https://jekyllrb.com/docs/github-pages/).
+
+## References
