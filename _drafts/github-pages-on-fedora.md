@@ -21,8 +21,7 @@ publishing:
 
 * A flexible, low-friction development environment, with [Jekyll] and [Liquid]
   providing attractive and flexible layout and themes, plus plugins for extra
-  features and few constraints for advanced users. You can even use your own
-  domain name if you want to.
+  features and few constraints for advanced users.
 
 This looked like much more fun than the [Movable Type] based [blogs.perl.org]
 I had previously used, and that rekindled my desire to write a technical
@@ -201,15 +200,15 @@ fi
 just like Python's `vitualenv` or Node's `node_modules`:
 
 ```shell
-bundle config set --local path vendor/bundle
+bundle config set path vendor/bundle
 bundle install
 ```
 
-One advantage of localising the install is that you don't end up polluting your
-environment with executables from random dependencies. These could shadow system
-executables and cause unexpected problems. This does cost some disk space (gems
-are not shared between projects) and some time (duplicated gem downloads), but
-for me, the effect was small.
+One advantage of localising installations is that you don't end up polluting
+your environment with executables from random dependencies. These could shadow
+system executables and cause unexpected problems. This does cost some disk space
+(gems are not shared between projects) and some time (duplicated gem downloads),
+but for me, the effect was small.
 
 [Dependency Hell]: https://en.wikipedia.org/wiki/Dependency_hell
 
@@ -292,7 +291,7 @@ Note that the `Gemfile` even contains (commented out) instructions for
 
 The key take away from all this is that the version of Jekyll used by our
 project can (and probably will) be different from the version installed using
-the `gem` command.  If this is the case, than we could just install the version
+the `gem` command.  If this is the case, then we could just install the versions
 of Bundler and Jekyll that come with the Fedora distribution:
 
 ```shell
@@ -327,6 +326,20 @@ sudo dnf install rubygem-bundler rubygem-jekyll
 This gave me access to reasonably up-to-date versions of the `bundle` and
 `jekyll` commands.
 
+Next, I configured bundler to always install gems into a local `vendor/bundle`
+directory so any projects would be self-contained:
+
+```shell
+bundle config set path vendor/bundle
+```
+
+I used the path `vendor/bundle` here to be consistent with standard [bundle
+deployments] and because, as we will see later, that path is ignored by default
+when Jekyll processes files. Note: this was a global setting and would affect
+all future uses of the `bundle` command.
+
+[bundle deployments]: https://andre.arko.net/2011/06/11/deploying-with-bundler-notes/
+
 I could now generate some basic scaffolding:
 
 ```shell
@@ -340,20 +353,6 @@ I stripped that back to
 source "https://rubygems.org"
 gem "github-pages", group: :jekyll_plugins
 ```
-
-Next, I configured bundler to install gems into a local `vendor/bundle`
-directory so the whole project was self-contained:
-
-```shell
-bundle config set --local path vendor/bundle
-```
-
-I used the path `vendor/bundle` here to be consistent with standard [bundle
-deployments] and because, as we will see later, that path is ignored by default
-when Jekyll processes files. I also used the `--local` option so that a local
-configuration file (`.bundle/config`) is used and could be tracked by git.
-
-[bundle deployments]: https://andre.arko.net/2011/06/11/deploying-with-bundler-notes/
 
 I could now safely install all the required gems with
 
@@ -394,7 +393,7 @@ project and place the results in the `_site/` directory:
 
 * Files or directories beginning with a `.` and `_` are excluded from direct
   processing.  Additional exclusions, and exceptions to those exclusions, are
-  defined in project's `exclude`, `include`, and `keep_files` lists.
+  defined in the project's `exclude`, `include`, and `keep_files` lists.
 
 * HTML, Markdown, and SCCS files containing YAML [front matter] are processed
   using the [Liquid] templating engine. This provides additional markup for the
@@ -431,19 +430,21 @@ project's "theme".
 Themes generally make heavy use of [Jekyll Variables] via [Liquid] markup. For
 example:
 
-* `site` for site wide information configurations settings.
-* `page` for page specific information and variables set in a page's front
-  matter.
-* `content` for the rendered content being wrapped by a layout.
+* the `site` variable for site wide information configurations settings.
+* the `page` variable for page specific information and variables set in
+  a page's front matter.
+* the `content` variable for the rendered content being wrapped by a layout.
 
 While themes can be defined locally, they are more often packaged and imported
-as gems. If the theme has been published on [RubyGems], then it can simply be
-added to the `Gemfile` and corresponding theme name is set in `_config.yml`. In
-this case, files from the theme gem are (right) merged with files from the
-project, before the combined set of files are processed. This makes it very easy
-to use sophisticated 3rd party themes and to keep your project uncluttered. It
-also allows you to selectively override parts of a theme adding files with the
-same relative path to your project--the project files shadow the gem files.
+as gems.  In this case, files from the theme gem are (right) merged with files
+from the project, before the combined set of files are processed.  This allows
+you to selectively override parts of a theme adding files with the same relative
+path to your project--the project files shadow the gem files.  This helps to
+keep your project uncluttered and makes it very easy to use sophisticated 3rd
+party themes.  If the theme has been published on [RubyGems], then you can
+simply add it to your `Gemfile`, set the corresponding theme name in
+`_config.yml`, then all those files in that gem will become part of your next
+build.
 
 [Jekyll Variables]: https://jekyllrb.com/docs/variables/
 
@@ -659,16 +660,38 @@ git push --force
 
 ## Conclusions
 
-The quality of these guides has improved greatly. My only
-criticism is that, while the main contents page suggests a reasonable narrative,
+Setting up this blog has been fun and relatively easy.  I managed to achieve
+really good results with minimum effort. There were some Fedora specific
+wrinkles with setting up Jekyll, but I managed to appropriately modify the
+Quick-start instructions:
+
+```console
+~ $ sudo dnf install rubygem-bundler rubygem-jekyll
+~ $ bundle config set path vendor/bundle
+~ $ jekyll new my-awesome-site
+~ $ cd my-awsome-site
+~/my-awsome-site $ bundle install
+~/my-awsome-site $ bundle exec jekyll serve
+# => Now browse to http://localhost:4000
+```
+
+The principle [GitHub Pages] documentation has improved significant, but there
+are still some issues.  The main contents page suggests a reasonable narrative,
 the individual articles lack the navigation links to make that narrative easy to
-follow.
-I have to keep going back to the contents page to make sure you
-haven't missed anything. Internal links point to very similar looking pages.
+follow.  There were many internal links pointing to very similar looking pages.
+I had to keep going back to the contents page to make sure I hadn't missed
+anything.  This may all be due to an accumulation of features over time (GitHub
+Pages is not new) and some of the older guides are more straight-forward.
+
+The [Jekyll] documentation was especially good--very simple and direct--although
+some of the more useful pages were a little hard to track down.
+
+I hope you have found this post useful. Any mistakes or omission are my own.
+Feel free to let me know about them in the comments.
 
 ## Guides
 
-Some useful guides I found a long the way.
+Some other useful guides I found a long the way:
 
 * Jonathan McGlone's excellent [Creating and Hosting a Personal Site on GitHub](
   http://jmcglone.com/guides/github-pages/)
@@ -682,5 +705,3 @@ Some useful guides I found a long the way.
 
 * Jekyll's hard to find [Jekyll GitHub Pages](
   https://jekyllrb.com/docs/github-pages/).
-
-## References
