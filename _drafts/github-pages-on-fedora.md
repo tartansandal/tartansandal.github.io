@@ -15,9 +15,9 @@ publishing:
 * A very low bar of entry with free hosting via your existing GitHub account and
   automatic conversion of (the well known) GitHub Flavoured Markdown.
 
-* Built around Git, so content could be developed, reviewed, and deployed just
-  as you would 'code'. (No composing in clunky web editors or cut and paste into
-  web forms).
+* Being built around Git, content could be developed, reviewed, and deployed just
+  as you would normal 'code'. (No composing in clunky web editors or cut and
+  paste into web forms).
 
 * A flexible, low-friction development environment, with [Jekyll] and [Liquid]
   providing attractive and flexible layout and themes, plus plugins for extra
@@ -51,8 +51,8 @@ instructions.  For example, any references to a `gh-pages` branch only apply to
 "project" site types.
 
 I was planning on building a site to host a professional blog, ostensibly for
-gratuitous self-promotion. This is not going to be tied to any particular
-project or organisation, so the "user" site type is definitely what I want.
+gratuitous self-promotion. This was not going to be tied to any particular
+project or organisation, so the "user" site type is definitely what I wanted.
 
 The next step was to set up a "publishing source".  For my "user" site I simply
 needed to
@@ -61,13 +61,9 @@ needed to
 * Browse to the "Settings" page and find the "GitHub Pages" section
 * Select "master branch" from the "Source" drop-down menu
 
-Any content that I commit to the `master` branch of that repository will be
-automatically published to <https://tartansandal.github.io>. There was the
-option of setting the domain name to one that I controlled, but that was more
-complicated and something I could change later.
-
-For example, I could
-add a simple `index.html` file containing:
+Now any content that I commit to the `master` branch of that repository would be
+automatically published to <https://tartansandal.github.io>.  For example,
+I could add a simple `index.html` file containing:
 
 ```html
 <html>
@@ -80,22 +76,22 @@ add a simple `index.html` file containing:
 Then browsing to <https://tartansandal.github.io> would display "Hello World" in
 large bold text.
 
-That was pretty easy, but it gets better. If I add a `_config.yml` file with:
+That was pretty easy, but it gets better. If I added a `_config.yml` file
+containing:
 
 ```yaml
-name: Just some notes...
 markdown: kramdown
 ```
 
-GitHub will then use Jekyll to automatic convert any Markdown files to
-appropriately formatted HTML. So I could replace the `index.html` file with
-`index.md` file containing
+GitHub would then automatically convert any Markdown files to appropriately
+formatted HTML. I could replace the `index.html` file with `index.md` file
+containing:
 
 ```markdown
 # Hello World
 ```
 
-to get the same effect. Very nice.
+and get the same effect. Very nice.
 
 Now I just needed to learn how to use Jekyll to layout a technical blog.
 
@@ -111,26 +107,25 @@ Now I just needed to learn how to use Jekyll to layout a technical blog.
 
 GitHub pages uses Jekyll as its static site generator and has extensive set up
 and usage [documentation][GitHub Pages with Jekyll].  After scanning that,
-I decided on running through the official [Jekyll Docs], in order to get
-a better handle on its requirements and capabilities.
+I decided on running through the official [Jekyll Docs], to get a better handle
+on its requirements and capabilities.
 
-One key point, somewhat obscured by the above guides, was that pushing any new
-content to the `master` branch of my repository would trigger that content
-being made public (almost) immediately. If I wanted to review my updates before
-publishing, I would have to install and run Jekyll locally. This was something
-I was definitely going to want to do for new content, major edits, and layout
-changes.
+One key point---somewhat obscured by the above guides---was that pushing content
+to the `master` branch of my repository would cause the public website to be
+updated (almost) immediately. If I wanted to (privately) review any new content,
+major edits, or layout changes, I would have to install and run Jekyll locally.
+This was something I was definitely going to want to do.
 
 [GitHub Pages with Jekyll]: https://help.github.com/en/github/working-with-github-pages/setting-up-a-github-pages-site-with-jekyll
 [Jekyll Docs]: https://jekyllrb.com/docs/
 
 ## Installing Jekyll on Fedora 31
 
-I found a number of Jekyll installation guides, including a [GitHub Guide] and
-a [Jekyll Guide].  Unfortunately these guides do not strictly agree, so some
-research and experimentation was required to find the best path forward. In
-particular, there were some Fedora specific wrinkles with [Ruby], [RubyGems],
-and [Bundler] that I needed to sort out first.
+Unfortunately the [GitHub Guide] and the [Jekyll Guide] did not strictly agree
+on how to install Jekyll, and some of the advice relating to [Ruby], [RubyGems],
+and [Bundler] did not seem appropriate for Fedora.
+
+Some research and experimentation was required to find the best path forward.
 
 [GitHub Guide]: https://help.github.com/en/github/working-with-github-pages/testing-your-github-pages-site-locally-with-jekyll
 [Jekyll Guide]: https://jekyllrb.com/docs/installation/other-linux/
@@ -156,12 +151,12 @@ In particular,
 * Gems are installed under `~/.gem/ruby`
 * Executable files are installed under `~/bin`
 
-Here, this make the `gem` command "just work" without the user having to change
-their environment, but it uses different paths to those suggested by the [Jekyll
+This make the `gem` command "just work" without the user having to change their
+environment, but it uses different paths to those suggested by the [Jekyll
 Guide].
 
 I'm running Fedora and already have some "user installed" ruby gems, so if
-I blindly follow the [Jekyll Guide], those gems are going to break.
+I blindly follow the [Jekyll Guide], those gems are going to break. Not good.
 
 [`operating_system.rb`]: https://gist.github.com/tartansandal/f82322f7928b786432ab600804cae73e
 
@@ -197,30 +192,30 @@ fi
 ```
 
 [Bundler] also has the option of installing gems inside your project directory,
-just like Python's `vitualenv` or Node's `node_modules`:
+just like Python's `vitualenv` or Node's `node_modules`. You can make this the
+default behaviour with
 
 ```shell
-bundle config set path vendor/bundle
-bundle install
+bundle config set path "vendor/bundle"
 ```
 
-One advantage of localising installations is that you don't end up polluting
-your environment with executables from random dependencies. These could shadow
-system executables and cause unexpected problems. This does cost some disk space
-(gems are not shared between projects) and some time (duplicated gem downloads),
-but for me, the effect was small.
+One advantage of localising installations this way is that you don't end up
+polluting your environment with executables from random dependencies. These
+could shadow system executables and cause unexpected problems. This does cost
+some disk space (gems are not shared between projects) and some time (duplicated
+gem downloads), but for me, the effect was small.
 
 [Dependency Hell]: https://en.wikipedia.org/wiki/Dependency_hell
 
 ### Different installation methods
 
-The [Jekyll Guide] suggests installing some system dependencies:
+The [Jekyll Guide] suggests installing some system dependencies with
 
 ```shell
 sudo dnf install ruby ruby-devel @development-tools
 ```
 
-Then installing both Bundler and Jekyll as a normal user:
+Then installing both Bundler and Jekyll as a normal user with
 
 ```shell
 gem install bundler jekyll
@@ -240,7 +235,7 @@ The key to unravelling all this is that GitHub maintains and provides a special
 > A simple Ruby Gem to bootstrap dependencies for setting up and maintaining
 > a local Jekyll environment in sync with GitHub Pages
 
-So if we have [Bundler] installed and a `Gemfile` containing:
+So if we have [Bundler] installed and a `Gemfile` containing
 
 ```ruby
 gem 'github-pages', group: :jekyll_plugins
@@ -267,7 +262,7 @@ bundle exec jekyll serve
 The final wrinkle is the following very useful `jekyll` sub-command:
 
 ```shell
-jekyll new .
+jekyll new PATH
 ```
 
 This generates a simple skeleton that can be used as a starting point for
@@ -330,17 +325,17 @@ Next, I configured bundler to always install gems into a local `vendor/bundle`
 directory so any projects would be self-contained:
 
 ```shell
-bundle config set path vendor/bundle
+bundle config set path "vendor/bundle"
 ```
 
 I used the path `vendor/bundle` here to be consistent with standard [bundle
-deployments] and because, as we will see later, that path is ignored by default
-when Jekyll processes files. Note: this was a global setting and would affect
-all future uses of the `bundle` command.
+deployments] and because, that path is ignored by default when Jekyll processes
+files. Note: this was a global setting and would affect all future uses of the
+`bundle` command.
 
 [bundle deployments]: https://andre.arko.net/2011/06/11/deploying-with-bundler-notes/
 
-I could now generate some basic scaffolding:
+I could now generate some basic scaffolding with
 
 ```shell
 jekyll new .
@@ -512,7 +507,7 @@ The combined set of files are processed as follows:
 * All the other layouts inherit the "default" layout to produce a consistent
   well-formed HTML pages.
 
-* All markdown files are compiled into well-formed HTML fragments before being
+* All Markdown files are compiled into well-formed HTML fragments before being
   wrapped in their respective layouts.
 
 * `about.md` uses the "page" layout and sets the `permalink` property. The
@@ -524,15 +519,15 @@ The combined set of files are processed as follows:
   produces `_site/index.html`.
 
 * `2020-01-20-welcome-to-jekyll.markdown` uses the "post" layout and variables
-  set in the front matter (via the `page` object) to layout the posts content
-  and to produce `/_site/jekyll/update/2020/01/20/welcome-to-jekyll.html`.
-
-The result of all this is a minimal, attractive, and above all functional
-blogging site, all from simple `jekyll new` command.
+  set in the front matter (via the `page` object) to produce
+  `/_site/jekyll/update/2020/01/20/welcome-to-jekyll.html`.
 
 This can be personalised by setting the configuration variables `title`,
 `author`, `email`, `description`, and `github_username`, and by replacing the
 content of the `about.md` file.
+
+The result is a simple, attractive, and functional blogging site--all from
+simple `jekyll new` command.
 
 ### Posts and drafts
 
@@ -549,12 +544,10 @@ YEAR-MONTH-DAY-title.MARKUP
 
 The `YEAR-MONTH-DAY` prefix corresponds to the intended publication date.  Posts
 are sorted by this date and allows for authoring posts with a planned future
-publication date (although this is a little more difficult in practice see [How
-to schedule posts with Jekyll][scheduling posts] and [Working with upcoming
-posts in Jekyll][upcoming posts]).
+publication date.
 
 The `title` is going to be
-a[slugified](https://en.wikipedia.org/wiki/Clean_URL#Slug) version of the posts
+a [slugified](https://en.wikipedia.org/wiki/Clean_URL#Slug) version of the post's
 title which we set in the pages front matter.
 
 I'm plan to be primarily use Markdown for my posts, so I'll use the `md` suffix
@@ -571,11 +564,11 @@ categories: jekyll update
 ---
 ```
 
-The `categories` setting allows us to group related posts. This can be useful
-for SEO. In particular it changes the path part of the posts URL. For the above,
-it changes the path to `/jekyll/update/2020/01/20/welcome-to-jekyll.html`.
-This can make linking between posts complicated. The trick is to use the
-`post_url` tag to generate the correct path:
+The `categories` setting allows us to group related posts.  In particular it
+changes the path part of the post's URL, for example, in the above the path is
+changed to `/jekyll/update/2020/01/20/welcome-to-jekyll.html`.  This can be
+useful for SEO, but does can make linking between posts more complicated. The
+trick is to use the `post_url` tag to generate the correct path:
 
 ```liquid
 {% raw %}{% post_url 2020-01-20-welcome-to-jekyll %}{% endraw %}
@@ -602,8 +595,6 @@ The `post.date` is automatically set to when the file was last changed on the
 file. Once I'm happy with the post, I can move it to and appropriately named
 file under `_posts`.
 
-[upcoming posts]: http://www.fizerkhan.com/blog/posts/Working-with-upcoming-posts-in-Jekyll.html
-[scheduling posts]: https://shot511.github.io/2018-12-03-how-to-schedule-posts-with-jekyll/
 [kramdown]: https://kramdown.gettalong.org
 [front matter]: https://jekyllrb.com/docs/step-by-step/03-front-matter/
 [jekyll configuration]: https://jekyllrb.com/docs/configuration/
@@ -647,9 +638,8 @@ Finally, I wrote this story and used it to replace the introductory
 Now it was time to deploy.
 
 I had already been using git to track the development of this project and had
-merged all my changes into the `master` branch. In order to deploy all I had to
-do was not attach it to the `tartansandal.github.io` repository, and push my
-changes:
+merged all my changes into the `master` branch. All I had to do was attach the
+project to the `tartansandal.github.io` repository and push my changes:
 
 ```shell
 git add remote origin git@github.com:tartansandal/tartansandal.github.io.git
@@ -662,7 +652,7 @@ git push --force
 
 Setting up this blog has been fun and relatively easy.  I managed to achieve
 really good results with minimum effort. There were some Fedora specific
-wrinkles with setting up Jekyll, but I managed to appropriately modify the
+wrinkles with setting up Jekyll, but I managed to find appropriate tweaks to the
 Quick-start instructions:
 
 ```console
@@ -675,13 +665,14 @@ Quick-start instructions:
 # => Now browse to http://localhost:4000
 ```
 
-The principle [GitHub Pages] documentation has improved significant, but there
-are still some issues.  The main contents page suggests a reasonable narrative,
-the individual articles lack the navigation links to make that narrative easy to
-follow.  There were many internal links pointing to very similar looking pages.
-I had to keep going back to the contents page to make sure I hadn't missed
-anything.  This may all be due to an accumulation of features over time (GitHub
-Pages is not new) and some of the older guides are more straight-forward.
+The principle [GitHub Pages] documentation had improved significantly, but there
+are still some issues.  The main contents page suggested a reasonable narrative,
+but the individual articles lacked the navigation links to make that narrative
+easy to follow.  There were many internal links pointing to very similar looking
+pages and I had to keep going back to the contents page to make sure I hadn't
+missed anything.  This may all be due to an accumulation of features over time
+(GitHub Pages is not new) and I found some of the older guides are more
+straight-forward.
 
 The [Jekyll] documentation was especially good--very simple and direct--although
 some of the more useful pages were a little hard to track down.
@@ -705,3 +696,9 @@ Some other useful guides I found a long the way:
 
 * Jekyll's hard to find [Jekyll GitHub Pages](
   https://jekyllrb.com/docs/github-pages/).
+
+* Tomasz Gałajs [How to schedule posts with Jekyll](
+  https://shot511.github.io/2018-12-03-how-to-schedule-posts-with-jekyll/)
+
+* Fizer Khan's [Working with upcoming posts in Jekyll](
+  http://www.fizerkhan.com/blog/posts/Working-with-upcoming-posts-in-Jekyll.html)
