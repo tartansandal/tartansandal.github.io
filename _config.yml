@@ -20,7 +20,7 @@ theme: minima
 plugins:
   - jekyll-feed
 
-discus:
+disqus:
   shortname: tartansandal
 
 minima:
