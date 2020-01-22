@@ -32,7 +32,7 @@ blog again.
 The starting point for this adventure was, well, a page that no longer exists.
 To be honest, I first started looking at this four months ago, but I got
 distracted by "life" for a while. By the time I had got back to it, things had
-changed significantly. Fortunately, these changes where for the better.  The
+changed significantly. Fortunately, these changes were for the better.  The
 [GitHub Pages] front page now gives you a nice video introduction and
 interactive set up details, plus some links to various [Working with GitHub
 Pages] guides.
