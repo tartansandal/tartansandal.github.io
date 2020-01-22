@@ -5,8 +5,22 @@ categories: github-pages jekyll fedora
 comments: true
 ---
 
-This is a sort of meta-post describing how I set up this blog, with some Fedora
+This is a sort of meta-post describing how I set up this blog--with some Fedora
 Desktop specific advice.
+
+## TL;DR
+
+```console
+~ $ sudo dnf install rubygem-bundler rubygem-jekyll
+~ $ bundle config set path vendor/bundle
+~ $ jekyll new my-awesome-site
+~ $ cd my-awsome-site
+~/my-awsome-site $ bundle install
+~/my-awsome-site $ bundle exec jekyll serve
+# => Now browse to http://localhost:4000
+```
+
+## The Full Story
 
 I first stumbled on [GitHub Pages] and [Jekyll] while researching [Asciidoctor]
 and was intrigued. It seemed to occupy a sweet spot in the world of technical
@@ -657,19 +671,9 @@ git push --force
 ## Conclusions
 
 Setting up this blog has been fun and relatively easy.  I managed to achieve
-excellent results with minimum effort. There were some Fedora specific
-wrinkles with setting up Jekyll, but I managed to find appropriate tweaks to the
-Quick-start instructions:
-
-```console
-~ $ sudo dnf install rubygem-bundler rubygem-jekyll
-~ $ bundle config set path vendor/bundle
-~ $ jekyll new my-awesome-site
-~ $ cd my-awsome-site
-~/my-awsome-site $ bundle install
-~/my-awsome-site $ bundle exec jekyll serve
-# => Now browse to http://localhost:4000
-```
+excellent results with minimum effort. There were some Fedora specific wrinkles
+with setting up Jekyll, but I managed to find appropriate tweaks to the
+Quick-start instructions.
 
 The principle [GitHub Pages] documentation had improved significantly, but there
 are still some issues.  The main contents page suggested a reasonable narrative,
