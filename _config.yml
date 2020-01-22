@@ -7,7 +7,7 @@ description: >-
   stuff.
 
 baseurl: "" # the subpath of your site, e.g. /blog
-url: "" # the base hostname & protocol for your site, e.g. http://example.com
+url: "https://tartansandal.github.io"  # needed for Disqus
 github_username: tartansandal
 
 # Build settings
