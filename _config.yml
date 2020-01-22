@@ -25,6 +25,8 @@ plugins:
 disqus:
   shortname: tartansandal
 
+google_site_verification: G5NVa1L1VYTSJ3wWlpFZ1zWwKmCnuj2zelXrbsje84I
+
 minima:
   date_format: "%-d %B %Y"
 
