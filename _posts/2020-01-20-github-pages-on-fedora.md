@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "GitHub Pages with Fedora and Jekyll"
+title: "GitHub Pages with Fedora and Jekyll"
 categories: github-pages jekyll fedora
 comments: true
 ---
@@ -122,7 +122,7 @@ This was something I was definitely going to want to do.
 ## Installing Jekyll on Fedora 31
 
 Unfortunately the [GitHub Guide] and the [Jekyll Guide] did not strictly agree
-on how to install Jekyll, and some of the advice relating to [Ruby], [RubyGems],
+on how to install Jekyll, and some advice relating to [Ruby], [RubyGems],
 and [Bundler] did not seem appropriate for Fedora.
 
 Some research and experimentation was required to find the best path forward.
@@ -226,7 +226,7 @@ straight-forward.
 
 On the other hand the [GitHub Guide] suggests using Bundler to install Jekyll in
 order to ensure the version is compatible with the one used by GitHub. The
-details of how exactly to do this are not explained though and, at this point,
+details of how exactly to do this were not explained though and, at this point,
 the exposition starts to get a bit muddy.
 
 The key to unravelling all this is that GitHub maintains and provides a special
@@ -293,7 +293,7 @@ of Bundler and Jekyll that come with the Fedora distribution:
 sudo dnf install rubygems-bundler rubygems-jekyll
 ```
 
-This would automatically take care of any dependencies and we wouldn't have to
+This would automatically take care of any dependencies, and we wouldn't have to
 worry about managing updates. The Fedora versions are relatively modern and
 (after reading the respective Changelogs) seem to be appropriately stable.
 
@@ -341,7 +341,7 @@ I could now generate some basic scaffolding with
 jekyll new .
 ```
 
-The generated `Gemfile` contained a lot comments and Windows specific tweaks, so
+The generated `Gemfile` contained a lot of comments and Windows specific tweaks, so
 I stripped that back to
 
 ```ruby
@@ -564,7 +564,7 @@ categories: jekyll update
 ---
 ```
 
-The `categories` setting allows us to group related posts.  In particular it
+The `categories` setting allows us to group related posts.  In particular, it
 changes the path part of the post's URL, for example, in the above the path is
 changed to `/jekyll/update/2020/01/20/welcome-to-jekyll.html`.  This can be
 useful for SEO, but does can make linking between posts more complicated. The
@@ -651,7 +651,7 @@ git push --force
 ## Conclusions
 
 Setting up this blog has been fun and relatively easy.  I managed to achieve
-really good results with minimum effort. There were some Fedora specific
+excellent results with minimum effort. There were some Fedora specific
 wrinkles with setting up Jekyll, but I managed to find appropriate tweaks to the
 Quick-start instructions:
 
@@ -671,7 +671,7 @@ but the individual articles lacked the navigation links to make that narrative
 easy to follow.  There were many internal links pointing to very similar looking
 pages and I had to keep going back to the contents page to make sure I hadn't
 missed anything.  This may all be due to an accumulation of features over time
-(GitHub Pages is not new) and I found some of the older guides are more
+(GitHub Pages is not new) and I found some older guides to be more
 straight-forward.
 
 The [Jekyll] documentation was especially good--very simple and direct--although
