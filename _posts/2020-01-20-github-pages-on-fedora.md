@@ -69,7 +69,7 @@ gratuitous self-promotion. This was not going to be tied to any particular
 project or organisation, so the "user" site type is definitely what I wanted.
 
 The next step was to set up a "publishing source".  For my "user" site I simply
-needed to
+needed to:
 
 * Create a GitHub repository called "tartansandal.github.io"
 * Browse to the "Settings" page and find the "GitHub Pages" section
@@ -105,7 +105,7 @@ containing:
 # Hello World
 ```
 
-and get the same effect. Very nice.
+And get the same effect. Very nice.
 
 Now I just needed to learn how to use Jekyll to layout a technical blog.
 
@@ -207,7 +207,7 @@ fi
 
 [Bundler] also has the option of installing gems inside your project directory,
 just like Python's `vitualenv` or Node's `node_modules`. You can make this the
-default behaviour with
+default behaviour with the following:
 
 ```shell
 bundle config set path "vendor/bundle"
@@ -223,13 +223,13 @@ gem downloads), but for me, the effect was small.
 
 ### Different installation methods
 
-The [Jekyll Guide] suggests installing some system dependencies with
+The [Jekyll Guide] suggests installing some system dependencies:
 
 ```shell
 sudo dnf install ruby ruby-devel @development-tools
 ```
 
-Then installing both Bundler and Jekyll as a normal user with
+Then installing both Bundler and Jekyll as a normal user:
 
 ```shell
 gem install bundler jekyll
@@ -249,25 +249,25 @@ The key to unravelling all this is that GitHub maintains and provides a special
 > A simple Ruby Gem to bootstrap dependencies for setting up and maintaining
 > a local Jekyll environment in sync with GitHub Pages
 
-So if we have [Bundler] installed and a `Gemfile` containing
+So if we have [Bundler] installed and a `Gemfile` containing:
 
 ```ruby
 gem 'github-pages', group: :jekyll_plugins
 ```
 
-We can install Jekyll and its dependencies at the correct versions with
+We can install Jekyll and its dependencies at the correct versions:
 
 ```shell
 bundle install
 ```
 
-We can keep this in sync with the current GitHub Pages by regularly running
+We can keep this in sync with the current GitHub Pages by regularly running:
 
 ```shell
 bundle update
 ```
 
-And we can generate and serve our content locally with
+And we can generate and serve our content locally:
 
 ```shell
 bundle exec jekyll serve
@@ -326,7 +326,7 @@ git clone git@github.com:tartansandal/tartansandal.github.io.git
 cd tartansandal.github.io
 ```
 
-Next, I installed the Fedora packages with
+Next, I installed the Fedora packages:
 
 ```shell
 sudo dnf install rubygem-bundler rubygem-jekyll
@@ -335,7 +335,7 @@ sudo dnf install rubygem-bundler rubygem-jekyll
 This gave me access to reasonably up-to-date versions of the `bundle` and
 `jekyll` commands.
 
-Next, I configured bundler to always install gems into a local `vendor/bundle`
+Next, I configured Bundler to always install gems into a local `vendor/bundle`
 directory so any projects would be self-contained:
 
 ```shell
@@ -349,27 +349,27 @@ files. Note: this was a global setting and would affect all future uses of the
 
 [bundle deployments]: https://andre.arko.net/2011/06/11/deploying-with-bundler-notes/
 
-I could now generate some basic scaffolding with
+I could now generate some basic scaffolding:
 
 ```shell
 jekyll new .
 ```
 
 The generated `Gemfile` contained a lot of comments and Windows specific tweaks, so
-I stripped that back to
+I stripped that back to:
 
 ```ruby
 source "https://rubygems.org"
 gem "github-pages", group: :jekyll_plugins
 ```
 
-I could now safely install all the required gems with
+I could now safely install all the required gems:
 
 ```shell
 bundle install
 ```
 
-and verify that they were all installed under `vendor/bundle/ruby`.  I didn't
+And verify that they were all installed under `vendor/bundle/ruby`.  I didn't
 want those files tracked by Git, so I added an appropriate line to the
 `.gitignore` file.
 
@@ -511,7 +511,7 @@ $ tree
 The combined set of files are processed as follows:
 
 * `assets/main.scss` is compiled using the "minima" style defined in the themes
-  `_sass` directory. This produces `_site/assets/main.css` and that file is
+  `_sass` directory. This produces the `_site/assets/main.css` file which is
   referenced in the `head.html` fragment.
 
 * `404.html` uses the "default" layout (which includes the `head.html`,
@@ -564,7 +564,7 @@ The `title` is going to be
 a [slugified](https://en.wikipedia.org/wiki/Clean_URL#Slug) version of the post's
 title which we set in the pages front matter.
 
-I'm plan to use Markdown for most of my posts, so I'll use the `md` suffix
+I plan to use Markdown for most of my posts, so I'll use the `md` suffix
 for `MARKUP`. However, I may write some posts in [Asciidoctor] and manually
 convert them to HTML, so the `html` suffix is also a possibility.
 
@@ -619,16 +619,16 @@ file under `_posts`.
 
 I was pretty happy with the default `minima` theme and it was simple enough to
 edit the `_config.yml` file to change the blog title, description, and various
-user details. I also made some minor [customisations][customizing minima]:
+user details. I also made some minor [customisation][customising minima]:
 
-* Changing the date format to Australian standard with
+* Changing the date format to Australian standard:
 
   ```yaml
   minima:
     date_format: "%-d %B %Y"
   ```
 
-* Enabling display of post "excerpts" in the main listing with
+* Enabling display of post "excerpts" in the main listing:
 
   ```yaml
   show_excerpts: true
@@ -641,7 +641,7 @@ user details. I also made some minor [customisations][customizing minima]:
     shortname: tartansandal
   ```
 
-* Setting the sites URL so Disqus would work
+* Setting the sites URL so Disqus would work:
 
   ```yaml
   url: "https://tartansandal.github.io"
