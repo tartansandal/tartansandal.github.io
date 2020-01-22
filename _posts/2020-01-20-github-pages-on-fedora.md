@@ -623,8 +623,14 @@ user details. I also made some minor [customizations][customizing minima]:
 * Setting up a Disqus account:
 
   ```yaml
-  discus:
+  disqus:
     shortname: tartansandal
+  ```
+
+* Setting the sites URL so Disqus would work
+
+  ```yaml
+  url: "https://tartansandal.github.io"
   ```
 
 * Using <https://realfavicongenerator.net/> to build my own favicons.
