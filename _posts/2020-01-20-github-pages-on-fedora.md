@@ -564,7 +564,7 @@ The `title` is going to be
 a [slugified](https://en.wikipedia.org/wiki/Clean_URL#Slug) version of the post's
 title which we set in the pages front matter.
 
-I'm plan to be primarily use Markdown for my posts, so I'll use the `md` suffix
+I'm plan to use Markdown for most of my posts, so I'll use the `md` suffix
 for `MARKUP`. However, I may write some posts in [Asciidoctor] and manually
 convert them to HTML, so the `html` suffix is also a possibility.
 
@@ -619,7 +619,7 @@ file under `_posts`.
 
 I was pretty happy with the default `minima` theme and it was simple enough to
 edit the `_config.yml` file to change the blog title, description, and various
-user details. I also made some minor [customizations][customizing minima]:
+user details. I also made some minor [customisations][customizing minima]:
 
 * Changing the date format to Australian standard with
 
@@ -666,7 +666,7 @@ git add remote origin git@github.com:tartansandal/tartansandal.github.io.git
 git push --force
 ```
 
-[customizing minima]: https://github.com/jekyll/minima#customizing-templates
+[customising minima]: https://github.com/jekyll/minima#customizing-templates
 
 ## Conclusions
 
