@@ -13,10 +13,14 @@ Desktop specific advice.
 ```console
 ~ $ sudo dnf install rubygem-bundler rubygem-jekyll
 ~ $ bundle config set path vendor/bundle
-~ $ jekyll new my-awesome-site
-~ $ cd my-awsome-site
-~/my-awsome-site $ bundle install
-~/my-awsome-site $ bundle exec jekyll serve
+~ $ jekyll new my-site
+~ $ cd my-site
+~/my-site $ cat <<EOF > Gemfile
+~/my-site > source "https://rubygems.org"
+~/my-site > gem "github-pages", group: :jekyll_plugins
+~/my-site > EOF
+~/my-site $ bundle install
+~/my-site $ bundle exec jekyll serve
 # => Now browse to http://localhost:4000
 ```
 
@@ -119,7 +123,7 @@ Now I just needed to learn how to use Jekyll to layout a technical blog.
 
 ## Learning about Jekyll
 
-GitHub pages uses Jekyll as its static site generator and has extensive set up
+GitHub Pages uses Jekyll as its static site generator and has extensive set up
 and usage [documentation][GitHub Pages with Jekyll].  After scanning that,
 I decided on running through the official [Jekyll Docs], to get a better handle
 on its requirements and capabilities.
@@ -139,7 +143,7 @@ Unfortunately the [GitHub Guide] and the [Jekyll Guide] did not strictly agree
 on how to install Jekyll, and some advice relating to [Ruby], [RubyGems],
 and [Bundler] did not seem appropriate for Fedora.
 
-Some research and experimentation was required to find the best path forward.
+Some research and experimentation were required to find the best path forward.
 
 [GitHub Guide]: https://help.github.com/en/github/working-with-github-pages/testing-your-github-pages-site-locally-with-jekyll
 [Jekyll Guide]: https://jekyllrb.com/docs/installation/other-linux/
@@ -355,8 +359,8 @@ I could now generate some basic scaffolding:
 jekyll new .
 ```
 
-The generated `Gemfile` contained a lot of comments and Windows specific tweaks, so
-I stripped that back to:
+The generated `Gemfile` contained a lot of comments and Windows specific tweaks,
+so I stripped that back to:
 
 ```ruby
 source "https://rubygems.org"
