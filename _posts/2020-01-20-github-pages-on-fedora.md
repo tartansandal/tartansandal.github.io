@@ -27,15 +27,15 @@ Desktop specific advice.
 ## The Full Story
 
 I first stumbled on [GitHub Pages] and [Jekyll] while researching [Asciidoctor]
-and was intrigued. It seemed to occupy a sweet spot in the world of technical
+and was intrigued.  It seemed to occupy a sweet spot in the world of technical
 publishing:
 
-* A very low bar of entry with free hosting via your existing GitHub account and
+* A low bar of entry with free hosting via your existing GitHub account and
   automatic conversion of (the well known) GitHub Flavoured Markdown.
 
-* Being built around Git, content could be developed, reviewed, and deployed just
-  as you would normal 'code'. (No composing in clunky web editors or cut and
-  paste into web forms).
+* Being built around Git, content could be developed, reviewed, and deployed
+  just as you would normal 'code'.  (No composing in clunky web editors or cut
+  and paste into web forms).
 
 * A flexible, low-friction development environment, with [Jekyll] and [Liquid]
   providing attractive and flexible layout and themes, plus plugins for extra
@@ -49,18 +49,18 @@ blog again.
 
 The starting point for this adventure was, well, a page that no longer exists.
 To be honest, I first started looking at this four months ago, but I got
-distracted by "life" for a while. By the time I had got back to it, things had
-changed significantly. Fortunately, these changes were for the better.  The
+distracted by "life" for a while.  By the time I had got back to it, things had
+changed significantly.  Fortunately, these changes were for the better.  The
 [GitHub Pages] front page now gives you a nice video introduction and
 interactive set up details, plus some links to various [Working with GitHub
 Pages] guides.
 
-I discovered very quickly that would have to choose a "site
-type" before I could get much further.
+I quickly discovered that would have to choose a "site type" before I could
+get much further.
 
 > There are three types of GitHub Pages sites: project, user, and organisation.
 > Project sites are connected to a specific project hosted on GitHub, such as
-> a JavaScript library or a recipe collection. User and organisation sites are
+> a JavaScript library or a recipe collection.  User and organisation sites are
 > connected to a specific GitHub account.
 
 This distinction is repeated constantly throughout the documentation, so once
@@ -69,7 +69,7 @@ instructions.  For example, any references to a `gh-pages` branch only apply to
 "project" site types.
 
 I was planning on building a site to host a professional blog, ostensibly for
-gratuitous self-promotion. This was not going to be tied to any particular
+gratuitous self-promotion.  This was not going to be tied to any particular
 project or organisation, so the "user" site type is definitely what I wanted.
 
 The next step was to set up a "publishing source".  For my "user" site I simply
@@ -94,7 +94,7 @@ I could add a simple `index.html` file containing:
 Then browsing to <https://tartansandal.github.io> would display "Hello World" in
 large bold text.
 
-That was pretty easy, but it gets better. If I added a `_config.yml` file
+That was pretty easy, but it gets better.  If I added a `_config.yml` file
 containing:
 
 ```yaml
@@ -102,14 +102,14 @@ markdown: kramdown
 ```
 
 GitHub would then automatically convert any Markdown files to appropriately
-formatted HTML. I could replace the `index.html` file with `index.md` file
+formatted HTML.  I could replace the `index.html` file with `index.md` file
 containing:
 
 ```markdown
 # Hello World
 ```
 
-And get the same effect. Very nice.
+And get the same effect.  Nice!
 
 Now I just needed to learn how to use Jekyll to layout a technical blog.
 
@@ -130,7 +130,7 @@ on its requirements and capabilities.
 
 One key point---somewhat obscured by the above guides---was that pushing content
 to the `master` branch of my repository would cause the public website to be
-updated (almost) immediately. If I wanted to (privately) review any new content,
+updated (almost) immediately.  If I wanted to (privately) review any new content,
 major edits, or layout changes, I would have to install and run Jekyll locally.
 This was something I was definitely going to want to do.
 
@@ -155,7 +155,7 @@ Some research and experimentation were required to find the best path forward.
 
 The [Jekyll Guide] suggests you first adjust your environment so that running
 the `gem` command as a normal user operates on user files rather than the
-default system files. In particular,
+default system files.  In particular,
 
 * Gems are installed under `~/.gems`
 * Executable files are installed under `~/.gems/bin`.
@@ -174,7 +174,7 @@ environment, but it uses different paths to those suggested by the [Jekyll
 Guide].
 
 I'm running Fedora and already have some "user installed" ruby gems, so if
-I blindly follow the [Jekyll Guide], those gems are going to break. Not good.
+I blindly follow the [Jekyll Guide], those gems are going to break.  Not good.
 
 [`operating_system.rb`]: https://gist.github.com/tartansandal/f82322f7928b786432ab600804cae73e
 
@@ -198,7 +198,7 @@ ensure that only the correct versions are used by your project.  In short:
   constraints specified in `Gemfile.lock`.
 
 Unfortunately this does not work well with the Fedora modifications to RubyGems
-mentioned above. We can get mutually compatible behaviour, however, by adding
+mentioned above.  We can get mutually compatible behaviour, however, by adding
 the following to our bash configuration:
 
 ```bash
@@ -210,7 +210,7 @@ fi
 ```
 
 [Bundler] also has the option of installing gems inside your project directory,
-just like Python's `vitualenv` or Node's `node_modules`. You can make this the
+just like Python's `vitualenv` or Node's `node_modules`.  You can make this the
 default behaviour with the following:
 
 ```shell
@@ -218,8 +218,8 @@ bundle config set path "vendor/bundle"
 ```
 
 One advantage of localising installations this way is that you don't end up
-polluting your environment with executables from random dependencies. These
-could shadow system executables and cause unexpected problems. This does cost
+polluting your environment with executables from random dependencies.  These
+could shadow system executables and cause unexpected problems.  This does cost
 some disk space (gems are not shared between projects) and some time (duplicated
 gem downloads), but for me, the effect was small.
 
@@ -243,7 +243,7 @@ Using the configuration tweaks mentioned above, this is safe and
 straight-forward.
 
 On the other hand the [GitHub Guide] suggests using Bundler to install Jekyll in
-order to ensure the version is compatible with the one used by GitHub. The
+order to ensure the version is compatible with the one used by GitHub.  The
 details of how exactly to do this were not explained though and, at this point,
 the exposition starts to get a bit muddy.
 
@@ -277,7 +277,7 @@ And we can generate and serve our content locally:
 bundle exec jekyll serve
 ```
 
-The final wrinkle is the following very useful `jekyll` sub-command:
+The final wrinkle is the following useful `jekyll` sub-command:
 
 ```shell
 jekyll new PATH
@@ -300,7 +300,7 @@ $ tree -a
 ```
 
 Note that the `Gemfile` even contains (commented out) instructions for
-`github-pages` gem. Using this requires having Jekyll installed first though.
+`github-pages` gem.  Using this requires having Jekyll installed first though.
 
 The key take away from all this is that the version of Jekyll used by our
 project can (and probably will) be different from the version installed using
@@ -312,7 +312,7 @@ sudo dnf install rubygems-bundler rubygems-jekyll
 ```
 
 This would automatically take care of any dependencies, and we wouldn't have to
-worry about managing updates. The Fedora versions are relatively modern and
+worry about managing updates.  The Fedora versions are relatively modern and
 (after reading the respective Changelogs) seem to be appropriately stable.
 
 [`github-pages`]: https://github.com/github/pages-gem
@@ -348,7 +348,7 @@ bundle config set path "vendor/bundle"
 
 I used the path `vendor/bundle` here to be consistent with standard [bundle
 deployments] and because, that path is ignored by default when Jekyll processes
-files. Note: this was a global setting and would affect all future uses of the
+files.  Note: this was a global setting and would affect all future uses of the
 `bundle` command.
 
 [bundle deployments]: https://andre.arko.net/2011/06/11/deploying-with-bundler-notes/
@@ -409,7 +409,7 @@ project and place the results in the `_site/` directory:
   defined in the project's `exclude`, `include`, and `keep_files` lists.
 
 * HTML, Markdown, and SCCS files containing YAML [front matter] are processed
-  using the [Liquid] templating engine. This provides additional markup for the
+  using the [Liquid] templating engine.  This provides additional markup for the
   interpolation of "objects", "tags", and "filters", as well as flow control
   constructs.
 
@@ -440,7 +440,7 @@ during processing.  For example,
 These three `_` directories, plus an additional `assets` directory, form the
 project's "theme".
 
-Themes generally make heavy use of [Jekyll Variables] via [Liquid] markup. For
+Themes generally make heavy use of [Jekyll Variables] via [Liquid] markup.  For
 example:
 
 * the `site` variable for site wide information configurations settings.
@@ -453,7 +453,7 @@ as gems.  In this case, files from the theme gem are (right) merged with files
 from the project, before the combined set of files are processed.  This allows
 you to selectively override parts of a theme adding files with the same relative
 path to your project--the project files shadow the gem files.  This helps to
-keep your project uncluttered and makes it very easy to use sophisticated 3rd
+keep your project uncluttered and makes it easy to use sophisticated 3rd
 party themes.  If the theme has been published on [RubyGems], then you can
 simply add it to your `Gemfile`, set the corresponding theme name in
 `_config.yml`, then all those files in that gem will become part of your next
@@ -515,7 +515,7 @@ $ tree
 The combined set of files are processed as follows:
 
 * `assets/main.scss` is compiled using the "minima" style defined in the themes
-  `_sass` directory. This produces the `_site/assets/main.css` file which is
+  `_sass` directory.  This produces the `_site/assets/main.css` file which is
   referenced in the `head.html` fragment.
 
 * `404.html` uses the "default" layout (which includes the `head.html`,
@@ -528,12 +528,12 @@ The combined set of files are processed as follows:
 * All Markdown files are compiled into well-formed HTML fragments before being
   wrapped in their respective layouts.
 
-* `about.md` uses the "page" layout and sets the `permalink` property. The
+* `about.md` uses the "page" layout and sets the `permalink` property.  The
   latter changes the destination file to `_site/about/index.html` so it can be
   linked to with the path `/about/`.
 
 * `index.md` uses the "home" layout and the content of the `_post` directory
-  (via a `site.posts` object) to form a listing of links to posts. This
+  (via a `site.posts` object) to form a listing of links to posts.  This
   produces `_site/index.html`.
 
 * `2020-01-20-welcome-to-jekyll.markdown` uses the "post" layout and variables
@@ -550,11 +550,11 @@ simple `jekyll new` command.
 ### Posts and drafts
 
 While [Jekyll] is great for generating many types of static sites, the default
-theme and scaffolding are focused on producing blogs. This was what I was
+theme and scaffolding are focused on producing blogs.  This was what I was
 really after.
 
 The section above introduced the `_posts` data directory which is handled
-specially. Files in this directory have a special naming convention:
+specially.  Files in this directory have a special naming convention:
 
 ```text
 YEAR-MONTH-DAY-title.MARKUP
@@ -569,7 +569,7 @@ a [slugified](https://en.wikipedia.org/wiki/Clean_URL#Slug) version of the post'
 title which we set in the pages front matter.
 
 I plan to use Markdown for most of my posts, so I'll use the `md` suffix
-for `MARKUP`. However, I may write some posts in [Asciidoctor] and manually
+for `MARKUP`.  However, I may write some posts in [Asciidoctor] and manually
 convert them to HTML, so the `html` suffix is also a possibility.
 
 Individual post files require some minimal front matter:
@@ -585,7 +585,7 @@ categories: jekyll update
 The `categories` setting allows us to group related posts.  In particular, it
 changes the path part of the post's URL, for example, in the above the path is
 changed to `/jekyll/update/2020/01/20/welcome-to-jekyll.html`.  This can be
-useful for SEO, but does can make linking between posts more complicated. The
+useful for SEO, but does can make linking between posts more complicated.  The
 trick is to use the `post_url` tag to generate the correct path:
 
 ```liquid
@@ -595,8 +595,8 @@ trick is to use the `post_url` tag to generate the correct path:
 What about drafts?
 
 Most of my posts are going to take a while to polish and I expect
-be working on more than one post at a time. In this case I can use a `_drafts/`
-directory to store draft posts. Drafts are not visible in production and are
+be working on more than one post at a time.  In this case I can use a `_drafts/`
+directory to store draft posts.  Drafts are not visible in production and are
 only shown locally if you pass the `--drafts` option:
 
 ```shell
@@ -610,7 +610,7 @@ title.MARKUP
 ```
 
 The `post.date` is automatically set to when the file was last changed on the
-file. Once I'm happy with the post, I can move it to and appropriately named
+file.  Once I'm happy with the post, I can move it to and appropriately named
 file under `_posts`.
 
 [kramdown]: https://kramdown.gettalong.org
@@ -623,7 +623,7 @@ file under `_posts`.
 
 I was pretty happy with the default `minima` theme and it was simple enough to
 edit the `_config.yml` file to change the blog title, description, and various
-user details. I also made some minor [customisation][customising minima]:
+user details.  I also made some minor [customisation][customising minima]:
 
 * Changing the date format to Australian standard:
 
@@ -662,7 +662,7 @@ Finally, I wrote this story and used it to replace the introductory
 Now it was time to deploy.
 
 I had already been using git to track the development of this project and had
-merged all my changes into the `master` branch. All I had to do was attach the
+merged all my changes into the `master` branch.  All I had to do was attach the
 project to the `tartansandal.github.io` repository and push my changes:
 
 ```shell
@@ -675,23 +675,23 @@ git push --force
 ## Conclusions
 
 Setting up this blog has been fun and relatively easy.  I managed to achieve
-excellent results with minimum effort. There were some Fedora specific wrinkles
+excellent results with minimum effort.  There were some Fedora specific wrinkles
 with setting up Jekyll, but I managed to find appropriate tweaks to the
 Quick-start instructions.
 
 The principle [GitHub Pages] documentation had improved significantly, but there
 are still some issues.  The main contents page suggested a reasonable narrative,
-but the individual articles lacked the navigation links to make that narrative
-easy to follow.  There were many internal links pointing to very similar looking
+however, the individual articles lacked the navigation links to make that narrative
+easy to follow.  There were many internal links pointing to similar looking
 pages and I had to keep going back to the contents page to make sure I hadn't
 missed anything.  This may all be due to an accumulation of features over time
 (GitHub Pages is not new) and I found some older guides to be more
 straight-forward.
 
-The [Jekyll] documentation was especially good--very simple and direct--although
+The [Jekyll] documentation was especially good--simple and direct--although
 some of the more useful pages were a little hard to track down.
 
-I hope you have found this post useful. Any mistakes or omission are my own.
+I hope you have found this post useful.  Any mistakes or omission are my own.
 Feel free to let me know about them in the comments.
 
 ## Guides
@@ -704,8 +704,8 @@ Some other useful guides I found a long the way:
 * Ben Balter's opinionated [Jekyll style guide](
   https://ben.balter.com/jekyll-style-guide/)
 
-* Sylvain Durand's very straight-forward [Using GitHub to serve Jekyll](
-  https://www.sylvaindurand.org/using-github-to-serve-jekyll/). This was the
+* Sylvain Durand's straight-forward [Using GitHub to serve Jekyll](
+  https://www.sylvaindurand.org/using-github-to-serve-jekyll/).  This was the
   closest to the approach that I eventually ended up using.
 
 * Jekyll's hard to find [Jekyll GitHub Pages](
