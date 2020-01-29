@@ -1,74 +1,47 @@
 ---
-title: Docker on Fedora Desktop
+title: Docker on a Fedora Desktop
 layout: post
 categories: fedora docker
 ---
 
-The following are some notes made while exploring using Docker as part
-of a software development pipeline on a Fedora Desktop in 2019.
+Some notes I made while exploring using Docker for software development on
+a Fedora Desktop.
 
-I’d been wanting to explore Docker for a long time, years in fact, but
-life and work seemed to have conspired against that ambition for a long.
-This month I finally got some spare time and the freedom to explore, so
-I headed off to the main website [Docker](https://www.docker.com/) and
-the associated [Getting Started](https://docs.docker.com/get-started/)
-tutorial.
+## The official "Get Started" guide
 
-It turns out that this was not 100% the best place for me to start and
-did cause some confusion. Some of this is due to tutorials that needed
-to work for Linux, Mac, and Windows users at the same time. Some of this
-is due to the rapid development of containerization and orchestration
-technologies.
-
-> **Note**
->
-> [Docker for Beginners](https://docker-curriculum.com/) is a
-> particularly good first time tutorial.
->
-> For an excellent curated list of Docker resources and projects, check
-> out [Awesome Docker](https://awesome-docker.netlify.com/).
-
-## Installing Docker CE
+Many people new to Docker will start out, as I did, with the official [Get
+Started](https://docs.docker.com/get-started/) guide referenced by the main
+[Docker](https://www.docker.com/) website.  This guide was written with Windows
+and MacOS users in mind and is not strictly the best place for Fedora Desktop
+users to start.  Completeness fanatics like myself will push ahead though.
 
 The first step was to install *Docker Community Edition* from Docker’s
-own repository. This was a bit odd since the official Fedora
-repositories provide a version of Docker.
+own repository.
 
-> What’s the deal here?
+> :bulb:
+> Fedora 31 offers both of [Moby Engine](https://mobyproject.org/)
+> and [Podman](https://podman.io/) for containerization, however, these
+> are too 'bleading-edge' to work with this tutorial.  Since many projects have
+> *Docker CE* as a requirement, its good to know how to set this up anyway.
 
-It turns out that the open source home of Docker is the [Moby
-Project](https://mobyproject.org/) which is the ultimate upstream for
-*Docker CE (Community Edition)* and the commercially supported *Docker
-EE (Enterprise Edition)*. The following advice is given:
+### Installing Docker CE on Fedora
 
-> Moby is NOT recommended for application developers looking for an easy
-> way to run their applications in containers. We recommend Docker CE
-> instead.
->
-> —  Moby Project
-
-Fedora’s version of Docker is provided via
-[ProjectAtomic](http://www.projectatomic.io/) which forks and patches
-work from the *Moby Project*. The focus of *ProjectAtomic* is on
-developing minimal operating systems for hosting containers like Docker.
-The Docker tools provided are actively maintained but the versions are a
-bit older and probably err on the side of stability. This is
-interesting, but probably not what we want.
-
-The upshot is we want to install Docker CE and clear out any of our
-Fedora versions of the tools (so we don’t get any conflicts).
-
-The following is a quick break down of this process.
-
-First ensure we have a clean slate and any exiting packages have been
-removed:
+First, clear out any of our Fedora versions of the tools (so we don’t get any
+conflicts):
 
 ``` bash
 sudo dnf remove 'docker*'
 ```
 
-To install from Docker directly we need to set up an additional
-repository:
+Fedora 31 users will have to revert to using the older cgroups v1:
+
+``` bash
+sudo dnf install -y grubby
+sudo grubby --update-kernel=ALL --args="systemd.unified_cgroup_hierarchy=0"
+sudo reboot
+```
+
+To install from Docker directly we need to set up an additional repository:
 
 ``` bash
 sudo dnf config-manager --add-repo https://download.docker.com/linux/fedora/docker-ce.repo
@@ -99,47 +72,26 @@ newgrp
 
 ## Installing Extra Tools
 
-Users of *Docker Desktop* for *MacOS* or *Windows* have some additional
-tools bundled in with its installation, namely, `docker-compose`,
-`docker-credential-helpers` and `docker-machine`. These tools are useful
-for exploring "multi-container orchestration" on your desktop. If want
-to complete the "Getting Started" guide, you will have to install (and
-trust) the binaries offered by Docker.
+Users of *Docker Desktop* for *MacOS* or *Windows* have some additional tools
+bundled in with its installation, namely, `docker-credential-helpers`,
+`docker-compose`, and `docker-machine`.  These tools are useful for exploring
+"multi-container orchestration" on your desktop.  If want to complete the [Get
+Started](https://docs.docker.com/get-started/) guide, you will have to install
+(and trust) the binaries offered by Docker.
 
-> **Note**
->
-> One of these tools, `docker-machine`, is in an unusual situation of
-> being actively *supported* (since it is useful for learning and local
-> development) and is part of Docker Desktop and Docker ToolBox, but it
-> is no longer being actively **developed**. This may cause some
-> confusion if you visit the project on GitHub . The reason is that it
-> has been superseded by platform specific orchestration tools, e.g.,
-> for production we might use, say, K8s for a Google deployment of our
-> Docker images.
->
-> Note that `docker-machine` relies on another development-only
-> component `boot2docker` which is part of Docker Desktop and Docker
-> ToolBox.
+Since these tools do not have any package management, I’m going to install them
+locally under `~/bin` rather than `~/.local/bin`.  The later is is a more
+appropriate target for package managers like `pip`, and `npm`, and I don’t want
+to get those mixed up.
 
-> **Note**
->
-> There *is* a version of `docker-compose` provided by the Fedora
-> repositories but it is more than a year old.
-
-The following is a quick break down of this process.
-
-Since these tools do not have any package management, I’m going to
-install them locally under `~/bin`. I don’t install under `~/.local/bin`
-since that is a more appropriate target for package managers like `pip`,
-`gem`, and `npm`, and I don’t want to get those mixed up. I use the
-`~/bin` directory for **manual** installations only.
+### Native storage of Docker credentials
 
 To allow the `docker login` command to use the GNOME Keyring, we need to
 install the latest version of `docker-credential-secretservice`.
 
 First check for the latest version at
-`https://github.com/docker/docker-credential-helpers/releases`, then run
-(adjusting the version number if needed):
+<https://github.com/docker/docker-credential-helpers/releases>, adjust the
+version number below if needed, then run:
 
 ``` bash
 version=v0.6.3
@@ -160,9 +112,14 @@ key:
 }
 ```
 
-To install `docker-compose`, first check for the latest release at
-`https://github.com/docker/compose/releases`, then run the following
-(adjusting the version number if needed):
+### Docker Compose
+
+[Docker Compose](https://docs.docker.com/compose/) is a tool for defining and
+running multi-container Docker applications.
+
+To install `docker-compose`, check for the latest release at
+<https://github.com/docker/compose/releases>, adjust the
+version number below if needed, then run:
 
 ``` bash
 version=1.24.1
@@ -180,9 +137,14 @@ target=~/.local/share/bash-completion/completions
 curl -L $base/contrib/completion/bash/docker-compose -o $target/docker-compose
 ```
 
+### Docker Machine
+
+[Docker Machine](https://docs.docker.com/machine/) lets you create Docker hosts
+on your computer, in our case, using [VirtualBox](https://www.virtualbox.org/).
+
 To install `docker-machine`, first check for the latest release at
-`https://github.com/docker/machine/releases`, then run the following
-(adjusting the version number if needed):
+<https://github.com/docker/machine/releases>, adjust the
+version number below if needed, then run:
 
 ``` bash
 version=v0.16.2
@@ -203,32 +165,38 @@ do
 done
 ```
 
-## Troubleshooting
+> :bulb:
+> `docker-machine` is being actively *supported* (since it is useful for
+> learning and local development) and is part of Docker Desktop and Docker
+> ToolBox, but it is no longer being actively **developed** (since it has been
+> superseded by platform specific orchestration tools like K8).
+>
+> Note that `docker-machine` relies on another development-only
+> component `boot2docker` which is part of Docker Desktop and Docker
+> ToolBox.
+
+## Next steps
+
+The above allowed me to run the official *Get Started* guide which
+introduced some basic and more advanced concepts, but left me a little
+confused about using Docker as part of my development work flow.  Some
+other guides like [Docker for Beginners](https://docker-curriculum.com/)
+gave a much better introduction.
+
+For an excellent curated list of Docker resources and projects, check
+out [Awesome Docker](https://awesome-docker.netlify.com/).
+
+I installed [Portainer](portainer.io) to track all the images and containers
+that had begun to invest my system.  Easy to install "as a container" itself.
+
+TODO: Pick out advice on actually doing development.
+
+Next steps will involve exploring [Kubernetes
+(k8s)](https://kubernetes.io/docs/concepts/overview/what-is-kubernetes/) and
+[Podman](https://podman.io/) some more.
+
+## Final Note
 
 If you have problems with login or connection timeouts to docker.io try:
 
     docker network prune
-
-
-## What next?
-
-The above allowed me to run the official *Getting Started* guide which
-introduced some basic and more advanced concepts, but left me a little
-confused about using Docker as part of my development work flow. Some
-other guides like [Docker for Beginners](https://docker-curriculum.com/)
-gave a much better introduction.
-
-Given the most likely deployment scenarios, I think I should be
-exploring orchestration that fits with AWS and GCP. Probably K8s.
-
-Running `portainer.io` made it much easier to track all the images and
-containers that had begun to invest my system. Very easy to install "as
-a container" itself.
-
-We should be able to avoid needing *VirtualBox* on Fedora, say using
-*Boxes* or `virt-manager` for the machines? The problem is getting
-access to images.
-
-Even *MiniKube* is a bit clunky on Fedora with VirtualBox.
-
-What about `rancher`? <https://rancher.com/>
