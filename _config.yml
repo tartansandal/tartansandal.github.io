@@ -18,6 +18,7 @@ kramdown:
 # Theme settings
 theme: minima
 plugins:
+  - jemoji
   - jekyll-feed
   - jekyll-sitemap
   - jekyll-seo-tag
