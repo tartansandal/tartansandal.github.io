@@ -56,4 +56,7 @@ Blog on using Makefile for project command aliases
 * mark aliases with .PHONY
 * figuring out details, getting it right, then forget about it
 
+Meta programming:
+<http://make.mad-scientist.net/constructed-macro-names/>
+
 <https://suva.sh/posts/well-documented-makefiles/>
