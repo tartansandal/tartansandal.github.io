@@ -716,3 +716,30 @@ Some other useful guides I found a long the way:
 
 * Fizer Khan's [Working with upcoming posts in Jekyll](
   http://www.fizerkhan.com/blog/posts/Working-with-upcoming-posts-in-Jekyll.html)
+
+* Rafael Xavier de Souza's[Complete list of github markdown emoji markup](
+  https://gist.github.com/rxaviers/7360908)
+
+  Some of these I might use in admonitions:
+
+  :exclamation: | `:exclamation:`
+  :question:    | `:question:`
+  :boom:        | `:boom:`
+  :zap:         | `:zap:`
+  :warning:     | `:warning:`
+  :tada:        | `:tada:`
+  :bell:        | `:bell:`
+  :bulb:        | `:bulb:`
+  :star:        | `:star:`
+  :key:         | `:key:`
+  :point_up:    | `:point_up:`
+  :link:        | `:link:`
+  :memo:        | `:memo:`
+  :wrench:      | `:wrench:`
+  :pushpin:     | `:pushpin:`
+  :paperclip:   | `:paperclip:`
+  :gem:         | `:gem:`
+  :trophy:      | `:trophy:`
+  :coffee:      | `:coffee:`
+  :anchor:      | `:anchor:`
+  :rocket:      | `:rocket:`
