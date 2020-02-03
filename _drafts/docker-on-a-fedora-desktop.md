@@ -1,11 +1,11 @@
 ---
-title: Docker on a Fedora Desktop
+title: Docker on a Fedora Desktop (Part 1)
 layout: post
 categories: fedora docker
 ---
 
-Some notes I made while exploring using Docker for software development on
-a Fedora Desktop.
+Part 1 of some notes I made while exploring using Docker for software
+development on a Fedora Desktop.
 
 ## The official "Get Started" guide
 
@@ -18,11 +18,11 @@ users to start.  Completeness fanatics like myself will push ahead though.
 The first step was to install *Docker Community Edition* from Docker’s
 own repository.
 
-> :bulb:
-> Fedora 31 offers both of [Moby Engine](https://mobyproject.org/)
-> and [Podman](https://podman.io/) for containerization, however, these
-> are too 'bleading-edge' to work with this tutorial.  Since many projects have
-> *Docker CE* as a requirement, its good to know how to set this up anyway.
+> :point_up:
+> While Fedora 31 offers both of [Moby Engine](https://mobyproject.org/) and
+> [Podman](https://podman.io/) for containerization, these are too
+> 'bleading-edge' to work with this tutorial.  In addition, many projects have
+> **Docker CE** as a requirement, so its good to know how to set this up.
 
 ### Installing Docker CE on Fedora
 
@@ -165,15 +165,12 @@ do
 done
 ```
 
-> :bulb:
-> `docker-machine` is being actively *supported* (since it is useful for
-> learning and local development) and is part of Docker Desktop and Docker
-> ToolBox, but it is no longer being actively **developed** (since it has been
-> superseded by platform specific orchestration tools like K8).
->
-> Note that `docker-machine` relies on another development-only
-> component `boot2docker` which is part of Docker Desktop and Docker
-> ToolBox.
+> :anchor:
+> While `docker-machine` is being actively **supported**---it is useful for
+> learning and local development---it is no longer being actively
+> **developed**---being superseded by platform specific orchestration tools like
+> K8s.  Both `docker-machine` and its dependency `boot2docker`, are part of
+> Docker Desktop and Docker Toolbox.
 
 ## Next steps
 
@@ -183,20 +180,20 @@ confused about using Docker as part of my development work flow.  Some
 other guides like [Docker for Beginners](https://docker-curriculum.com/)
 gave a much better introduction.
 
+> :bell: If you have problems with login or connection timeouts to
+> [docker.io](https://docker.io) try running
+>
+> `docker network prune`
+
 For an excellent curated list of Docker resources and projects, check
 out [Awesome Docker](https://awesome-docker.netlify.com/).
 
-I installed [Portainer](portainer.io) to track all the images and containers
-that had begun to invest my system.  Easy to install "as a container" itself.
+For example, [Portainer](portainer.io) is a simple tool for tracking and
+maintaining all the images and containers that will soon begin to invest my
+system.  You can even install it "as a container" itself.
 
-TODO: Pick out advice on actually doing development.
+That's all for now.
 
-Next steps will involve exploring [Kubernetes
-(k8s)](https://kubernetes.io/docs/concepts/overview/what-is-kubernetes/) and
-[Podman](https://podman.io/) some more.
-
-## Final Note
-
-If you have problems with login or connection timeouts to docker.io try:
-
-    docker network prune
+Future posts will explore actually doing development with Docker [Kubernetes
+(K8s)](https://kubernetes.io/docs/concepts/overview/what-is-kubernetes/) and
+[Podman](https://podman.io/).
