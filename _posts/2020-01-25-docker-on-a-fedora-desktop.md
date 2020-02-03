@@ -2,6 +2,7 @@
 title: Docker on a Fedora Desktop (Part 1)
 layout: post
 categories: fedora docker
+comments: true
 ---
 
 Part 1 of some notes I made while exploring using Docker for software
@@ -180,8 +181,8 @@ confused about using Docker as part of my development work flow.  Some
 other guides like [Docker for Beginners](https://docker-curriculum.com/)
 gave a much better introduction.
 
-> :bell: If you have problems with login or connection timeouts to
-> [docker.io](https://docker.io) try running
+> :bell: If you have problems with login or connection timeouts
+> to [docker.io](https://docker.io) try running
 >
 > `docker network prune`
 
