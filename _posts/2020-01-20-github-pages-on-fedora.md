@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "GitHub Pages with Fedora and Jekyll"
-categories: github-pages jekyll fedora
+categories: fedora github-pages jekyll
 comments: true
 ---
 
@@ -176,7 +176,7 @@ Guide].
 I'm running Fedora and already have some "user installed" ruby gems, so if
 I blindly follow the [Jekyll Guide], those gems are going to break.  Not good.
 
-[`operating_system.rb`]: https://gist.github.com/tartansandal/f82322f7928b786432ab600804cae73e
+[`operating_system.rb`]: https://gist.github.com/tartansandal/f82322f7928b786432ab600804cae73e#file-operating_system-rb-L95
 
 ### Using Bundler
 
