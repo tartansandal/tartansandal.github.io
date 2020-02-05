@@ -9,7 +9,7 @@ There are some unexpected and problematic wrinkles around installing user local
 Ruby "gems" on Fedora and setting `GEM_HOME` appropriately.
 
 Setting up local user installation is not normally something Fedora users have
-to worry about, since the distribution has tweaked the [RubyGems] package so the
+to worry about, since the Fedora `rubygems` package has been tweaked so that the
 `gem` command automatically performs a local user install when run by a normal
 user.  In particular,
 
