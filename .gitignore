@@ -11,3 +11,6 @@ vendor/bundle/ruby
 
 # This can interfere with the github-pages gem
 Gemfile.lock
+
+# Ignore JupyterLab checkpoints
+.ipynb_checkpoints/
