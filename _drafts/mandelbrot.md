@@ -78,13 +78,23 @@ Draw a picture of orbit with [seaborn].
 
 Introduce concept of a bounded region.
 
+```python
+def bounded(o, p=500):
+  for i in range(p):
+    z = next(o)
+    if abs(z) > 2:
+      return i
+  return p
+```
+
 Draw a picture of bounded region
 
 ## Mandelbrot Set
 
 Definition
 
-> The set of all complex numbers \(c\), such that the orbit \(o\) of the recursive function \(z_n = {z_{n-1}}^2 + c\) is bounded.
+> The set of all complex numbers \(c\), such that the orbit \(o\) of the
+> recursive function \(z_n = {z_{n-1}}^2 + c\) is bounded.
 
 ```python
 def orbit(c):
@@ -100,6 +110,8 @@ o = orbit(1+1j)
 Bounding lemma: if \(|z_n| > 2\) for any \(n\), then the orbit is unbounded.
 
 Zoom out to show the circle around \(|z| = 2\)
+
+What about \(|z_n| < 2/3\)?
 
 Zoom in to show:
 * repeated patterns
