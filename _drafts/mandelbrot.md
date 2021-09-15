@@ -1,32 +1,46 @@
----
-usemathjax: true
----
+# Exploring the Complex Plane with Python and Generators
 
-# Exploring the Mandelbrot Set with Python complex numbers and generators
+One of the joys of having ready access to modern computers and programming
+frameworks is the ability to easily explore mathematical concepts that would
+otherwise require a huge investment in time and resources. A classic example of
+this is the ubiquitous Mandelbrot Set and its associated psychedelic images.
+These images can be generated with surprisingling few lines of Python as
+demonstrated by Blake Sanie in his blog [Visualizing the Mandelbrot Set Using
+Python (< 50 Lines)][lt-50-lines].
 
-The Mandelbrot Set is one of those ubiquitous psychodelic images that crops up
-when comes to trying to demonstrate to the general public that mathematics can
-actually be interesting, or at least incredibly strange. Phrases like "fractal
-dimensions" and "infinitely self-similar" presented with lots of handwaving and
-invariably extract the requisite "Oooh's" and "Ahhh's" of appreciation from the
-audience. It certainly is an odd image, but what is really going on here and,
+Although it certainly is an odd image, but what is really going on here and,
 more importantly, why should we care?
 
+I was first introduced to the Mandelbrot many years ago at university, but
+I confess that I never really understood it. More recently I stumbled on YouTube videos by
 
-I first came across
+Last year I came a across a Numberphile vlog that explained it all alot better,
+but just using a pen and some butchers paper.  In fact there are innumerable
+blogs and youtube videos out there doing something similar.
 
-I recently discovered a blog about 
-Prior art: [Visualizing the Mandelbrot Set Using Python (< 50
-Lines)](https://medium.com/swlh/visualizing-the-mandelbrot-set-using-python-50-lines-f6aa5a05cf0f).
+This is pretty nice and relatively light introduction, but after reading the
+[Wikipedia][] article, I felt that it might be glazing over some important
+details.
 
-This is pretty nice and sufficiently light introduction.
+There is of course the implmentation on the matplotlib website and Ned
+Batcheldors Python modules.
 
-Definition
+code which show that it it does not take that much code to explore this.
 
-> The set of all complex numbers \(c\), such that the orbit \(o\) of the
-> recursive function \(z_n = {z_{n-1}}^2 + c\) is bounded.
+I occurs that some of the "<50 lines" code could be simplified by taking
+advantage of Python's complex numbers. This would allow us to add, multiply, and
+measure the magnitude of those numbers without getting caught up in the
+calculations.
+
+> The set of all complex numbers (c), such that the orbit (o) of the
+> recursive function (z_n = {z\_{n-1}}^2 + c) is bounded.
+
+Domain and range
 
 YouTube blogs
+
+JupyterLab is a great tool for running adhoc experiments with python --
+facillitating a discovery process that may lead to something more formal.:w
 
 ## Initial Concepts and Python support
 
@@ -37,7 +51,9 @@ python support.
 
 * [complex numbers](https://realpython.com/python-complex-numbers/)
 
-### recursive functions (in math sense) -- its domain is its range
+### recursive functions
+
+(in math sense) -- its domain is its range
 
 ### orbits
 
@@ -53,13 +69,12 @@ some pictures
 
 math in jupyter notebooks?
 
-
 ```python
 def orbit(c:complex):
   z = c
   while True
     yield z
-    z = z*c 
+    z = z*c
 
 o = orbit(1)
 [ next(o) for _ in range(10) ]
@@ -93,7 +108,7 @@ o = orbit(0.5+0.5j)
 A spiral inwards.
 ```
 
-Draw a picture of orbit with [seaborn].
+Draw a picture of orbit with \[seaborn].
 
 Introduce concept of a bounded region.
 
@@ -112,27 +127,28 @@ Draw a picture of bounded region
 
 Definition
 
-> The set of all complex numbers \(c\), such that the orbit \(o\) of the
-> recursive function \(z_n = {z_{n-1}}^2 + c\) is bounded.
+> The set of all complex numbers (c), such that the orbit (o) of the
+> recursive function (z_n = {z\_{n-1}}^2 + c) is bounded.
 
 ```python
 def orbit(c):
   z = c
   while True
     yield z
-    z = z**2 + c 
+    z = z**2 + c
 
 o = orbit(1+1j)
 [ next(o) for _ in range(10) ]
 ```
 
-Bounding lemma: if \(|z_n| > 2\) for any \(n\), then the orbit is unbounded.
+Bounding lemma: if (|z_n| > 2) for any (n), then the orbit is unbounded.
 
-Zoom out to show the circle around \(|z| = 2\)
+Zoom out to show the circle around (|z| = 2)
 
-What about \(|z_n| < 2/3\)?
+What about (|z_n| < 2/3)?
 
 Zoom in to show:
+
 * repeated patterns
 * branches
 * weird structures
@@ -141,37 +157,56 @@ Zoom in to show:
 Links to other articles and YouTube.
 
 Homework: Follow up by using the above to explore Julia sets?
+Definition
 
+--------------------------------------------------------------------------------
 
 ## Plan
 
 * Introduction
   * Prior art: maths and python
+
   * Definition of the Mandelbrot Set
     * complex domain and range
     * recursive functions
+
   * Python and complex numbers -> coordinate pairs or Python's complex numbers
+
   * Python and generators
+
   * Recursive functions -> Python's generators
-  * Using  
+
+  * Using generators to express mandelbrot function
 
 * Exploring a less complicated orbit
-  * wanted to developing intuitions
-  * confidence in our code
-  * learn some interesting things
-  * easier to prove things about
-  * get a better understanding of what bounded means
-  * a framework of behaviours to look out for
-  * questions we should be asking about the boundary
+  * Why?
+    * wanted to developing intuitions
+    * confidence in our code
+    * learn some interesting things
+    * easier to prove things about
+    * get a better understanding of what bounded means
+    * a framework of behaviours to look out for
+    * questions we should be asking about the boundary
+
   * define the recursive function
+
   * define the generator
+
   * define the arc function
 
 * Exploring the Real line
   * The pieces
   * Behaviour summary
+
 * Extending to the Imaginary numbers
   * Need a better way to visualize these arcs
   * Note that don't stray all over the complex plane
   * Cycles
-* 
+
+## References
+
+Visualizing the Mandelbrot Set Using Python (< 50 Lines)
+
+[lt-50-lines]: https://medium.com/swlh/visualizing-the-mandelbrot-set-using-python-50-lines-f6aa5a05cf0f
+
+[wikipedia]: https://en.wikipedia.org/wiki/Mandelbrot_set
