@@ -116,7 +116,7 @@ bellow.
 | ------------------------------------------------------------------------------------ | --- | - | - | --- | - | --------------------- |
 | [`definition-case`][remark-lint-definition-case]                                     | X   |   |   |     | X |                       |
 | [`definition-spacing`][remark-lint-definition-spacing]                               | X   |   |   |     | X |                       |
-| [`fenced-code-flag`][remark-lint-fenced-code-flag]                                   | X   |   |   |     |   | { allowEmpty: false } |
+| [`fenced-code-flag`][remark-lint-fenced-code-flag]                                   | X   |   |   |     |   |                       |
 | [`file-extension`][remark-lint-file-extension]                                       | X   |   |   |     |   |                       |
 | [`final-definition`][remark-lint-final-definition]                                   | X   |   |   |     |   |                       |
 | [`list-item-spacing`][remark-lint-list-item-spacing]                                 | X   |   |   |     |   | { checkBlanks: true } |
