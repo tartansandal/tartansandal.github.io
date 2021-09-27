@@ -60,7 +60,7 @@ When you run this `remark` command on a markdown file, it will parse the content
 into an AST using `mdast-util-from-markdown` (via `remark-parse`) and then
 convert that AST back into text using `mdast-util-to-markdown` (via
 `remark-stringify`).  To get this "fixing" routine to match your desired style,
-you just have to the formatting otions.  You can check out the available
+you just have to the formatting options.  You can check out the available
 formatting options in the [`mdast-util-to-markdown`
 documentation](https://github.com/syntax-tree/mdast-util-to-markdown#formatting-options),
 
@@ -71,7 +71,7 @@ preferred "linting" rules. You want stable round-trips: you don't want your
 "fixing" routine to alter the markdown so that a "linting" error is triggered,
 especially if you have just fixed that error manually.
 
-The defaults for most settings are resonable and using them in this particular
+The defaults for most settings are reasonable and using them in this particular
 combination avoids many issues. Of particular note are the following settings
 which minimize ambiguity and seem to give stable round-trips:
 
@@ -222,7 +222,7 @@ settings, but there were a couple of instances where I had to compromise to get
 consistent round-trip behaviour.
 
 This gives us a baseline of the minimum set of linting rules that we need and
-the correspunding settings. If we note the overlap of the MSG and Recommended
+the corresponding settings. If we note the overlap of the MSG and Recommended
 presets with the rules that are automatically fixed by the serializer, we can
 get a reasonably compact configuration by including those presets, the GFM
 plugin, and just 3 extra rules.
@@ -265,7 +265,7 @@ and setting the non-default value.
 
 Unfortunately there was one rule that I could not be configured to consistently
 match the serializer output: `link-title-style`. Since this could be loaded via
-a preset, I ended up suppressng this rule by explicitly setting it to `false`.
+a preset, I ended up suppressing this rule by explicitly setting it to `false`.
 
 ```yaml
   - - remark-lint-link-title-style
@@ -319,7 +319,7 @@ npm install -g                                   \
 
 Configuration for `remark` is handled by [`unified-args`][unified-args]
 framework which supports configuration files in multiple formats and a search
-up the filesystem. The current directory is searched for a file named either
+up the file-system. The current directory is searched for a file named either
 
 * `.remarkrc` (JSON), or 
 * `.remarkrc.js` (JS), or
@@ -335,8 +335,8 @@ configuration that I use. The full version includes detailed comments on all
 the official rules as a quick reference in case I need to tweak the rules for
 a particular project.
 
-The documentation suggests there is a "configuration cascade" and 
-settings may be extendeded or overriden, but unfortunately, it does not include
+The documentation suggests there is a &quot;configuration cascade&quot; and 
+settings may be extended or overridden, but unfortunately, it does not include
 any details.  
 
 If I need to override these options, some command-line options may come in
@@ -363,8 +363,8 @@ remark -r .my-remarkrc
 ```
 
 If you are working on a project that uses Node, remark will look for the
-`remarkConfig` key in your projects `package.json` file.  I've not use this yet,
-but will update this blog if I ever do.
+`remarkConfig` key in your projects `package.json` file. Not sure how the
+cascade handles this.
 
 If you have a Node project that uses `remark` for linting as part of its testing
 or CI setup, ALE will pick up the local installation and configuration and use
