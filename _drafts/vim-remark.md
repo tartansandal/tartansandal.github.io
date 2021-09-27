@@ -143,75 +143,75 @@ key to keep the table compact.
 * GFM: requires the Github Flavoured Markdown plugin (`remark-gfm`)
 * F: The "fixer" (`remark-stringify`) automatically resolves this issue
 
-| Plugin                                                                               | MSG | C | R | GFM | F  | My Fixer Setting    | My Linter Setting              |
-| ------------------------------------------------------------------------------------ | --- | - | - | --- | -- | ------------------- | ------------------------------ |
-| [`definition-case`][remark-lint-definition-case]                                     | X   |   |   |     |    |                     |                                |
-| [`fenced-code-flag`][remark-lint-fenced-code-flag]                                   | X   |   |   |     |    |                     |                                |
-| [`file-extension`][remark-lint-file-extension]                                       | X   |   |   |     |    |                     |                                |
-| [`final-definition`][remark-lint-final-definition]                                   | X   |   |   |     |    |                     |                                |
-| [`maximum-heading-length`][remark-lint-maximum-heading-length]                       | X   |   |   |     |    |                     |                                |
-| [`maximum-line-length`][remark-lint-maximum-line-length]                             | X   |   |   |     |    |                     |                                |
-| [`no-duplicate-headings`][remark-lint-no-duplicate-headings]                         | X   |   |   |     |    |                     |                                |
-| [`no-emphasis-as-heading`][remark-lint-no-emphasis-as-heading]                       | X   |   |   |     |    |                     |                                |
-| [`no-file-name-articles`][remark-lint-no-file-name-articles]                         | X   |   |   |     |    |                     |                                |
-| [`no-file-name-consecutive-dashes`][remark-lint-no-file-name-consecutive-dashes]     | X   |   |   |     |    |                     |                                |
-| [`no-file-name-irregular-characters`][remark-lint-no-file-name-irregular-characters] | X   |   |   |     |    |                     |                                |
-| [`no-file-name-mixed-case`][remark-lint-no-file-name-mixed-case]                     | X   |   |   |     |    |                     |                                |
-| [`no-file-name-outer-dashes`][remark-lint-no-file-name-outer-dashes]                 | X   |   |   |     |    |                     |                                |
-| [`no-heading-punctuation`][remark-lint-no-heading-punctuation]                       | X   |   |   |     |    |                     |                                |
-| [`no-multiple-toplevel-headings`][remark-lint-no-multiple-toplevel-headings]         | X   |   |   |     |    |                     |                                |
-| [`no-shell-dollars`][remark-lint-no-shell-dollars]                                   | X   |   |   |     |    |                     |                                |
-| [`definition-spacing`][remark-lint-definition-spacing]                               | X   |   |   |     | X  |                     |                                |
-| [`list-item-spacing`][remark-lint-list-item-spacing]                                 | X   |   |   |     | X  |                     |                                |
-| [`no-consecutive-blank-lines`][remark-lint-no-consecutive-blank-lines]               | X   |   |   |     | X  |                     |                                |
-| [`ordered-list-marker-value`][remark-lint-ordered-list-marker-value]                 | X   |   |   |     | X  |                     | ordered                        |
-| [`no-table-indentation`][remark-lint-no-table-indentation]                           | X   |   |   | X   | X  |                     |                                |
-| [`table-pipes`][remark-lint-table-pipes]                                             | X   |   |   | X   | X  |                     |                                |
-| [`table-pipe-alignment`][remark-lint-table-pipe-alignment]                           | X   |   |   | X   | X  |                     |                                |
-| [`table-cell-padding`][remark-lint-table-cell-padding]                               | X   | X |   | X   | X  |                     |                                |
-| [`blockquote-indentation`][remark-lint-blockquote-indentation]                       | X   | X |   |     | X  |                     |                                |
-| [`emphasis-marker`][remark-lint-emphasis-marker]                                     | X   | X |   |     | X  |                     |                                |
-| [`fenced-code-marker`][remark-lint-fenced-code-marker]                               | X   | X |   |     | X  |                     |                                |
-| [`code-block-style`][remark-lint-code-block-style]                                   | X   | X |   |     | X  | fences: true        |                                |
-| [`heading-style`][remark-lint-heading-style]                                         | X   | X |   |     | X  |                     |                                |
-| [`link-title-style`][remark-lint-link-title-style]                                   | X   | X |   |     | X+ |                     | **false**                      |
-| [`list-item-content-indent`][remark-lint-list-item-content-indent]                   | X   | X |   |     | X  |                     |                                |
-| [`rule-style`][remark-lint-rule-style]                                               | X   | X |   |     | X  | rule: '-'           |                                |
-| [`strong-marker`][remark-lint-strong-marker]                                         | X   | X |   |     | X  |                     |                                |
-| [`ordered-list-marker-style`][remark-lint-ordered-list-marker-style]                 | X   | X | X |     | X  |                     |                                |
-| [`hard-break-spaces`][remark-lint-hard-break-spaces]                                 | X   |   | X |     | X  |                     |                                |
-| [`list-item-indent`][remark-lint-list-item-indent]                                   | X   |   | X |     | X  | listItemIndent: one | space                          |
-| [`no-auto-link-without-protocol`][remark-lint-no-auto-link-without-protocol]         | X   |   | X |     | X  |                     |                                |
-| [`no-blockquote-without-marker`][remark-lint-no-blockquote-without-marker]           | X   |   | X |     | X  |                     |                                |
-| [`no-literal-urls`][remark-lint-no-literal-urls]                                     | X   |   | X |     | X  |                     |                                |
-| [`no-shortcut-reference-image`][remark-lint-no-shortcut-reference-image]             | X   |   | X |     | X  |                     |                                |
-| [`no-shortcut-reference-link`][remark-lint-no-shortcut-reference-link]               | X   |   | X |     | X  |                     |                                |
-| [`list-item-bullet-indent`][remark-lint-list-item-bullet-indent]                     |     |   | X |     | X  |                     |                                |
-| [`final-newline`][remark-lint-final-newline]                                         |     |   | X |     | X  |                     |                                |
-| [`no-heading-content-indent`][remark-lint-no-heading-content-indent]                 |     |   | X |     | X  |                     |                                |
-| [`no-undefined-references`][remark-lint-no-undefined-references]                     |     |   | X |     |    |                     |                                |
-| [`no-unused-definitions`][remark-lint-no-unused-definitions]                         |     |   | X |     |    |                     |                                |
-| [`no-duplicate-definitions`][remark-lint-no-duplicate-definitions]                   |     |   | X |     |    |                     |                                |
-| [`no-inline-padding`][remark-lint-no-inline-padding]                                 |     |   | X |     |    |                     |                                |
-| [`heading-increment`][remark-lint-heading-increment]                                 | X   |   |   |     |    |                     |                                |
-| [`checkbox-character-style`][remark-lint-checkbox-character-style]                   |     | X |   | X   | X  |                     | {checked: 'x', unchecked: ' '} |
-| [`checkbox-content-indent`][remark-lint-checkbox-content-indent]                     |     |   |   | X   | X  |                     |                                |
-| [`strikethrough-marker`][remark-lint-strikethrough-marker]                           |     |   |   | X   | X  |                     |                                |
-| [`unordered-list-marker-style`][remark-lint-unordered-list-marker-style]             |     |   |   |     | X  |                     | '\*'                           |
-| [`linebreak-style`][remark-lint-linebreak-style]                                     |     |   |   |     | X  |                     |                                |
-| [`no-missing-blank-lines`][remark-lint-no-missing-blank-lines]                       |     |   |   |     | X  |                     | exceptTightLists: true         |
-| [`first-heading-level`][remark-lint-first-heading-level]                             |     |   |   |     |    |                     |                                |
-| [`no-duplicate-defined-urls`][remark-lint-no-duplicate-defined-urls]                 |     |   |   |     |    |                     |                                |
-| [`no-duplicate-headings-in-section`][remark-lint-no-duplicate-headings-in-section]   |     |   |   |     |    |                     |                                |
-| [`no-empty-url`][remark-lint-no-empty-url]                                           |     |   |   |     |    |                     |                                |
-| [`no-heading-indent`][remark-lint-no-heading-indent]                                 |     |   |   |     |    |                     |                                |
-| [`no-heading-like-paragraph`][remark-lint-no-heading-like-paragraph]                 |     |   |   |     |    |                     |                                |
-| [`no-html`][remark-lint-no-html]                                                     |     |   |   |     |    |                     |                                |
-| [`no-paragraph-content-indent`][remark-lint-no-paragraph-content-indent]             |     |   |   |     |    |                     |                                |
-| [`no-reference-like-url`][remark-lint-no-reference-like-url]                         |     |   |   |     |    |                     |                                |
-| [`no-tabs`][remark-lint-no-tabs]                                                     |     |   |   |     |    |                     |                                |
-| [`no-unneeded-full-reference-image`][remark-lint-no-unneeded-full-reference-image]   |     |   |   |     |    |                     |                                |
-| [`no-unneeded-full-reference-link`][remark-lint-no-unneeded-full-reference-link]     |     |   |   |     |    |                     |                                |
+| Plugin                                                                               | MSG | C | R | GFM | F  |
+| ------------------------------------------------------------------------------------ | --- | - | - | --- | -- |
+| [`definition-case`][remark-lint-definition-case]                                     | X   |   |   |     |    |
+| [`fenced-code-flag`][remark-lint-fenced-code-flag]                                   | X   |   |   |     |    |
+| [`file-extension`][remark-lint-file-extension]                                       | X   |   |   |     |    |
+| [`final-definition`][remark-lint-final-definition]                                   | X   |   |   |     |    |
+| [`maximum-heading-length`][remark-lint-maximum-heading-length]                       | X   |   |   |     |    |
+| [`maximum-line-length`][remark-lint-maximum-line-length]                             | X   |   |   |     |    |
+| [`no-duplicate-headings`][remark-lint-no-duplicate-headings]                         | X   |   |   |     |    |
+| [`no-emphasis-as-heading`][remark-lint-no-emphasis-as-heading]                       | X   |   |   |     |    |
+| [`no-file-name-articles`][remark-lint-no-file-name-articles]                         | X   |   |   |     |    |
+| [`no-file-name-consecutive-dashes`][remark-lint-no-file-name-consecutive-dashes]     | X   |   |   |     |    |
+| [`no-file-name-irregular-characters`][remark-lint-no-file-name-irregular-characters] | X   |   |   |     |    |
+| [`no-file-name-mixed-case`][remark-lint-no-file-name-mixed-case]                     | X   |   |   |     |    |
+| [`no-file-name-outer-dashes`][remark-lint-no-file-name-outer-dashes]                 | X   |   |   |     |    |
+| [`no-heading-punctuation`][remark-lint-no-heading-punctuation]                       | X   |   |   |     |    |
+| [`no-multiple-toplevel-headings`][remark-lint-no-multiple-toplevel-headings]         | X   |   |   |     |    |
+| [`no-shell-dollars`][remark-lint-no-shell-dollars]                                   | X   |   |   |     |    |
+| [`definition-spacing`][remark-lint-definition-spacing]                               | X   |   |   |     | X  |
+| [`list-item-spacing`][remark-lint-list-item-spacing]                                 | X   |   |   |     | X  |
+| [`no-consecutive-blank-lines`][remark-lint-no-consecutive-blank-lines]               | X   |   |   |     | X  |
+| [`ordered-list-marker-value`][remark-lint-ordered-list-marker-value]                 | X   |   |   |     | X  |
+| [`no-table-indentation`][remark-lint-no-table-indentation]                           | X   |   |   | X   | X  |
+| [`table-pipes`][remark-lint-table-pipes]                                             | X   |   |   | X   | X  |
+| [`table-pipe-alignment`][remark-lint-table-pipe-alignment]                           | X   |   |   | X   | X  |
+| [`table-cell-padding`][remark-lint-table-cell-padding]                               | X   | X |   | X   | X  |
+| [`blockquote-indentation`][remark-lint-blockquote-indentation]                       | X   | X |   |     | X  |
+| [`emphasis-marker`][remark-lint-emphasis-marker]                                     | X   | X |   |     | X  |
+| [`fenced-code-marker`][remark-lint-fenced-code-marker]                               | X   | X |   |     | X  |
+| [`code-block-style`][remark-lint-code-block-style]                                   | X   | X |   |     | X  |
+| [`heading-style`][remark-lint-heading-style]                                         | X   | X |   |     | X  |
+| [`link-title-style`][remark-lint-link-title-style]                                   | X   | X |   |     | X+ |
+| [`list-item-content-indent`][remark-lint-list-item-content-indent]                   | X   | X |   |     | X  |
+| [`rule-style`][remark-lint-rule-style]                                               | X   | X |   |     | X  |
+| [`strong-marker`][remark-lint-strong-marker]                                         | X   | X |   |     | X  |
+| [`ordered-list-marker-style`][remark-lint-ordered-list-marker-style]                 | X   | X | X |     | X  |
+| [`hard-break-spaces`][remark-lint-hard-break-spaces]                                 | X   |   | X |     | X  |
+| [`list-item-indent`][remark-lint-list-item-indent]                                   | X   |   | X |     | X  |
+| [`no-auto-link-without-protocol`][remark-lint-no-auto-link-without-protocol]         | X   |   | X |     | X  |
+| [`no-blockquote-without-marker`][remark-lint-no-blockquote-without-marker]           | X   |   | X |     | X  |
+| [`no-literal-urls`][remark-lint-no-literal-urls]                                     | X   |   | X |     | X  |
+| [`no-shortcut-reference-image`][remark-lint-no-shortcut-reference-image]             | X   |   | X |     | X  |
+| [`no-shortcut-reference-link`][remark-lint-no-shortcut-reference-link]               | X   |   | X |     | X  |
+| [`list-item-bullet-indent`][remark-lint-list-item-bullet-indent]                     |     |   | X |     | X  |
+| [`final-newline`][remark-lint-final-newline]                                         |     |   | X |     | X  |
+| [`no-heading-content-indent`][remark-lint-no-heading-content-indent]                 |     |   | X |     | X  |
+| [`no-undefined-references`][remark-lint-no-undefined-references]                     |     |   | X |     |    |
+| [`no-unused-definitions`][remark-lint-no-unused-definitions]                         |     |   | X |     |    |
+| [`no-duplicate-definitions`][remark-lint-no-duplicate-definitions]                   |     |   | X |     |    |
+| [`no-inline-padding`][remark-lint-no-inline-padding]                                 |     |   | X |     |    |
+| [`heading-increment`][remark-lint-heading-increment]                                 | X   |   |   |     |    |
+| [`checkbox-character-style`][remark-lint-checkbox-character-style]                   |     | X |   | X   | X  |
+| [`checkbox-content-indent`][remark-lint-checkbox-content-indent]                     |     |   |   | X   | X  |
+| [`strikethrough-marker`][remark-lint-strikethrough-marker]                           |     |   |   | X   | X  |
+| [`unordered-list-marker-style`][remark-lint-unordered-list-marker-style]             |     |   |   |     | X  |
+| [`linebreak-style`][remark-lint-linebreak-style]                                     |     |   |   |     | X  |
+| [`no-missing-blank-lines`][remark-lint-no-missing-blank-lines]                       |     |   |   |     | X  |
+| [`first-heading-level`][remark-lint-first-heading-level]                             |     |   |   |     |    |
+| [`no-duplicate-defined-urls`][remark-lint-no-duplicate-defined-urls]                 |     |   |   |     |    |
+| [`no-duplicate-headings-in-section`][remark-lint-no-duplicate-headings-in-section]   |     |   |   |     |    |
+| [`no-empty-url`][remark-lint-no-empty-url]                                           |     |   |   |     |    |
+| [`no-heading-indent`][remark-lint-no-heading-indent]                                 |     |   |   |     |    |
+| [`no-heading-like-paragraph`][remark-lint-no-heading-like-paragraph]                 |     |   |   |     |    |
+| [`no-html`][remark-lint-no-html]                                                     |     |   |   |     |    |
+| [`no-paragraph-content-indent`][remark-lint-no-paragraph-content-indent]             |     |   |   |     |    |
+| [`no-reference-like-url`][remark-lint-no-reference-like-url]                         |     |   |   |     |    |
+| [`no-tabs`][remark-lint-no-tabs]                                                     |     |   |   |     |    |
+| [`no-unneeded-full-reference-image`][remark-lint-no-unneeded-full-reference-image]   |     |   |   |     |    |
+| [`no-unneeded-full-reference-link`][remark-lint-no-unneeded-full-reference-link]     |     |   |   |     |    |
 
 Many of issues highlighted by these rules can be automatically resolved by the
 serializer and I was able to find complementary "fixer" and "linter" settings.
@@ -269,7 +269,7 @@ a preset, I ended up suppressng this rule by explicitly setting it to `false`.
 
 ```yaml
   - - remark-lint-link-title-style
-    - false 
+    - false
 ```
 
 > What about the rest of the rules?
@@ -287,57 +287,144 @@ by adding the following rules:
 ```
 
 While all of the rules have some benefit, loading too many can slow down the
-"linting" routine while you are editing.  Rather than running all the rules in
-your editor, it may be more efficient to set up a linting routine in your
-project's Pre-Commit hook or CI configuration, and relegating the slow or rarely
-triggered rules to that routine.
+"linting" routine while you are editing, so I generally chose to relegate those
+to post-commit and CI hooks. This is especially true of the 3rd party rules like
+[`remark-lint-are-links-valid`][remark-lint-are-links-valid] which use more
+resources.
 
-```yaml
-  - remark-lint-no-tabs
-  - remark-lint-no-html
-  - remark-lint-no-empty-url
-  - remark-lint-no-duplicate-defined-urls
-  - remark-lint-no-inline-padding
-  - remark-lint-no-reference-like-url
+To use the above rules I had to install a few packages:
+
+```bash
+npm install -g                                   \
+    remark-gfm                                   \
+    remark-preset-lint-recommended               \
+    remark-preset-lint-markdown-style-guide      \
+    remark-lint-list-item-indent                 \
+    remark-lint-ordered-list-marker-value        \
+    remark-lint-strikethrough-marker             \
+    remark-lint-checkbox-content-indent          \
+    remark-lint-checkbox-character-style         \
+    remark-lint-linebreak-style                  \
+    remark-lint-unordered-list-marker-style      \
+    remark-lint-no-missing-blank-lines           \
+    remark-lint-link-title-style                 \
+    remark-lint-first-heading-level              \
+    remark-lint-no-heading-indent                \
+    remark-lint-no-heading-like-paragraph        \
+    remark-lint-no-duplicate-headings-in-section \
+    remark-lint-no-paragraph-content-indent
 ```
-
-There are some MSG and Recomended rules that could be omitted if you have
-something like that set up. For example, the rules from MSG that check the file
-name and extension:
-
-```yaml
-  - remark-lint-file-extension
-  - remark-lint-no-file-name-articles
-  - remark-lint-no-file-name-consecutive-dashes
-  - remark-lint-no-file-name-irregular-characters
-  - remark-lint-no-file-name-mixed-case
-  - remark-lint-no-file-name-outer-dashes
-```
-
-And rules that check for missing, unused, or duplicate definitions:
-
-```yaml
-  - remark-lint-no-inline-padding
-  - remark-lint-no-duplicate-definitions
-  - remark-lint-no-undefined-references
-  - remark-lint-no-unused-definitions
-```
-
-Though testing does not show a huge effect on performance.
 
 ## Configuration
+
+Configuration for `remark` is handled by [`unified-args`][unified-args]
+framework which supports configuration files in multiple formats and a search
+up the filesystem. The current directory is searched for a file named either
+
+* `.remarkrc` (JSON), or 
+* `.remarkrc.js` (JS), or
+* `.remarkrc.yml` (YAML)
+
+If a matching file is not found, the parent directory is searched, and so on.
+
+I ended up using a top-level [`~/.remarkrc.yml`][my-remarkrc] in my home
+directory as a catch-all. 
+
+The [Linting](#linting) section above shows a trimmed down version of the
+configuration that I use. The full version includes detailed comments on all
+the official rules as a quick reference in case I need to tweak the rules for
+a particular project.
+
+The documentation suggests there is a "configuration cascade" and 
+settings may be extendeded or overriden, but unfortunately, it does not include
+any details.  
+
+If I need to override these options, some command-line options may come in
+handy.
+
+<!-- test these -->
+
+Overriding parser/compiler settings with the `-s|--setting`:
+
+```console
+remark -s 'fence=false'
+```
+
+Overriding plugins and options with the `-u|--use`:
+
+```console
+remark -u 'remark-lint-first-heading-level:2'
+```
+
+Using a targeted configuration file with the `-r|--rc-path`:
+
+```console
+remark -r .my-remarkrc
+```
+
+If you are working on a project that uses Node, remark will look for the
+`remarkConfig` key in your projects `package.json` file.  I've not use this yet,
+but will update this blog if I ever do.
+
+If you have a Node project that uses `remark` for linting as part of its testing
+or CI setup, ALE will pick up the local installation and configuration and use
+that. You might want to override some of the options by
+
+## Integrating with Vim via ALE
+
+If you install remark under the defaults, ALE will automatically detect it and
+start linting accordingly. To set it as a "fixer"
+
+With ALE you can set
+
+```vimrc
+g:ale_markdown_remark_lint_executable = 'remark'
+g:ale_markdown_remark_lint_options = ''
+g:ale_markdown_remark_lint_use_global = 0
+```
+
+Override these at the buffer level using the `~/.vim/ftplugin/markdown.vim`.
+
+If I need to override at the project level, I create a [localvimrc][] file to override by passing in configuration options with
+
+```vimrc
+# ~/.../myproject/.lvimrc
+let b:ale_markdown_remark_lint_options = '-s fences=false'
+```
+
+or force the use of the global executable and configuration with
+
+```vimrc
+let b:ale_markdown_remark_lint_use_global = 1
+let b:ale_markdown_remark_lint_options = '-r ~/.remarkrc'
+```
+
+```vimrc
+" Set up tabstops to match "bullet plus 1 space" style
+setlocal tabstop=2
+setlocal shiftwidth=2
+setlocal shiftround       " Indent/outdent to nearest tabstop
+setlocal expandtab        " Convert all tabs typed to spaces
+
+" Setup so we get nice soft wrapping effect with very long lines
+setlocal linebreak        " Wrap long lines at word boundaries
+setlocal formatoptions-=t " Dont auto-wrap text using textwidth
+setlocal columns=83       " Constrain window width to trigger soft wrap
+
+# Only use `remark` for linting
+let b:ale_linters=['remark-lint']
+let b:ale_fixers=['remark-lint']
+```
 
 It is fairly easy to make small errors in the configuration files that cause
 Remark to bail. The symptom is often an unusual error on the very first line of
 the of the file. If you see this, check `:ALEInfo` to see what the error is.
 
-tuning remark
-tuning to be general. leave target specific linting for pre-commit-hooks.
+Since linting has to parse the whole file, asynchronous linting will start to lag on larger and more complex files. Possibly an indication that you should split your files.
+You may just want to turn it off in these cases.
+For this blog, running `remark` command with all the settings above takes about 2 seconds.
 
-Handled by `unified`
-.remarkrc.yaml
-
-## Integrating with Vim via ALE
+Do some timing tests?
 
 --------------------------------------------------------------------------------
 
@@ -356,25 +443,13 @@ a large number of 3rd party linting programs. Having your IDE constantly harass
 you about trivial errors can be distracting and fixing those errors immediately
 may be counter-productive
 
-### Preset overlaps
-
-As you can see, the Consistency rules are almost a subset of the Markdown Style
-Guide rules (except for linter settings), with the
-[`checkbox-character-style`][remark-lint-checkbox-character-style] rule being
-the only exception. The real differences between the two presets is that the
-Consistency preset only insists that the markdown uses a *consistent* style
-(e.g. the same markers and indentation are used throughout), whereas the
-Markdown Style Guide preset insists that a *specific* style is used. Since our
-"fixer" routine is going to impose a specific style, we probably want to use
-similar rules.
-
-Conversley, the Consistency and Recommended rules are almost disjoint, with the
-[`ordered-list-marker-style`][remark-lint-ordered-list-marker-style] rule being
-the only exception.
-
 --------------------------------------------------------------------------------
 
 ## References
+
+[my-remarkrc]: https://github.com/tartansandal/dotfiles/blob/master/remarkrc.yml
+
+[localvimrc]: https://github.com/embear/vim-localvimrc
 
 [vim]: https://www.vim.org/
 
@@ -403,6 +478,8 @@ the only exception.
 [remark-package]: https://github.com/remarkjs/remark/tree/main/packages/remark
 
 [unified]: https://github.com/unifiedjs/unified
+
+[unified-args]: https://github.com/unifiedjs/unified-args
 
 [remark-preset-lint-consistent]: https://github.com/remarkjs/remark-lint/tree/main/packages/remark-preset-lint-consistent
 
@@ -545,3 +622,5 @@ the only exception.
 [remark-lint-table-pipes]: https://github.com/remarkjs/remark-lint/tree/main/packages/remark-lint-table-pipes
 
 [remark-lint-unordered-list-marker-style]: https://github.com/remarkjs/remark-lint/tree/main/packages/remark-lint-unordered-list-marker-style
+
+[remark-lint-are-links-valid]: https://github.com/wemake-services/remark-lint-are-links-valid
