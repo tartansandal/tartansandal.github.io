@@ -219,13 +219,15 @@ Mostly these corresponded to the default [`remark-stringify`][remark-stringify]
 settings and
 [`remark-preset-lint-markdown-style-guide`][remark-preset-lint-markdown-style-guide]
 settings, but there were a couple of instances where I had to compromise to get
-consistent round-trip behaviour.
+consistent round-trip behaviour.  This gives us a baseline of linting rules that
+we need and the corresponding settings. If we note the overlap of the MSG and
+Recommended presets with the rules that are automatically fixed by the
+serializer, we can get a reasonably compact configuration by including those
+presets, the GFM plugin, and just 3 extra rules.
 
-This gives us a baseline of the minimum set of linting rules that we need and
-the corresponding settings. If we note the overlap of the MSG and Recommended
-presets with the rules that are automatically fixed by the serializer, we can
-get a reasonably compact configuration by including those presets, the GFM
-plugin, and just 3 extra rules.
+The following is a trimmed down version of the configuration that I use. The
+[full version][my-remarkrc] includes detailed comments on all the official rules
+as a quick reference in case I need to tweak anything.
 
 ```yaml
 settings:
@@ -287,12 +289,10 @@ by adding the following rules:
 ```
 
 While all of the rules have some benefit, loading too many can slow down the
-"linting" routine while you are editing, so I generally chose to relegate those
-to post-commit and CI hooks. This is especially true of the 3rd party rules like
-[`remark-lint-are-links-valid`][remark-lint-are-links-valid] which use more
-resources.
+"linting" routine while you are editing, so I generally relegate any additional
+rules to post-commit and CI hooks.
 
-To use the above rules I had to install a few packages:
+To use the rules mentioned above I had to install a few packages:
 
 ```bash
 npm install -g                                   \
@@ -318,71 +318,117 @@ npm install -g                                   \
 ## Configuration
 
 Configuration for `remark` is handled by [`unified-args`][unified-args]
-framework which supports configuration files in multiple formats and a search
-up the file-system. The current directory is searched for a file named either
+framework which supports configuration files in multiple formats and a search up
+the file-system heirarchy. The current directory is searched for a file named
+either
 
-* `.remarkrc` (JSON), or 
+* `package.json` with a `remarkConfig` key, or
+* `.remarkrc` (JSON), or
 * `.remarkrc.js` (JS), or
-* `.remarkrc.yml` (YAML)
+* `.remarkrc.yml` (YAML).
 
 If a matching file is not found, the parent directory is searched, and so on.
+With this setup, you can have optional project level configurations and
+a catch-all configuration in, say, your home directory.  Note that if a lower
+level configuration file is found, the search stops and any higher level
+configuration files are ignored.
 
-I ended up using a top-level [`~/.remarkrc.yml`][my-remarkrc] in my home
-directory as a catch-all. 
-
-The [Linting](#linting) section above shows a trimmed down version of the
-configuration that I use. The full version includes detailed comments on all
-the official rules as a quick reference in case I need to tweak the rules for
-a particular project.
-
-The documentation suggests there is a &quot;configuration cascade&quot; and 
+The documentation suggests there is a "configuration cascade" and
 settings may be extended or overridden, but unfortunately, it does not include
-any details.  
+any details.  After some experients it seems that this cascade only applies to command-line options overriding options from a configuration file. For example:
 
-If I need to override these options, some command-line options may come in
-handy.
+* Overriding parser/compiler settings:
 
-<!-- test these -->
+  ```console
+  remark -s 'fence:false'
+  ```
 
-Overriding parser/compiler settings with the `-s|--setting`:
+* Overriding a plugin with options:
 
-```console
-remark -s 'fence=false'
-```
+  ```console
+  remark -u 'remark-lint-first-heading-level=number:2'
+  ```
 
-Overriding plugins and options with the `-u|--use`:
-
-```console
-remark -u 'remark-lint-first-heading-level:2'
-```
-
-Using a targeted configuration file with the `-r|--rc-path`:
+However if you have a specify a specific configuration file on the command-line,
+other configuration files are ignored. For example:
 
 ```console
 remark -r .my-remarkrc
 ```
 
-If you are working on a project that uses Node, remark will look for the
-`remarkConfig` key in your projects `package.json` file. Not sure how the
-cascade handles this.
+Where `.my-remarkrc` contains:
+
+```yaml
+settings:
+  fences: false
+
+plugins:
+  - - remark-lint-first-heading-level
+    - 2
+```
 
 ## Integrating with Vim via ALE
 
-If you install remark under the defaults, ALE will automatically detect it and
-start linting accordingly. I prefer to make this explicit at
-buffer level using `~/.vim/ftplugin/markdown.vim`.
+If you install `remark-cli`, ALE will automatically detect it and start linting
+accordingly. If you run `:ALEInfo`, you will see `remark-lint` in the list of
+"Available Linters" and that executable for `remark-lint` is set to
+`remark`. (There is some term juggling going on here).
+
+You can configure ALE to use `remark` as a "fixer" via a global setting, but
+I prefer do this via a buffer local setting in `~/.vim/ftplugin/markdown.vim`:
 
 ```vimrc
 # Only use `remark` for linting and fixing
 let b:ale_linters=['remark-lint']
 let b:ale_fixers=['remark-lint']
+```
 
+Note I also explicitly limit ALE to using `remark-lint` since I don't want other
+linters confusing my set up.
+
+If you are working on a project that uses `remark` as part of its testing/CI
+chain, ALE will usually detect this and use the corresponding configuration.
+This may not work well if the linting process takes too long, so you may want to
+tweak the "live" linting to omit some plugins. 
+
+If you use [localvimrc][] files, you could override a plugin with:
+
+```vimrc
+let b:ale_markdown_remark_lint_options = '-u remark-lint-long-check=false'
+```
+
+Or you could force the use of the global executable and configuration with
+
+```vimrc
+let b:ale_markdown_remark_lint_use_global = 1
+let b:ale_markdown_remark_lint_options = '-r ~/.remarkrc'
+```
+
+One of the potential linting rules, [`no-tabs`][remark-lint-no-tabs], warns
+about using raw tab characters. In Vim you can avoid needing to use this rule
+by adding the following lines to your `~/.vim/ftplugin/markdown.vim` file:
+
+```vimrc
 " Set up tabstops to match "bullet plus 1 space" style
 setlocal tabstop=2
 setlocal shiftwidth=2
 setlocal shiftround       " Indent/outdent to nearest tabstop
 setlocal expandtab        " Convert all tabs typed to spaces
 ```
+
+One issue that often arises is whether or not to wrap lines. The Markdown Style
+Guide suggests doing this at 80 chars, but some markdown processors (GitLab)
+interpret these as hard-breaks rather than reflowing as expected (the spec says
+you need 2 spaces or a "\" at the end of a line for a hard-break). I avoid this
+by disabling the [`maximum-line-length`][remark-lint-maximum-line-length] plugin
+
+```yaml
+  - - remark-lint-maximum-line-length
+    - false
+```
+
+And adding the following to my `~/.vim/ftplugin/markdown.vim` file, to get
+reasonable soft-wrapping behaviour:
 
 ```vimrc
 " Setup so we get nice soft wrapping effect with very long lines
@@ -391,70 +437,15 @@ setlocal formatoptions-=t " Dont auto-wrap text using textwidth
 setlocal columns=83       " Constrain window width to trigger soft wrap
 ```
 
-It is fairly easy to make small errors in the configuration files that cause
-Remark to bail. The symptom is often an unusual error on the very first line of
-the of the file. If you see this, check `:ALEInfo` to see what the error is.
+Finally, it is fairly easy to make small errors in the configuration files that
+cause Remark to bail. The symptom is often an unusual error on the very first
+line of the of the file. If you see this, check `:ALEInfo` to see what the error
+is. You will probably have to run `remark` on the command line to debug.
 
-With ALE you can set
+## Conclusion
 
-```vimrc
-g:ale_markdown_remark_lint_executable = 'remark'
-g:ale_markdown_remark_lint_options = ''
-g:ale_markdown_remark_lint_use_global = 0
-```
-
-Override these at the buffer level using the `~/.vim/ftplugin/markdown.vim`.
-
-If I need to override at the project level, I create a [localvimrc][] file to override by passing in configuration options with
-
-With ALE you can set
-
-```vimrc
-g:ale_markdown_remark_lint_executable = 'remark'
-g:ale_markdown_remark_lint_options = ''
-g:ale_markdown_remark_lint_use_global = 0
-```
-
-<!-- where to put this -->
-
-If you have a Node project that uses `remark` for linting as part of its testing
-or CI setup, ALE will pick up the local installation and configuration and use
-that. You might want to override some of the options by
-
-```vimrc
-# ~/.../myproject/.lvimrc
-let b:ale_markdown_remark_lint_options = '-s fences=false'
-```
-
-or force the use of the global executable and configuration with
-
-```vimrc
-let b:ale_markdown_remark_lint_use_global = 1
-let b:ale_markdown_remark_lint_options = '-r ~/.remarkrc'
-```
-
---------------------------------------------------------------------------------
-
-## Sidetracks
-
-Asynchronous linting is good. Automatic fixing is better.
-
-Having an IDE that highlights errors or warnings as you write can help to ensure
-that whatever you are writing or coding is coherent, provided the errors or
-warnings it reports are both relevant and correct. With Vim we can get access to
-excellent  asynchronous linting support via the
-[ALE](https://github.com/dense-analysis/ale) plugin which has integrations for
-a large number of 3rd party linting programs. Having your IDE constantly harass
-you about trivial errors can be distracting and fixing those errors immediately
-may be counter-productive
-
-Since linting has to parse the whole file, asynchronous linting will start to
-lag on larger and more complex files. Possibly an indication that you should
-split your files.  You may just want to turn it off in these cases.  For this
-blog, running `remark` command with all the settings above takes about
-2 seconds.
-
---------------------------------------------------------------------------------
+So thats my configuration and the rationale behind it. Hope this helps with your
+own setup.
 
 ## References
 
