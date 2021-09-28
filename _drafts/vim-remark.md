@@ -42,7 +42,7 @@ include.
 At various layers, support for additional markup and output (like footnotes,
 directives, ToCs, GFM, MDX, etc) can be provided by [remark plugins][].
 
-This can make understanding the setup and configuration a little confusing --
+This can make understanding the setup and configuration a little confusing
 with the documentation being spread across a number of packages and projects.
 
 ## Fixing Markdown
@@ -134,7 +134,7 @@ combinations:
   markdown style guide
 
 The table below shows some of the relationships between the different rules and
-presets.  I've ommited the `remark-lint-` rule prefix and used the following
+presets.  I've omitted the `remark-lint-` rule prefix and used the following
 key to keep the table compact.
 
 * MSG: provided by the Markdown Style Guide preset
@@ -366,14 +366,34 @@ If you are working on a project that uses Node, remark will look for the
 `remarkConfig` key in your projects `package.json` file. Not sure how the
 cascade handles this.
 
-If you have a Node project that uses `remark` for linting as part of its testing
-or CI setup, ALE will pick up the local installation and configuration and use
-that. You might want to override some of the options by
-
 ## Integrating with Vim via ALE
 
 If you install remark under the defaults, ALE will automatically detect it and
-start linting accordingly. To set it as a "fixer"
+start linting accordingly. I prefer to make this explicit at
+buffer level using `~/.vim/ftplugin/markdown.vim`.
+
+```vimrc
+# Only use `remark` for linting and fixing
+let b:ale_linters=['remark-lint']
+let b:ale_fixers=['remark-lint']
+
+" Set up tabstops to match "bullet plus 1 space" style
+setlocal tabstop=2
+setlocal shiftwidth=2
+setlocal shiftround       " Indent/outdent to nearest tabstop
+setlocal expandtab        " Convert all tabs typed to spaces
+```
+
+```vimrc
+" Setup so we get nice soft wrapping effect with very long lines
+setlocal linebreak        " Wrap long lines at word boundaries
+setlocal formatoptions-=t " Dont auto-wrap text using textwidth
+setlocal columns=83       " Constrain window width to trigger soft wrap
+```
+
+It is fairly easy to make small errors in the configuration files that cause
+Remark to bail. The symptom is often an unusual error on the very first line of
+the of the file. If you see this, check `:ALEInfo` to see what the error is.
 
 With ALE you can set
 
@@ -387,6 +407,20 @@ Override these at the buffer level using the `~/.vim/ftplugin/markdown.vim`.
 
 If I need to override at the project level, I create a [localvimrc][] file to override by passing in configuration options with
 
+With ALE you can set
+
+```vimrc
+g:ale_markdown_remark_lint_executable = 'remark'
+g:ale_markdown_remark_lint_options = ''
+g:ale_markdown_remark_lint_use_global = 0
+```
+
+<!-- where to put this -->
+
+If you have a Node project that uses `remark` for linting as part of its testing
+or CI setup, ALE will pick up the local installation and configuration and use
+that. You might want to override some of the options by
+
 ```vimrc
 # ~/.../myproject/.lvimrc
 let b:ale_markdown_remark_lint_options = '-s fences=false'
@@ -399,38 +433,9 @@ let b:ale_markdown_remark_lint_use_global = 1
 let b:ale_markdown_remark_lint_options = '-r ~/.remarkrc'
 ```
 
-```vimrc
-" Set up tabstops to match "bullet plus 1 space" style
-setlocal tabstop=2
-setlocal shiftwidth=2
-setlocal shiftround       " Indent/outdent to nearest tabstop
-setlocal expandtab        " Convert all tabs typed to spaces
-
-" Setup so we get nice soft wrapping effect with very long lines
-setlocal linebreak        " Wrap long lines at word boundaries
-setlocal formatoptions-=t " Dont auto-wrap text using textwidth
-setlocal columns=83       " Constrain window width to trigger soft wrap
-
-# Only use `remark` for linting
-let b:ale_linters=['remark-lint']
-let b:ale_fixers=['remark-lint']
-```
-
-It is fairly easy to make small errors in the configuration files that cause
-Remark to bail. The symptom is often an unusual error on the very first line of
-the of the file. If you see this, check `:ALEInfo` to see what the error is.
-
-Since linting has to parse the whole file, asynchronous linting will start to lag on larger and more complex files. Possibly an indication that you should split your files.
-You may just want to turn it off in these cases.
-For this blog, running `remark` command with all the settings above takes about 2 seconds.
-
-Do some timing tests?
-
 --------------------------------------------------------------------------------
 
 ## Sidetracks
-
-### Linting vs fixing
 
 Asynchronous linting is good. Automatic fixing is better.
 
@@ -442,6 +447,12 @@ excellent  asynchronous linting support via the
 a large number of 3rd party linting programs. Having your IDE constantly harass
 you about trivial errors can be distracting and fixing those errors immediately
 may be counter-productive
+
+Since linting has to parse the whole file, asynchronous linting will start to
+lag on larger and more complex files. Possibly an indication that you should
+split your files.  You may just want to turn it off in these cases.  For this
+blog, running `remark` command with all the settings above takes about
+2 seconds.
 
 --------------------------------------------------------------------------------
 
