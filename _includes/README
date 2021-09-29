@@ -1,0 +1,5 @@
+# overrides and additions to "minima" theme.
+
+If you want to make modifications to a theme file, copy it here and make the
+modifications. Be careful about adding random files to this directory, as they
+may mask existing ones and break everything.
