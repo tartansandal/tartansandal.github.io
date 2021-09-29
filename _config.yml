@@ -51,3 +51,5 @@ exclude:
   # - .bundle
   - README.md
   - Makefile
+  # exclude jupyter notebooks
+  - "*.ipynb"

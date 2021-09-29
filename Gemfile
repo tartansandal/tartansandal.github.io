@@ -1,6 +1,7 @@
 source "https://rubygems.org"
 gem "github-pages", "~>219", group: :jekyll_plugins
 
+# Really make sure these are here
 gem "minima"
 gem "kramdown-parser-gfm"
 

@@ -1,22 +1,21 @@
-# Development aliases
-.PHONY: all serve update
+.PHONY: all serve build
 
-# Ensure gems have been updated before serving content
-all: update serve
+all: serve 
 
-# Launch a jekyll server to rebuild _site/ and serve content
-# include drafts and livereload code
+export JEKYLL_VERSION=3.8
 serve:
-	bundle exec jekyll serve --drafts --livereload
+	docker run --rm -it \
+		--volume="$$PWD:/srv/jekyll" \
+		--volume="$$PWD/vendor/bundle:/usr/local/bundle" \
+		--publish 4000:4000 \
+		jekyll/jekyll:${JEKYLL_VERSION} \
+		jekyll serve --drafts --livereload
 
-# Update bundled gems to sync with GitHub Pages
-update:
-	bundle update
+build: 
+	docker run --rm -it \
+		--volume="$$PWD:/srv/jekyll" \
+		--volume="$$PWD/vendor/bundle:/usr/local/bundle" \
+		--publish 4000:4000 \
+		jekyll/jekyll:${JEKYLL_VERSION} \
+		jekyll build
 
-# Lists the current gem dependency versions
-# versions:
-# 	bundle exec github-pages versions
-#
-## We don't need this for github.io domains
-# health-check:
-# 	bundle exec github-pages health-check

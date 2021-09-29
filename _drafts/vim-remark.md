@@ -1,14 +1,19 @@
-# Linting and fixing in Vim with Remark
+---
+layout: post
+categories: vim markdown remark
+comments: true
 
-The [Remark][] utility can be used to both highlight style and formatting
-issues with your markdown and to automatically fix many of them. Figuring out
-how to configure Remark to work well with [Vim][] and [ALE][] was a bit
+title: "Linting and Fixing in Vim with Remark"
+---
+
+The [Remark][] utility can be used to highlight both style and formatting
+issues with [Markdown][] and to automatically fix many of them. Figuring out
+how to configure [Remark][] to work well with [Vim][] and [ALE][] was a bit
 challenging, so I thought I would share my setup and some tips.
 
-First up, note that Remark is a general framework for processing Markdown and
-not just for converting it to HTML. It is built out of layered components so
-that different parts can be used in different contexts. Some relevant ones
-include.
+First up, [Remark][] is a general framework for processing Markdown and not just
+for converting it to HTML. It is built out of layered components so that
+different parts can be used in different contexts. Some relevant ones include:
 
 * [`micromark`][micromark]: the smallest commonmark-compliant markdown parser
   that exists.
@@ -29,7 +34,7 @@ include.
   into markdown using the above.
 
 * [`remark-lint`][remark-lint]: a library that examines an AST for issues based
-  on plugins
+  on plugins.
 
 * [`remark`][remark-package]: is a markdown processor powered by plugins and
   using all the above.
@@ -40,7 +45,8 @@ include.
   `remark`
 
 At various layers, support for additional markup and output (like footnotes,
-directives, ToCs, GFM, MDX, etc) can be provided by [remark plugins][].
+frontmatter, directives, ToCs, GFM, MDX, etc) can be provided by [remark
+plugins][].
 
 This can make understanding the setup and configuration a little confusing
 with the documentation being spread across a number of packages and projects.
@@ -64,7 +70,7 @@ you just have to the formatting options.  You can check out the available
 formatting options in the [`mdast-util-to-markdown`
 documentation](https://github.com/syntax-tree/mdast-util-to-markdown#formatting-options),
 
-> Which, if any, settings should I change?
+### Which, if any, settings should I change?
 
 You will want to ensure your "fixing" settings don't conflict with your
 preferred "linting" rules. You want stable round-trips: you don't want your
@@ -441,6 +447,12 @@ Finally, it is fairly easy to make small errors in the configuration files that
 cause Remark to bail. The symptom is often an unusual error on the very first
 line of the of the file. If you see this, check `:ALEInfo` to see what the error
 is. You will probably have to run `remark` on the command line to debug.
+
+Ignoring frontmatter needed by Jekyll
+
+```yaml
+  - remark-frontmatter
+```
 
 ## Conclusion
 
