@@ -7,7 +7,7 @@
 _site/
 
 # Local bundles (based on Gemfile and managed by the github-pages gem)
-vendor/bundle/ruby
+vendor/
 
 # This can interfere with the github-pages gem
 Gemfile.lock
