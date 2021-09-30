@@ -1,4 +1,6 @@
-# Exploring the Complex Plane with Python and Generators
+---
+title: Exploring the Complex Plane with Python and Generators
+---
 
 One of the joys of having ready access to modern computers and programming
 frameworks is the ability to easily explore mathematical concepts that would

@@ -1,4 +1,6 @@
-# PyCharm for VIM users
+---
+title: PyCharm for VIM users
+---
 
 Docs at <https://www.jetbrains.com/help/pycharm/quick-start-guide.html>
 

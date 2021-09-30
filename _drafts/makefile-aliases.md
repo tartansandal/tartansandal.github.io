@@ -1,3 +1,7 @@
+---
+title: Makefiles for project-level command aliases
+---
+
 Blog on using Makefile for project command aliases
 
 * Makefiles can be complex, but a simple usage can be powerful

@@ -1,3 +1,6 @@
+---
+title: A long-time Fedora User
+---
 
 I've been using Fedora Linux as my primary desktop since its inception in
 late 2003. That's a long time to stick it out with a Linux desktop, so that
