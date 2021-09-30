@@ -1,4 +1,6 @@
 source "https://rubygems.org"
+
+# https://pages.github.com/versions/
 gem "github-pages", "~>219", group: :jekyll_plugins
 
 # Really make sure these are here
