@@ -424,22 +424,22 @@ plugins:
   # # Warn when inline nodes (emphasis,links,...) are padded with spaces (R)
   # # See https://github.com/remarkjs/remark-lint/tree/main/packages/remark-lint-no-inline-padding
   - - remark-lint-no-inline-padding
-    - false
+  # - false
 
   # Warn when duplicate definitions are found (R)
   # See https://github.com/remarkjs/remark-lint/tree/main/packages/remark-lint-no-duplicate-definitions
   - - remark-lint-no-duplicate-definitions
-    - false
+  # - false
 
   # Warn when references to undefined definitions are found (R)
   # See https://github.com/remarkjs/remark-lint/tree/main/packages/remark-lint-no-undefined-references
   - - remark-lint-no-undefined-references
   # - allow: ['...']   # example to allow, say, `[...]` for elided content
-    - false
+  # - false
   
   # # Warn when unused definitions are found (R)
   # # See https://github.com/remarkjs/remark-lint/tree/main/packages/remark-lint-no-unused-definitions
   - - remark-lint-no-unused-definitions
-    - false
+  # - false
 
 # vim: nowrap
