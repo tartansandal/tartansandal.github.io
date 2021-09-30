@@ -456,10 +456,12 @@ Ignoring frontmatter needed by Jekyll
 
 ## Conclusion
 
-So thats my configuration and the rationale behind it. Hope this helps with your
+So that's my configuration and the rationale behind it. Hope this helps with your
 own setup.
 
-## References
+<!-- References -->
+
+[markdown]: https://en.wikipedia.org/wiki/Markdown
 
 [my-remarkrc]: https://github.com/tartansandal/dotfiles/blob/master/remarkrc.yml
 
@@ -636,5 +638,3 @@ own setup.
 [remark-lint-table-pipes]: https://github.com/remarkjs/remark-lint/tree/main/packages/remark-lint-table-pipes
 
 [remark-lint-unordered-list-marker-style]: https://github.com/remarkjs/remark-lint/tree/main/packages/remark-lint-unordered-list-marker-style
-
-[remark-lint-are-links-valid]: https://github.com/wemake-services/remark-lint-are-links-valid
