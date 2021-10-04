@@ -20,15 +20,15 @@ publish= --publish 4000:4000 --publish 35729:35729
 
 # Serve the static files for local development
 serve:
-	docker run --rm -it ${appdir} ${cache} ${publish} ${image} \
+	@docker run --rm -it ${appdir} ${cache} ${publish} ${image} \
 		jekyll serve --drafts --watch --force-polling --livereload
 
 # Build the static files
 build: 
-	docker run --rm -it ${appdir} ${cache} ${image} \
+	@docker run --rm -it ${appdir} ${cache} ${image} \
 		jekyll build
 
 # Update the Gemfile.lock
 update:
-	docker run --rm -it ${appdir} ${cache} ${image} \
+	@docker run --rm -it ${appdir} ${cache} ${image} \
 		bundle update
