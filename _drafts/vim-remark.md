@@ -15,7 +15,7 @@ I thought I would share my setup plus some tips.
 
 Historically Markdown was based on common formatting conversions in email and
 usenet, and although formal specifications like [Commonmark][] have been
-developed, there are a still a range of valid flavours and styles. 
+developed, there are a still a range of valid flavours and styles.
 
 Ideally Markdown should:
 
@@ -27,43 +27,41 @@ warning when technically valid but inconsistent or unusual Markdown is used.
 The second point calls out to the observed behaviour of common Markdown
 compilers: warning when particular styles of Markdown will either be
 interpreted by differently by different compilers, or result in an unexpected
-conversion. 
+conversion.
 
 We can try to address this by following a set of rules like the [Markdown Style
 Guide][]. Moreover, automated "linting" facilities like [Remark][] can warn us
 when we stray from these rules, and integrations like [ALE][] can do this
-asynchronously as we write in [Vim][].  
+asynchronously as we write Markdown in [Vim][].
 
-There is nothing particularly controversial here.
+Now some of these warnings indicate ambiguity and require us to make a clarify
+our intent.  Other warnings identify inconsistencies or errors that can only be
+resolved in one way, for example, using inconsistent spacing or bullet markers.
+The latter warnings lend themselves to automated "fixing", a process supported by
+[Remark][] and [ALE][] via the `ALEFix` command.
 
-Now some warnings indicate ambiguity and require us to make some decision to
-clarify out intent.  Other warnings typically identify inconsistency and can
-only be resolved in one way, for example, inconsistent spacing or bullet
-markers.  The latter warnings lend themselves to automated "fixing", a process
-supported by [Remark][] and [ALE][] via the `ALEFix` command. 
-
-Unlike "linting", "fixing" is a necessarily strict process. We can choose to
-ignore a "linting" warning, but our "fixing" routine is going to fix everything
-that it is set up to fix.
-
-If we are going to be linting and fixing in tandem, we want to ensure that:
+Unlike "linting", this "fixing" is a necessarily strict process. We can choose
+to ignore a "linting" warning, but our "fixing" routine is going to fix
+everything that it is set up to fix.  If we are going to be "linting" and
+"fixing" in tandem, we will want to ensure that:
 
 1. Our "fixing" routine only fixes the problems that we want it to fix. We don't
-   want this routine to backslash all the square brackets in our carefully laid
-   out checkboxes.
+   want this routine to, say, backslash all the square brackets in our carefully
+   laid out checkboxes.
 
 2. Our "linting" routine highlights most, if not all, of the issues that are
-   fixed by the "fixing" routine.  We want this routine to highlight lines
+   fixed by the "fixing" routine.  We want this routine to, say, highlight lines
    with checkboxes if they are are going to be "backslashed" by the "fixing
    routine.
 
-3. Our "fixing" routine does not (re)introduce Markdown that is going to be
-   highlighted by the "linting" routine. We don't want to convert all our
-   unordered lists to use `-` characters for bullets when out linting routine
-   wants to use `*` characters. 
+3. Our "fixing" routine does not (re)introduce Markdown that is going trigger
+   a "linting" warning. We don't want to convert all our unordered lists to use
+   `-` characters for bullets when out linting routine wants to use `*`
+   characters.
 
-In short, we will need to find complimentary setups for our "linting" and
-"fixing" routines.
+Since I want to use [Remark][] for both the "linting" and "fixing" in [Vim][],
+I need to find complimentary, or at least non-conflicting, configurations for
+both of these processes.
 
 ## Where to start?
 
@@ -93,7 +91,7 @@ different parts can be used in different contexts. Some relevant ones include:
   using all the above.
 
 * Support for additional markup and output (like footnotes, frontmatter,
-  directives, ToCs, GFM, MDX, etc) is provided by various plugins.  
+  directives, ToCs, GFM, MDX, etc) is provided by various plugins.
 
 * [`unified-engine`][unified-engine]: a framework for processing files and
   configurations.
@@ -106,47 +104,35 @@ different parts can be used in different contexts. Some relevant ones include:
 * [`remark-cli`][remark-cli]: a command-line interface based on `unified` and
   `remark`
 
-Unfortunately the documentation is spread across a number of packages and
-projects. Understanding the application, its plugins, and all the relevant
-settings and configuration options, requires tracking through a lot of cross
-references.  I hope the above provides a semblance of a guide if you want to go
-digging yourself.
-
-One thing is reasonably clear though: the last package in this stack is the one
-that gives you the `remark` command and this is what we need for integration
-with [Vim][].  We can get this, plus all the packages above, by running:
+For [ALE][] integration with [Vim][], I needed a command line interface, so the
+last package in the above stack was what I wanted.
 
 ```console
 npm install -g remark-cli
 ```
 
-## Linting Versus Fixing 
+This gave me a `remark` command, installed in a user-global context, which
+I could use on arbitrary Markdown files.
+
+Unfortunately, the documentation for [Remark][] is spread across all of the
+above packages and I found that understanding the application and its plugins,
+plus all the relevant settings and configuration options, required tracking
+through a lot of cross-references.
+
+## Fixing
 
 Out of the box, the `remark` command gives us an automatic "fixing" utility.
 When you run it on a Markdown file it will parse the content into an AST using
 [`remark-parse`][remark-parse] and then serializes that AST back into text using
 [`remark-stringify`][remark-stringify]. The result is usually a more "strictly"
 formatted version of the original Markdown, with things like bullet characters
-and block spacing being applied consistently. 
-
-Now we come to the crux of problem.
-
-I want to use [Remark][] for both the "linting" and "fixing" while composing
-markdown in [Vim][], so I need both to be complimentary, or at least not
-conflict.  I don't want to be in a situation where my "fixing" routine alters
-the markdown but triggers a fresh "linting" error, or where manualy fixing
-a linting error is reverted by running the "fixing" routine. 
-
-This amounts to finding a complimentary set of settings for
-[`remark-stringify`][remark-stringify] and set of linting plugins and options.
+and block spacing being applied consistently.
 
 Various details of this "reformatting" can be controlled by settings passed to
 the serializer (see [`mdast-util-to-markdown`][mdast-util-to-markdown] for
-details).
-
-The defaults for most settings are reasonable and using them in this particular
-combination avoids many issues. Of particular note are the following settings
-which minimize ambiguity and seem to give stable behaviour:
+details).  The defaults for most settings are reasonable and using them in this
+particular combination avoids many issues. Of particular note are the following
+settings which minimize ambiguity and seem to give stable behaviour:
 
 ```yaml
 bullet: '*'
@@ -157,7 +143,7 @@ fence: '`'
 quote: '"'
 ```
 
-The only ones I change are:
+The only ones I ended up changing where:
 
 ```yaml
 rule: '-'
@@ -167,24 +153,29 @@ listItemIndent: one
 
 Using `-` instead of `*` for a rule marker helps avoid a couple of edge cases
 where the intent is ambiguous.  Always using fences for code blocks, and
-a single space after bullets, enforces a consistency that can help to avoid
-unnecessary round-trips.
+a single space after bullets, enforces a consistency that matches well with the
+available linting rules.
 
-If you want support for GFM tables and checkbox lists, say, in you github
-project's `README.md` file,  you will want to add the `remark-gfm` plugin.  This
+**FIXME**
+
+This formatting could also be influenced by plugins...
+
+I you want support for GFM tables and checkbox lists, say, in you github
+project's `README.md` file, you will want to add the `remark-gfm` plugin.  This
 has to be loaded before any associated "linting" plugins since they require the
-content to be appropriately parsed before it can be "linted". There are some
-options to this module, but the defaults seem to work well.
+content to be appropriately parsed before it can be interpreted by the "linting"
+routines. There are some options to this module, but the defaults seem to work
+well.
 
-If you are writing a blog that uses [Jekyll][] to generate static content from
-Markdown, you will want to add the `remark-frontmatter` plugin as well. This
-will prevent the delimiters for the front matter block (`---`) from raising
-errors. There are some optional settings, but the defaults work well for this
-case.
+If you are writing a blog, like this one, that uses [Jekyll][] to generate
+static content from Markdown, you will want to add the `remark-frontmatter`
+plugin as well. This will prevent the delimiters for the front matter block
+(`---`) from raising errors. There are some optional settings, but the defaults
+work well for this case.
 
 ## Linting Markdown
 
-At this stage, despite having a `remark-lint` module installed, you do not have
+At this stage, despite having a `remark-lint` module installed, I did not have
 any linting capabilities. This is because `remark-lint` passes off all the
 actual linting to configurable plugins that target specific errors or
 warnings. These must be installed and loaded before any linting can occur.
@@ -206,96 +197,99 @@ presets.  I've omitted the `remark-lint-` prefix and used the following
 key to keep the table compact.
 
 * **MSG**: Rules provided by the Markdown Style Guide preset
-* **C**: Rules provided by the Consistent preset
-* **R**: Rules provided by the Recommended preset
+* **Con**: Rules provided by the Consistent preset
+* **Rec**: Rules provided by the Recommended preset
 * **GFM**: Rules that require the Github Flavoured Markdown plugin (`remark-gfm`)
-* **F**: Rules that are "fixed" by the serializer
+* **Fix**: Rules that are "fixed" by the serializer
 
-| Plugin                                                                               | MSG | C | R | GFM | F  |
-| ------------------------------------------------------------------------------------ | --- | - | - | --- | -- |
-| [`definition-case`][remark-lint-definition-case]                                     | X   |   |   |     |    |
-| [`fenced-code-flag`][remark-lint-fenced-code-flag]                                   | X   |   |   |     |    |
-| [`file-extension`][remark-lint-file-extension]                                       | X   |   |   |     |    |
-| [`final-definition`][remark-lint-final-definition]                                   | X   |   |   |     |    |
-| [`maximum-heading-length`][remark-lint-maximum-heading-length]                       | X   |   |   |     |    |
-| [`maximum-line-length`][remark-lint-maximum-line-length]                             | X   |   |   |     |    |
-| [`no-duplicate-headings`][remark-lint-no-duplicate-headings]                         | X   |   |   |     |    |
-| [`no-emphasis-as-heading`][remark-lint-no-emphasis-as-heading]                       | X   |   |   |     |    |
-| [`no-file-name-articles`][remark-lint-no-file-name-articles]                         | X   |   |   |     |    |
-| [`no-file-name-consecutive-dashes`][remark-lint-no-file-name-consecutive-dashes]     | X   |   |   |     |    |
-| [`no-file-name-irregular-characters`][remark-lint-no-file-name-irregular-characters] | X   |   |   |     |    |
-| [`no-file-name-mixed-case`][remark-lint-no-file-name-mixed-case]                     | X   |   |   |     |    |
-| [`no-file-name-outer-dashes`][remark-lint-no-file-name-outer-dashes]                 | X   |   |   |     |    |
-| [`no-heading-punctuation`][remark-lint-no-heading-punctuation]                       | X   |   |   |     |    |
-| [`no-multiple-toplevel-headings`][remark-lint-no-multiple-toplevel-headings]         | X   |   |   |     |    |
-| [`no-shell-dollars`][remark-lint-no-shell-dollars]                                   | X   |   |   |     |    |
-| [`definition-spacing`][remark-lint-definition-spacing]                               | X   |   |   |     | X  |
-| [`list-item-spacing`][remark-lint-list-item-spacing]                                 | X   |   |   |     | X  |
-| [`no-consecutive-blank-lines`][remark-lint-no-consecutive-blank-lines]               | X   |   |   |     | X  |
-| [`ordered-list-marker-value`][remark-lint-ordered-list-marker-value]                 | X   |   |   |     | X  |
-| [`no-table-indentation`][remark-lint-no-table-indentation]                           | X   |   |   | X   | X  |
-| [`table-pipes`][remark-lint-table-pipes]                                             | X   |   |   | X   | X  |
-| [`table-pipe-alignment`][remark-lint-table-pipe-alignment]                           | X   |   |   | X   | X  |
-| [`table-cell-padding`][remark-lint-table-cell-padding]                               | X   | X |   | X   | X  |
-| [`blockquote-indentation`][remark-lint-blockquote-indentation]                       | X   | X |   |     | X  |
-| [`emphasis-marker`][remark-lint-emphasis-marker]                                     | X   | X |   |     | X  |
-| [`fenced-code-marker`][remark-lint-fenced-code-marker]                               | X   | X |   |     | X  |
-| [`code-block-style`][remark-lint-code-block-style]                                   | X   | X |   |     | X  |
-| [`heading-style`][remark-lint-heading-style]                                         | X   | X |   |     | X  |
-| [`link-title-style`][remark-lint-link-title-style]                                   | X   | X |   |     | X+ |
-| [`list-item-content-indent`][remark-lint-list-item-content-indent]                   | X   | X |   |     | X  |
-| [`rule-style`][remark-lint-rule-style]                                               | X   | X |   |     | X  |
-| [`strong-marker`][remark-lint-strong-marker]                                         | X   | X |   |     | X  |
-| [`ordered-list-marker-style`][remark-lint-ordered-list-marker-style]                 | X   | X | X |     | X  |
-| [`hard-break-spaces`][remark-lint-hard-break-spaces]                                 | X   |   | X |     | X  |
-| [`list-item-indent`][remark-lint-list-item-indent]                                   | X   |   | X |     | X  |
-| [`no-auto-link-without-protocol`][remark-lint-no-auto-link-without-protocol]         | X   |   | X |     | X  |
-| [`no-blockquote-without-marker`][remark-lint-no-blockquote-without-marker]           | X   |   | X |     | X  |
-| [`no-literal-urls`][remark-lint-no-literal-urls]                                     | X   |   | X |     | X  |
-| [`no-shortcut-reference-image`][remark-lint-no-shortcut-reference-image]             | X   |   | X |     | X  |
-| [`no-shortcut-reference-link`][remark-lint-no-shortcut-reference-link]               | X   |   | X |     | X  |
-| [`list-item-bullet-indent`][remark-lint-list-item-bullet-indent]                     |     |   | X |     | X  |
-| [`final-newline`][remark-lint-final-newline]                                         |     |   | X |     | X  |
-| [`no-heading-content-indent`][remark-lint-no-heading-content-indent]                 |     |   | X |     | X  |
-| [`no-undefined-references`][remark-lint-no-undefined-references]                     |     |   | X |     |    |
-| [`no-unused-definitions`][remark-lint-no-unused-definitions]                         |     |   | X |     |    |
-| [`no-duplicate-definitions`][remark-lint-no-duplicate-definitions]                   |     |   | X |     |    |
-| [`no-inline-padding`][remark-lint-no-inline-padding]                                 |     |   | X |     |    |
-| [`heading-increment`][remark-lint-heading-increment]                                 | X   |   |   |     |    |
-| [`checkbox-character-style`][remark-lint-checkbox-character-style]                   |     | X |   | X   | X  |
-| [`checkbox-content-indent`][remark-lint-checkbox-content-indent]                     |     |   |   | X   | X  |
-| [`strikethrough-marker`][remark-lint-strikethrough-marker]                           |     |   |   | X   | X  |
-| [`unordered-list-marker-style`][remark-lint-unordered-list-marker-style]             |     |   |   |     | X  |
-| [`linebreak-style`][remark-lint-linebreak-style]                                     |     |   |   |     | X  |
-| [`no-missing-blank-lines`][remark-lint-no-missing-blank-lines]                       |     |   |   |     | X  |
-| [`first-heading-level`][remark-lint-first-heading-level]                             |     |   |   |     |    |
-| [`no-duplicate-defined-urls`][remark-lint-no-duplicate-defined-urls]                 |     |   |   |     |    |
-| [`no-duplicate-headings-in-section`][remark-lint-no-duplicate-headings-in-section]   |     |   |   |     |    |
-| [`no-empty-url`][remark-lint-no-empty-url]                                           |     |   |   |     |    |
-| [`no-heading-indent`][remark-lint-no-heading-indent]                                 |     |   |   |     |    |
-| [`no-heading-like-paragraph`][remark-lint-no-heading-like-paragraph]                 |     |   |   |     |    |
-| [`no-html`][remark-lint-no-html]                                                     |     |   |   |     |    |
-| [`no-paragraph-content-indent`][remark-lint-no-paragraph-content-indent]             |     |   |   |     |    |
-| [`no-reference-like-url`][remark-lint-no-reference-like-url]                         |     |   |   |     |    |
-| [`no-tabs`][remark-lint-no-tabs]                                                     |     |   |   |     |    |
-| [`no-unneeded-full-reference-image`][remark-lint-no-unneeded-full-reference-image]   |     |   |   |     |    |
-| [`no-unneeded-full-reference-link`][remark-lint-no-unneeded-full-reference-link]     |     |   |   |     |    |
+| Plugin                                                                               | MSG | Con | Rec | GFM | Fix |
+| ------------------------------------------------------------------------------------ | --- | --- | --- | --- | --- |
+| [`definition-case`][remark-lint-definition-case]                                     | X   |     |     |     |     |
+| [`fenced-code-flag`][remark-lint-fenced-code-flag]                                   | X   |     |     |     |     |
+| [`file-extension`][remark-lint-file-extension]                                       | X   |     |     |     |     |
+| [`final-definition`][remark-lint-final-definition]                                   | X   |     |     |     |     |
+| [`maximum-heading-length`][remark-lint-maximum-heading-length]                       | X   |     |     |     |     |
+| [`maximum-line-length`][remark-lint-maximum-line-length]                             | X   |     |     |     |     |
+| [`no-duplicate-headings`][remark-lint-no-duplicate-headings]                         | X   |     |     |     |     |
+| [`no-emphasis-as-heading`][remark-lint-no-emphasis-as-heading]                       | X   |     |     |     |     |
+| [`no-file-name-articles`][remark-lint-no-file-name-articles]                         | X   |     |     |     |     |
+| [`no-file-name-consecutive-dashes`][remark-lint-no-file-name-consecutive-dashes]     | X   |     |     |     |     |
+| [`no-file-name-irregular-characters`][remark-lint-no-file-name-irregular-characters] | X   |     |     |     |     |
+| [`no-file-name-mixed-case`][remark-lint-no-file-name-mixed-case]                     | X   |     |     |     |     |
+| [`no-file-name-outer-dashes`][remark-lint-no-file-name-outer-dashes]                 | X   |     |     |     |     |
+| [`no-heading-punctuation`][remark-lint-no-heading-punctuation]                       | X   |     |     |     |     |
+| [`no-multiple-toplevel-headings`][remark-lint-no-multiple-toplevel-headings]         | X   |     |     |     |     |
+| [`no-shell-dollars`][remark-lint-no-shell-dollars]                                   | X   |     |     |     |     |
+| [`definition-spacing`][remark-lint-definition-spacing]                               | X   |     |     |     | X   |
+| [`list-item-spacing`][remark-lint-list-item-spacing]                                 | X   |     |     |     | X   |
+| [`no-consecutive-blank-lines`][remark-lint-no-consecutive-blank-lines]               | X   |     |     |     | X   |
+| [`ordered-list-marker-value`][remark-lint-ordered-list-marker-value]                 | X   |     |     |     | X   |
+| [`no-table-indentation`][remark-lint-no-table-indentation]                           | X   |     |     | X   | X   |
+| [`table-pipes`][remark-lint-table-pipes]                                             | X   |     |     | X   | X   |
+| [`table-pipe-alignment`][remark-lint-table-pipe-alignment]                           | X   |     |     | X   | X   |
+| [`table-cell-padding`][remark-lint-table-cell-padding]                               | X   | X   |     | X   | X   |
+| [`blockquote-indentation`][remark-lint-blockquote-indentation]                       | X   | X   |     |     | X   |
+| [`emphasis-marker`][remark-lint-emphasis-marker]                                     | X   | X   |     |     | X   |
+| [`fenced-code-marker`][remark-lint-fenced-code-marker]                               | X   | X   |     |     | X   |
+| [`code-block-style`][remark-lint-code-block-style]                                   | X   | X   |     |     | X   |
+| [`heading-style`][remark-lint-heading-style]                                         | X   | X   |     |     | X   |
+| [`link-title-style`][remark-lint-link-title-style]                                   | X   | X   |     |     | X+  |
+| [`list-item-content-indent`][remark-lint-list-item-content-indent]                   | X   | X   |     |     | X   |
+| [`rule-style`][remark-lint-rule-style]                                               | X   | X   |     |     | X   |
+| [`strong-marker`][remark-lint-strong-marker]                                         | X   | X   |     |     | X   |
+| [`ordered-list-marker-style`][remark-lint-ordered-list-marker-style]                 | X   | X   | X   |     | X   |
+| [`hard-break-spaces`][remark-lint-hard-break-spaces]                                 | X   |     | X   |     | X   |
+| [`list-item-indent`][remark-lint-list-item-indent]                                   | X   |     | X   |     | X   |
+| [`no-auto-link-without-protocol`][remark-lint-no-auto-link-without-protocol]         | X   |     | X   |     | X   |
+| [`no-blockquote-without-marker`][remark-lint-no-blockquote-without-marker]           | X   |     | X   |     | X   |
+| [`no-literal-urls`][remark-lint-no-literal-urls]                                     | X   |     | X   |     | X   |
+| [`no-shortcut-reference-image`][remark-lint-no-shortcut-reference-image]             | X   |     | X   |     | X   |
+| [`no-shortcut-reference-link`][remark-lint-no-shortcut-reference-link]               | X   |     | X   |     | X   |
+| [`list-item-bullet-indent`][remark-lint-list-item-bullet-indent]                     |     |     | X   |     | X   |
+| [`final-newline`][remark-lint-final-newline]                                         |     |     | X   |     | X   |
+| [`no-heading-content-indent`][remark-lint-no-heading-content-indent]                 |     |     | X   |     | X   |
+| [`no-undefined-references`][remark-lint-no-undefined-references]                     |     |     | X   |     |     |
+| [`no-unused-definitions`][remark-lint-no-unused-definitions]                         |     |     | X   |     |     |
+| [`no-duplicate-definitions`][remark-lint-no-duplicate-definitions]                   |     |     | X   |     |     |
+| [`no-inline-padding`][remark-lint-no-inline-padding]                                 |     |     | X   |     |     |
+| [`heading-increment`][remark-lint-heading-increment]                                 | X   |     |     |     |     |
+| [`checkbox-character-style`][remark-lint-checkbox-character-style]                   |     | X   |     | X   | X   |
+| [`checkbox-content-indent`][remark-lint-checkbox-content-indent]                     |     |     |     | X   | X   |
+| [`strikethrough-marker`][remark-lint-strikethrough-marker]                           |     |     |     | X   | X   |
+| [`unordered-list-marker-style`][remark-lint-unordered-list-marker-style]             |     |     |     |     | X   |
+| [`linebreak-style`][remark-lint-linebreak-style]                                     |     |     |     |     | X   |
+| [`no-missing-blank-lines`][remark-lint-no-missing-blank-lines]                       |     |     |     |     | X   |
+| [`first-heading-level`][remark-lint-first-heading-level]                             |     |     |     |     |     |
+| [`no-duplicate-defined-urls`][remark-lint-no-duplicate-defined-urls]                 |     |     |     |     |     |
+| [`no-duplicate-headings-in-section`][remark-lint-no-duplicate-headings-in-section]   |     |     |     |     |     |
+| [`no-empty-url`][remark-lint-no-empty-url]                                           |     |     |     |     |     |
+| [`no-heading-indent`][remark-lint-no-heading-indent]                                 |     |     |     |     |     |
+| [`no-heading-like-paragraph`][remark-lint-no-heading-like-paragraph]                 |     |     |     |     |     |
+| [`no-html`][remark-lint-no-html]                                                     |     |     |     |     |     |
+| [`no-paragraph-content-indent`][remark-lint-no-paragraph-content-indent]             |     |     |     |     |     |
+| [`no-reference-like-url`][remark-lint-no-reference-like-url]                         |     |     |     |     |     |
+| [`no-tabs`][remark-lint-no-tabs]                                                     |     |     |     |     |     |
+| [`no-unneeded-full-reference-image`][remark-lint-no-unneeded-full-reference-image]   |     |     |     |     |     |
+| [`no-unneeded-full-reference-link`][remark-lint-no-unneeded-full-reference-link]     |     |     |     |     |     |
 
 You can see from the above table that many of issues raised by these linting
-rules can be automatically resolved by the serializer. To do this effectively,
-however, requires using complementary "fixer" and "linter" settings.  Mostly
-these correspond to the default [`remark-stringify`][remark-stringify] settings
-and
-[`remark-preset-lint-markdown-style-guide`][remark-preset-lint-markdown-style-guide]
-settings, but there are a couple of instances where I found I had to alter those
-settings to get consistent behaviour.  If we note the overlap of the MSG and
-Recommended presets with the rules that are automatically fixed by the
-serializer, we can get a reasonably compact configuration by including those
+rules can be automatically resolved by the serializer.  Noting the overlap of
+the MSG and Recommended presets with the rules that are automatically fixed by
+the serializer, I could get a reasonably compact rule set by including those
 presets, the GFM plugin, and just 6 extra rules.
+This did included a number of rules that could not be fixed by the serializer,  but they all seemed to be sensible enough and I had no problems including them.
 
-The following is a trimmed down version of the configuration that I use. The
-[full version][my-remarkrc] includes detailed comments on all the official rules
-as a quick reference in case I need to tweak anything.
+The default [`remark-stringify`][remark-stringify] settings, the default linting
+rule settings, and the
+[`remark-preset-lint-markdown-style-guide`][remark-preset-lint-markdown-style-guide]
+setting overrides, were generally fairly complimentary, and there were only
+a couple of instances where I had to override settings to get the desired
+behaviour.  
+
+The following is a trimmed down version of the configuration that I use, with
+the required overrides.  The [full version][my-remarkrc] includes detailed
+comments on all the official rules as a quick reference in case I need to tweak
+anything.
 
 ```yaml
 settings:
@@ -330,8 +324,8 @@ plugins:
     - exceptTightLists: true
 ```
 
-In the above we override preset configurations by loading the associated rule
-but using different options.
+In the above, we override preset configurations by loading the associated rule
+and applying alternative options.
 
 Unfortunately there was one rule that I could not configure to consistently
 match the serializer output: `link-title-style`. Since this could be loaded via
@@ -385,7 +379,7 @@ npm install -g                                   \
 
 ## Configuration
 
-Configuration for `remark` is handled by [`unified-args`][unified-args]
+Configuration for `remark` is handled by [`unified-engine`][unified-engine]
 framework. This supports configuration files in multiple formats and a search up
 the file-system hierarchy. The current directory is searched for a file named
 either
@@ -398,7 +392,8 @@ If a matching file is not found, the parent directory is searched, and so on.
 With this setup, you can have optional project level configurations and
 a catch-all configuration in, say, your home directory.  Note that if a lower
 level configuration file is found, the search stops and any higher level
-configuration files are ignored.
+configuration files are ignored, so there is no convenient merging of
+configurations.
 
 The documentation suggests there is a "configuration cascade" and that settings
 may be extended or overridden, but unfortunately, it does not include any
@@ -409,16 +404,19 @@ does not work for many of the linting rules and so its not very useful for us.
 
 If you install `remark-cli`, [ALE][] will automatically detect it and start
 linting accordingly. If you run `:ALEInfo`, you will see `remark-lint` in the
-list of "Available Linters". There is some term juggling going on here. [ALE][]
-refers to both the "fixer" and the "linter" as `remark-lint` (possibly for
-historical reasons). But note that the `g:ale_markdown_remark_lint_executable`
-variable is set to `remark`.
+list of "Available Linters". 
+
+> There is some term juggling going on here. [ALE][] refers to both the "fixer"
+> and the "linter" as `remark-lint` (possibly for historical reasons). But note
+> that the `g:ale_markdown_remark_lint_executable` variable is set to
+> `remark`. So `remark-lint` is the one that we want, and it will use the right
+> command.
 
 You can configure [ALE][] to use `remark-lint` as a "fixer" via a global
 setting, but I prefer do this via a buffer local setting in
 `~/.vim/ftplugin/markdown.vim`:
 
-```vimrc
+```viml
 # Only use `remark` for linting and fixing
 let b:ale_linters=['remark-lint']
 let b:ale_fixers=['remark-lint']
@@ -426,6 +424,14 @@ let b:ale_fixers=['remark-lint']
 
 Note that I also explicitly limit [ALE][] to using `remark-lint` since I don't
 want other "linters" confusing my set up.
+
+As part of my global `.vimrc` I also have `ALEFix` bound to `\f` so "fixing" my
+buffer is only two key presses away:
+
+```viml
+nmap <silent> <leader>f <Plug>(ale_fix)
+
+```
 
 ### Local overrides
 
@@ -436,13 +442,13 @@ tweak the "live" linting to omit some plugins.
 
 If you use [localvimrc][] files, you could override a plugin with:
 
-```vimrc
+```viml
 let b:ale_markdown_remark_lint_options = '-u remark-lint-no-html=false'
 ```
 
 Or you could force the use of the global executable and configuration with
 
-```vimrc
+```viml
 let b:ale_markdown_remark_lint_use_global = 1
 let b:ale_markdown_remark_lint_options = '-r ~/.remarkrc'
 ```
@@ -450,22 +456,26 @@ let b:ale_markdown_remark_lint_options = '-r ~/.remarkrc'
 ### No Tabs
 
 One of the potential linting rules, [`no-tabs`][remark-lint-no-tabs], warns
-about using raw tab characters. In [Vim][] you can avoid needing to use this rule
-by adding the following lines to your `~/.vim/ftplugin/markdown.vim` file:
+about using raw tab characters. With [Vim][] I avoid needing to use this rule
+by adding the following lines to my `~/.vim/ftplugin/markdown.vim` file:
 
-```vimrc
+```viml
 setlocal tabstop=2
 setlocal shiftwidth=2
 setlocal shiftround       " Indent/outdent to nearest tabstop
 setlocal expandtab        " Convert all tabs typed to spaces
 ```
 
+This makes it pretty difficult to accidentally enter a tab character unless
+I explicitly want to (say for a Makefile snippet).
+
 ### Long lines
 
 One issue that often arises is whether or not to wrap long lines. The Markdown
-Style Guide suggests doing this at 80 chars, but some markdown processors
-(GitLab) interpret these as hard-breaks rather than re-flowing as expected (the
-spec says you need 2 spaces or a "\\" at the end of a line for a hard-break).
+Style Guide suggests doing this at 80 chars, but some markdown processors (like
+GitLab) interpret these as hard-breaks rather than re-flowing as expected (the
+specification says you need 2 spaces or a backslash at the end of a line for
+a hard-break).
 
 I avoid this issue (and many arguments with other developers) by disabling the
 [`maximum-line-length`][remark-lint-maximum-line-length] plugin in my
@@ -476,15 +486,16 @@ I avoid this issue (and many arguments with other developers) by disabling the
     - false
 ```
 
-and adding the following settings to my `~/.vim/ftplugin/markdown.vim` to get
-reasonable soft-wrapping behaviour:
+and adding the following settings to my `~/.vim/ftplugin/markdown.vim`:
 
-```vimrc
+```viml
 setlocal linebreak        " Wrap long lines at word boundaries
 setlocal formatoptions-=t " Dont auto-wrap text using textwidth
 setlocal columns=80       " Constrain window width to trigger soft wrap
 # ^ increase this if you use number or error columns
 ```
+
+This gives me reasonable soft-wrapping behaviour and makes editing Markdown files with very long lines bearable.
 
 ## Conclusion
 
@@ -517,8 +528,6 @@ errors that I could later bulk fix by triggering `ALEFix`.
 [remark-lint rules]: https://github.com/remarkjs/remark-lint/blob/main/doc/rules.md#list-of-rules
 
 [remark]: https://remark.js.org/
-
-[micromark]: https://github.com/micromark/micromark
 
 [mdast]: https://github.com/syntax-tree/mdast
 
