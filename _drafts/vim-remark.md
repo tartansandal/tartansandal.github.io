@@ -7,18 +7,69 @@ title: "Linting and Fixing in Vim with Remark"
 ---
 
 The [Remark][] utility can be used to highlight issues with your [Markdown][]
-files and to automatically fix many of them. Figuring out how to
-configure [Remark][] to work well with [Vim][] and [ALE][] was a bit
-of a challenge, so I thought I would share my setup and some tips.
+files and to automatically fix many of them.  Figuring out how to configure
+[Remark][] to work well with [Vim][] and [ALE][] was a bit of a challenge, so
+I thought I would share my setup plus some tips.
 
-## Frameworks
+## Linting vs Fixing
 
-First up, [Remark][] is a general framework for processing Markdown and not just
-for converting it to HTML. It is built out of layered components so that
+Historically Markdown was based on common formatting conversions in email and
+usenet, and although formal specifications like [Commonmark][] have been
+developed, there are a still a range of valid flavours and styles. 
+
+Ideally Markdown should:
+
+1. Make sense in its raw form
+2. Make the same sense when converted to HTML
+
+The first point calls out to consistency and using well established forms:
+warning when technically valid but inconsistent or unusual Markdown is used.
+The second point calls out to the observed behaviour of common Markdown
+compilers: warning when particular styles of Markdown will either be
+interpreted by differently by different compilers, or result in an unexpected
+conversion. 
+
+We can try to address this by following a set of rules like the [Markdown Style
+Guide][]. Moreover, automated "linting" facilities like [Remark][] can warn us
+when we stray from these rules, and integrations like [ALE][] can do this
+asynchronously as we write in [Vim][].  
+
+There is nothing particularly controversial here.
+
+Now some warnings indicate ambiguity and require us to make some decision to
+clarify out intent.  Other warnings typically identify inconsistency and can
+only be resolved in one way, for example, inconsistent spacing or bullet
+markers.  The latter warnings lend themselves to automated "fixing", a process
+supported by [Remark][] and [ALE][] via the `ALEFix` command. 
+
+Unlike "linting", "fixing" is a necessarily strict process. We can choose to
+ignore a "linting" warning, but our "fixing" routine is going to fix everything
+that it is set up to fix.
+
+If we are going to be linting and fixing in tandem, we want to ensure that:
+
+1. Our "fixing" routine only fixes the problems that we want it to fix. We don't
+   want this routine to backslash all the square brackets in our carefully laid
+   out checkboxes.
+
+2. Our "linting" routine highlights most, if not all, of the issues that are
+   fixed by the "fixing" routine.  We want this routine to highlight lines
+   with checkboxes if they are are going to be "backslashed" by the "fixing
+   routine.
+
+3. Our "fixing" routine does not (re)introduce Markdown that is going to be
+   highlighted by the "linting" routine. We don't want to convert all our
+   unordered lists to use `-` characters for bullets when out linting routine
+   wants to use `*` characters. 
+
+In short, we will need to find complimentary setups for our "linting" and
+"fixing" routines.
+
+## Where to start?
+
+[Remark][] is a general framework for processing Markdown and not just
+for converting it to HTML.  It is built out of layered components so that
 different parts can be used in different contexts. Some relevant ones include:
-
-* [`micromark`][micromark]: the smallest commonmark-compliant markdown parser
-  that exists.
 
 * [`mdast`][mdast]: a specification for representing a various Markdown flavours
   in an Abstract Syntax Tree.
@@ -41,39 +92,57 @@ different parts can be used in different contexts. Some relevant ones include:
 * [`remark`][remark-package]: is a markdown processor powered by plugins and
   using all the above.
 
-* [`unified`][unified]: a framework for building text processing tools.
+* Support for additional markup and output (like footnotes, frontmatter,
+  directives, ToCs, GFM, MDX, etc) is provided by various plugins.  
+
+* [`unified-engine`][unified-engine]: a framework for processing files and
+  configurations.
+
+* [`unified-args`][unified-args]: a framework for building command-line tools.
+
+* [`unified`][unified]: a framework for building text processing tools using the
+  above.
 
 * [`remark-cli`][remark-cli]: a command-line interface based on `unified` and
   `remark`
 
-At various layers, support for additional markup and output (like footnotes,
-frontmatter, directives, ToCs, GFM, MDX, etc) can be provided by [remark
-plugins][].
+Unfortunately the documentation is spread across a number of packages and
+projects. Understanding the application, its plugins, and all the relevant
+settings and configuration options, requires tracking through a lot of cross
+references.  I hope the above provides a semblance of a guide if you want to go
+digging yourself.
 
-This can make understanding the setup and configuration a little confusing,
-with the documentation being spread across a number of packages and projects.
-
-## Fixing Markdown
-
-You can get an automatic "fixing" ability but simply installing `remark-cli`:
+One thing is reasonably clear though: the last package in this stack is the one
+that gives you the `remark` command and this is what we need for integration
+with [Vim][].  We can get this, plus all the packages above, by running:
 
 ```console
 npm install -g remark-cli
 ```
 
-With that you get all of the above libraries installed plus a command-line
-utility called `remark`. When you run this command on a markdown file, it will
-parse the content into an AST using [`remark-parse`][remark-parse] and then
-serializes that AST back into text using
-[`remark-stringify`][remark-stringify]. The result is usually a more "strictly"
-formated file that differs from the input. To get this "fixing" routine to match
-your desired style, you need to adjust the options for
-[`remark-stringify`][remark-stringify].  These options are actually inherited
-from [`mdast-util-to-markdown`][mdast-util-to-markdown], so you will want to
-look there for details.
+## Linting Versus Fixing 
 
-Whatever settings you choose, if you want to want to use the "linting" and
-"fixing" feature of [ALE][], you will need to ensure your "fixing" settings don't conflict with your "linting" rules. You don't want to be in a situation where your "fixing" routine alters the markdown so that a fresh "linting" error is triggered, especially if you have just fixed that error manually.
+Out of the box, the `remark` command gives us an automatic "fixing" utility.
+When you run it on a Markdown file it will parse the content into an AST using
+[`remark-parse`][remark-parse] and then serializes that AST back into text using
+[`remark-stringify`][remark-stringify]. The result is usually a more "strictly"
+formatted version of the original Markdown, with things like bullet characters
+and block spacing being applied consistently. 
+
+Now we come to the crux of problem.
+
+I want to use [Remark][] for both the "linting" and "fixing" while composing
+markdown in [Vim][], so I need both to be complimentary, or at least not
+conflict.  I don't want to be in a situation where my "fixing" routine alters
+the markdown but triggers a fresh "linting" error, or where manualy fixing
+a linting error is reverted by running the "fixing" routine. 
+
+This amounts to finding a complimentary set of settings for
+[`remark-stringify`][remark-stringify] and set of linting plugins and options.
+
+Various details of this "reformatting" can be controlled by settings passed to
+the serializer (see [`mdast-util-to-markdown`][mdast-util-to-markdown] for
+details).
 
 The defaults for most settings are reasonable and using them in this particular
 combination avoids many issues. Of particular note are the following settings
@@ -368,7 +437,7 @@ tweak the "live" linting to omit some plugins.
 If you use [localvimrc][] files, you could override a plugin with:
 
 ```vimrc
-let b:ale_markdown_remark_lint_options = '-u remark-lint-long-check=false'
+let b:ale_markdown_remark_lint_options = '-u remark-lint-no-html=false'
 ```
 
 Or you could force the use of the global executable and configuration with
@@ -413,14 +482,25 @@ reasonable soft-wrapping behaviour:
 ```vimrc
 setlocal linebreak        " Wrap long lines at word boundaries
 setlocal formatoptions-=t " Dont auto-wrap text using textwidth
-setlocal columns=83       " Constrain window width to trigger soft wrap
+setlocal columns=80       " Constrain window width to trigger soft wrap
+# ^ increase this if you use number or error columns
 ```
 
 ## Conclusion
 
-So that's my configuration and some of the rationale behind it. Once I worked out all the wrinkles, I found [Remark][] to a valuable addition to my linting setup.  Integrating the "linter" and "fixer" into [Vim][] really helps to keep my writing on target.
+So that's my configuration and some of the rationale behind it. Once I worked
+out all the wrinkles, I found [Remark][] to a valuable addition to my linting
+setup.  Integrating the "linter" and "fixer" into [Vim][] really helps to keep
+my writing on target.  Knowing that linting was always there meant I could, say,
+ignore tracking down a reference until I was sure I was going to keep the
+sentence that contained it.  I liked being able to temporarily ignore linting
+errors that I could later bulk fix by triggering `ALEFix`.
 
 <!-- References -->
+
+[commonmark]: https://commonmark.org
+
+[markdown style guide]: https://cirosantilli.com/markdown-style-guide/
 
 [markdown]: https://en.wikipedia.org/wiki/Markdown
 
@@ -433,8 +513,6 @@ So that's my configuration and some of the rationale behind it. Once I worked ou
 [ale]: https://github.com/dense-analysis/ale
 
 [jekyll]: https://jekyllrb.com
-
-[remark plugins]: https://github.com/remarkjs/remark/blob/main/doc/plugins.md#plugins
 
 [remark-lint rules]: https://github.com/remarkjs/remark-lint/blob/main/doc/rules.md#list-of-rules
 
@@ -459,6 +537,8 @@ So that's my configuration and some of the rationale behind it. Once I worked ou
 [unified]: https://github.com/unifiedjs/unified
 
 [unified-args]: https://github.com/unifiedjs/unified-args
+
+[unified-engine]: https://github.com/unifiedjs/unified-engine
 
 [remark-preset-lint-consistent]: https://github.com/remarkjs/remark-lint/tree/main/packages/remark-preset-lint-consistent
 
