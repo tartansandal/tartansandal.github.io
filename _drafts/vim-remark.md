@@ -11,6 +11,41 @@ files and to automatically fix many of them.  Figuring out how to configure
 [Remark][] to work well with [Vim][] and [ALE][] was a bit of a challenge, so
 I thought I would share my setup plus some tips.
 
+## TL;DR
+
+```yaml
+settings:
+  rule: '-'
+  fences: true
+  listItemIndent: one
+
+plugins:
+  - remark-gfm
+
+  - remark-preset-lint-recommended
+  - remark-preset-lint-markdown-style-guide
+
+  - - remark-lint-list-item-indent
+    - space
+
+  - - remark-lint-ordered-list-marker-value
+    - ordered
+
+  - remark-lint-strikethrough-marker
+  - remark-lint-checkbox-content-indent
+
+  - - remark-lint-checkbox-character-style
+    - {checked: 'x', unchecked: ' '}
+
+  - remark-lint-linebreak-style
+
+  - - remark-lint-unordered-list-marker-style
+    - '*'
+
+  - - remark-lint-no-missing-blank-lines
+    - exceptTightLists: true
+```
+
 ## Linting vs Fixing
 
 Historically Markdown was based on common formatting conversions in email and
@@ -75,8 +110,8 @@ different parts can be used in different contexts. Some relevant ones include:
 * [`mdast-util-from-markdown`][mdast-util-from-markdown]: a utility to parse
   Markdown to an AST.
 
-* [`remark-parse`][remark-parse]: a parser that converts Markdown to an AST
-  using the above.
+* [`remark-parse`][remark-parse]: a parser and compiler that converts Markdown
+  to an AST using the above.
 
 * [`mdast-util-to-markdown`][mdast-util-to-markdown]: a utility to serialize
   `mdast` to Markdown.
@@ -121,18 +156,18 @@ through a lot of cross-references.
 
 ## Fixing
 
-Out of the box, the `remark` command gives us an automatic "fixing" utility.
+Out of the box, the `remark` command gives us an automatic fixing utility.
 When you run it on a Markdown file it will parse the content into an AST using
 [`remark-parse`][remark-parse] and then serializes that AST back into text using
-[`remark-stringify`][remark-stringify]. The result is usually a more "strictly"
+[`remark-stringify`][remark-stringify]. The result is usually a more strictly
 formatted version of the original Markdown, with things like bullet characters
 and block spacing being applied consistently.
 
 Various details of this "reformatting" can be controlled by settings passed to
 the serializer (see [`mdast-util-to-markdown`][mdast-util-to-markdown] for
-details).  The defaults for most settings are reasonable and using them in this
-particular combination avoids many issues. Of particular note are the following
-settings which minimize ambiguity and seem to give stable behaviour:
+details).  The defaults for most settings are reasonable and avoid many
+issues. Of particular note are the following settings which minimize ambiguity
+and seem to give stable behaviour:
 
 ```yaml
 bullet: '*'
@@ -143,7 +178,7 @@ fence: '`'
 quote: '"'
 ```
 
-The only ones I ended up changing where:
+The only ones I ended up changing from the default where:
 
 ```yaml
 rule: '-'
@@ -156,22 +191,17 @@ where the intent is ambiguous.  Always using fences for code blocks, and
 a single space after bullets, enforces a consistency that matches well with the
 available linting rules.
 
-**FIXME**
-
-This formatting could also be influenced by plugins...
-
-I you want support for GFM tables and checkbox lists, say, in you github
-project's `README.md` file, you will want to add the `remark-gfm` plugin.  This
-has to be loaded before any associated "linting" plugins since they require the
-content to be appropriately parsed before it can be interpreted by the "linting"
-routines. There are some options to this module, but the defaults seem to work
-well.
-
-If you are writing a blog, like this one, that uses [Jekyll][] to generate
-static content from Markdown, you will want to add the `remark-frontmatter`
-plugin as well. This will prevent the delimiters for the front matter block
-(`---`) from raising errors. There are some optional settings, but the defaults
-work well for this case.
+This formatting can also be influenced by [plugins][remark-plugins] which extend
+the parser and compiler.  Since this blog uses tables (an extension to
+[Commonmark][] provided by [Github Flavoured Markdown][gfm]), I add the
+[`remark-gfm`][remark-gfm] plugin so that the fixing routine will ensure my table
+columns are nicely padded and aligned.  I also get support for checkboxes (which
+I occasionally use) and strikethroughs (which I seldom use). There are some
+options to this module, but the defaults seem to work well.  As you will see
+bellow, there are corresponding linting rules that highlight issues with this
+extended Markdown.  These rules have to be loaded *after* the plugin since they
+require the content to be appropriately parsed before it can be interpreted by
+the linting routines. 
 
 ## Linting Markdown
 
@@ -199,7 +229,7 @@ key to keep the table compact.
 * **MSG**: Rules provided by the Markdown Style Guide preset
 * **Con**: Rules provided by the Consistent preset
 * **Rec**: Rules provided by the Recommended preset
-* **GFM**: Rules that require the Github Flavoured Markdown plugin (`remark-gfm`)
+* **GFM**: Rules that require the Github Flavoured Markdown plugin
 * **Fix**: Rules that are "fixed" by the serializer
 
 | Plugin                                                                               | MSG | Con | Rec | GFM | Fix |
@@ -325,7 +355,7 @@ plugins:
 ```
 
 In the above, we override preset configurations by loading the associated rule
-and applying alternative options.
+with the desired options after the preset has been loaded.
 
 Unfortunately there was one rule that I could not configure to consistently
 match the serializer output: `link-title-style`. Since this could be loaded via
@@ -351,7 +381,7 @@ these under control at by adding the following rules:
 ```
 
 While all of the rules have some benefit, loading too many can slow down the
-"linting" routine while you are editing, so I generally relegate any additional
+linting routine while you are editing, so I generally relegate any additional
 rules to post-commit and CI hooks.
 
 To use the rules mentioned above I had to install a few packages:
@@ -417,20 +447,21 @@ setting, but I prefer do this via a buffer local setting in
 `~/.vim/ftplugin/markdown.vim`:
 
 ```viml
-# Only use `remark` for linting and fixing
-let b:ale_linters=['remark-lint']
 let b:ale_fixers=['remark-lint']
 ```
 
-Note that I also explicitly limit [ALE][] to using `remark-lint` since I don't
-want other "linters" confusing my set up.
+I also explicitly limit [ALE][] to using `remark-lint` because I don't
+want other installed "linters" being picked up and confusing my set up.
 
-As part of my global `.vimrc` I also have `ALEFix` bound to `\f` so "fixing" my
+```viml
+let b:ale_linters=['remark-lint']
+```
+
+Finally, I have `ALEFix` bound to `\f` as part of my global `.vimrc` so fixing my
 buffer is only two key presses away:
 
 ```viml
 nmap <silent> <leader>f <Plug>(ale_fix)
-
 ```
 
 ### Local overrides
@@ -453,6 +484,11 @@ let b:ale_markdown_remark_lint_use_global = 1
 let b:ale_markdown_remark_lint_options = '-r ~/.remarkrc'
 ```
 
+At the time of writing, very few of the linting plugins support passing in
+settings via the command line (PRs pending). Until that is fixed, the only way
+to alter the settings for an existing rule is to use an edited copy of the whole
+configuration file.
+
 ### No Tabs
 
 One of the potential linting rules, [`no-tabs`][remark-lint-no-tabs], warns
@@ -467,7 +503,7 @@ setlocal expandtab        " Convert all tabs typed to spaces
 ```
 
 This makes it pretty difficult to accidentally enter a tab character unless
-I explicitly want to (say for a Makefile snippet).
+I explicitly want to (say, for a Makefile snippet).
 
 ### Long lines
 
@@ -492,17 +528,23 @@ and adding the following settings to my `~/.vim/ftplugin/markdown.vim`:
 setlocal linebreak        " Wrap long lines at word boundaries
 setlocal formatoptions-=t " Dont auto-wrap text using textwidth
 setlocal columns=80       " Constrain window width to trigger soft wrap
-# ^ increase this if you use number or error columns
+" ^ increase this if you use number or error columns
 ```
 
-This gives me reasonable soft-wrapping behaviour and makes editing Markdown files with very long lines bearable.
+This gives me reasonable soft-wrapping behaviour and makes editing Markdown
+files with very long lines bearable.
 
 ## Conclusion
 
-So that's my configuration and some of the rationale behind it. Once I worked
-out all the wrinkles, I found [Remark][] to a valuable addition to my linting
-setup.  Integrating the "linter" and "fixer" into [Vim][] really helps to keep
-my writing on target.  Knowing that linting was always there meant I could, say,
+So that's my configuration and some of the rationale behind it. 
+
+Once I worked out all the wrinkles, I found [Remark][] to a valuable addition to
+my asynchronous linting setup.  
+
+Integrating the "linter" and "fixer" into [Vim][] really helps to keep my
+writing on target.  
+
+Knowing that linting was always there meant I could, say,
 ignore tracking down a reference until I was sure I was going to keep the
 sentence that contained it.  I liked being able to temporarily ignore linting
 errors that I could later bulk fix by triggering `ALEFix`.
@@ -510,6 +552,8 @@ errors that I could later bulk fix by triggering `ALEFix`.
 <!-- References -->
 
 [commonmark]: https://commonmark.org
+
+[gfm]: https://github.github.com/gfm/
 
 [markdown style guide]: https://cirosantilli.com/markdown-style-guide/
 
@@ -522,8 +566,6 @@ errors that I could later bulk fix by triggering `ALEFix`.
 [vim]: https://www.vim.org/
 
 [ale]: https://github.com/dense-analysis/ale
-
-[jekyll]: https://jekyllrb.com
 
 [remark-lint rules]: https://github.com/remarkjs/remark-lint/blob/main/doc/rules.md#list-of-rules
 
@@ -543,19 +585,23 @@ errors that I could later bulk fix by triggering `ALEFix`.
 
 [remark-package]: https://github.com/remarkjs/remark/tree/main/packages/remark
 
+[remark-plugins]: https://github.com/remarkjs/awesome-remark#plugins
+
+[remark-gfm]: https://github.com/remarkjs/remark-gfm
+
 [unified]: https://github.com/unifiedjs/unified
 
 [unified-args]: https://github.com/unifiedjs/unified-args
 
 [unified-engine]: https://github.com/unifiedjs/unified-engine
 
+[remark-cli]: https://github.com/remarkjs/remark/tree/main/packages/remark-cli
+
 [remark-preset-lint-consistent]: https://github.com/remarkjs/remark-lint/tree/main/packages/remark-preset-lint-consistent
 
 [remark-preset-lint-recommended]: https://github.com/remarkjs/remark-lint/tree/main/packages/remark-preset-lint-recommended
 
 [remark-preset-lint-markdown-style-guide]: https://github.com/remarkjs/remark-lint/tree/main/packages/remark-preset-lint-markdown-style-guide
-
-[remark-cli]: https://github.com/remarkjs/remark/tree/main/packages/remark-cli
 
 [remark-lint-blockquote-indentation]: https://github.com/remarkjs/remark-lint/tree/main/packages/remark-lint-blockquote-indentation
 
