@@ -44,6 +44,29 @@ plugins:
 
   - - remark-lint-no-missing-blank-lines
     - exceptTightLists: true
+
+  - - remark-lint-link-title-style
+    - false
+
+  - remark-lint-first-heading-level
+  - remark-lint-no-heading-indent
+  - remark-lint-no-heading-like-paragraph
+  - remark-lint-no-duplicate-headings-in-section
+  - remark-lint-no-paragraph-content-indent
+```
+
+What about the rest of the rules?
+
+Getting headings and sections wrong while I'm writing is going to upset my
+composition, and fixing them could require significant rework, so I like to keep
+these under control at by adding the following rules:
+
+```yaml
+  - remark-lint-first-heading-level
+  - remark-lint-no-heading-indent
+  - remark-lint-no-heading-like-paragraph
+  - remark-lint-no-duplicate-headings-in-section
+  - remark-lint-no-paragraph-content-indent
 ```
 
 ## Linting vs Fixing
@@ -86,7 +109,7 @@ everything that it is set up to fix.  If we are going to be "linting" and
 
 2. Our "linting" routine highlights most, if not all, of the issues that are
    fixed by the "fixing" routine.  We want this routine to, say, highlight lines
-   with checkboxes if they are are going to be "backslashed" by the "fixing
+   with checkboxes if they are are going to be "backslashed" by the "fixing"
    routine.
 
 3. Our "fixing" routine does not (re)introduce Markdown that is going trigger
@@ -126,7 +149,7 @@ different parts can be used in different contexts. Some relevant ones include:
   using all the above.
 
 * Support for additional markup and output (like footnotes, frontmatter,
-  directives, ToCs, GFM, MDX, etc) is provided by various plugins.
+  directives, ToCs, GFM, MDX) is provided by various plugins.
 
 * [`unified-engine`][unified-engine]: a framework for processing files and
   configurations.
@@ -196,12 +219,12 @@ the parser and compiler.  Since this blog uses tables (an extension to
 [Commonmark][] provided by [Github Flavoured Markdown][gfm]), I add the
 [`remark-gfm`][remark-gfm] plugin so that the fixing routine will ensure my table
 columns are nicely padded and aligned.  I also get support for checkboxes (which
-I occasionally use) and strikethroughs (which I seldom use). There are some
-options to this module, but the defaults seem to work well.  As you will see
-bellow, there are corresponding linting rules that highlight issues with this
-extended Markdown.  These rules have to be loaded *after* the plugin since they
-require the content to be appropriately parsed before it can be interpreted by
-the linting routines. 
+I occasionally use) and strike-through markers (which I seldom use). There are
+some options to this module, but the defaults seem to work well.  As you will
+see below, there are corresponding linting rules that highlight issues with
+this extended Markdown.  These rules have to be loaded *after* the plugin since
+they require the content to be appropriately parsed before it can be interpreted
+by the linting routines. 
 
 ## Linting Markdown
 
@@ -536,18 +559,22 @@ files with very long lines bearable.
 
 ## Conclusion
 
-So that's my configuration and some of the rationale behind it. 
-
 Once I worked out all the wrinkles, I found [Remark][] to a valuable addition to
-my asynchronous linting setup.  
+my asynchronous linting setup in [Vim][]. It has certainly has been catching many errors while writing this blog. 
 
-Integrating the "linter" and "fixer" into [Vim][] really helps to keep my
-writing on target.  
+Having the live feedback has helped to train me away from using bad Markdown and to avoid creating structures that were not going to work in the long-run.
 
-Knowing that linting was always there meant I could, say,
-ignore tracking down a reference until I was sure I was going to keep the
-sentence that contained it.  I liked being able to temporarily ignore linting
-errors that I could later bulk fix by triggering `ALEFix`.
+Having an automated fixing routine has meant I could temporarily ignore linting
+warnings, since I knew I could easily fix them in bulk later.  A great example
+of this is fixing the padding for large GFM tables. 
+
+Knowing that linting was always there has meant I could, say, ignore tracking
+down a reference until I was sure I was going to keep the sentence that
+contained it.  I could use the linting warnings as a kind of automatic TODO list
+of issues I needed to fix up at some point.
+
+Anyway, I hope you have found this useful. Please feel free to leave any
+comments or corrections below.
 
 <!-- References -->
 
