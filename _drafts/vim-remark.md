@@ -55,71 +55,39 @@ plugins:
   - remark-lint-no-paragraph-content-indent
 ```
 
-What about the rest of the rules?
-
-Getting headings and sections wrong while I'm writing is going to upset my
-composition, and fixing them could require significant rework, so I like to keep
-these under control at by adding the following rules:
-
-```yaml
-  - remark-lint-first-heading-level
-  - remark-lint-no-heading-indent
-  - remark-lint-no-heading-like-paragraph
-  - remark-lint-no-duplicate-headings-in-section
-  - remark-lint-no-paragraph-content-indent
-```
-
 ## Linting vs Fixing
 
-Historically Markdown was based on common formatting conversions in email and
-usenet, and although formal specifications like [Commonmark][] have been
-developed, there are a still a range of valid flavours and styles.
+Not all Markdown is created equal. It is quite easy to create Markdown that is
+either confusing in its raw form or which produces unexpected results when
+converted to HTML.
 
-Ideally Markdown should:
+We can try to address this problem by following a set of rules like the
+[Markdown Style Guide][]. Moreover, there exist automated "linting" facilities
+like [Remark][] that can warn us when we stray from these rules.
 
-1. Make sense in its raw form
-2. Make the same sense when converted to HTML
+Some "linting" warnings identify inconsistencies or errors that don't require
+any user decisions or input to resolve. For example, warnings about using the
+incorrect bullet marker or consecutive newlines.  These warnings lend themselves
+to automated "fixing", a process also supported by [Remark][].
 
-The first point calls out to consistency and using well established forms:
-warning when technically valid but inconsistent or unusual Markdown is used.
-The second point calls out to the observed behaviour of common Markdown
-compilers: warning when particular styles of Markdown will either be
-interpreted by differently by different compilers, or result in an unexpected
-conversion.
+In [Remark][], "linting" and "fixing" are two separate processes with separate
+configurations.  Since I want to use both processes in [Vim][], I needed to find
+complimentary, or at least non-conflicting, configurations.  In particular, I'll
+need to ensure that:
 
-We can try to address this by following a set of rules like the [Markdown Style
-Guide][]. Moreover, automated "linting" facilities like [Remark][] can warn us
-when we stray from these rules, and integrations like [ALE][] can do this
-asynchronously as we write Markdown in [Vim][].
+1. The "fixing" routine only fixes the problems that I want it to fix. I don't
+   want this routine to, say, backslash all the square brackets in my carefully
+   laid out checkbox tasklist.
 
-Now some of these warnings indicate ambiguity and require us to make a clarify
-our intent.  Other warnings identify inconsistencies or errors that can only be
-resolved in one way, for example, using inconsistent spacing or bullet markers.
-The latter warnings lend themselves to automated "fixing", a process supported by
-[Remark][] and [ALE][] via the `ALEFix` command.
+2. The "linting" routine highlights most (if not all) of the issues that are
+   fixed by the "fixing" routine -- providing a preview of what the "fixing
+   routine is going to change". I don't want the "fixing" routine to introduce
+   unexpected changes.
 
-Unlike "linting", this "fixing" is a necessarily strict process. We can choose
-to ignore a "linting" warning, but our "fixing" routine is going to fix
-everything that it is set up to fix.  If we are going to be "linting" and
-"fixing" in tandem, we will want to ensure that:
-
-1. Our "fixing" routine only fixes the problems that we want it to fix. We don't
-   want this routine to, say, backslash all the square brackets in our carefully
-   laid out checkboxes.
-
-2. Our "linting" routine highlights most, if not all, of the issues that are
-   fixed by the "fixing" routine.  We want this routine to, say, highlight lines
-   with checkboxes if they are are going to be "backslashed" by the "fixing"
-   routine.
-
-3. Our "fixing" routine does not (re)introduce Markdown that is going trigger
-   a "linting" warning. We don't want to convert all our unordered lists to use
-   `-` characters for bullets when out linting routine wants to use `*`
-   characters.
-
-Since I want to use [Remark][] for both the "linting" and "fixing" in [Vim][],
-I need to find complimentary, or at least non-conflicting, configurations for
-both of these processes.
+3. The "fixing" routine does not (re)introduce Markdown that is just going
+   trigger a "linting" warning. I don't want it to, say, convert all my
+   unordered lists to use `-` if the "linting" routine is going to insists I use
+   `*` characters.
 
 ## Where to start?
 
@@ -148,9 +116,6 @@ different parts can be used in different contexts. Some relevant ones include:
 * [`remark`][remark-package]: is a markdown processor powered by plugins and
   using all the above.
 
-* Support for additional markup and output (like footnotes, frontmatter,
-  directives, ToCs, GFM, MDX) is provided by various plugins.
-
 * [`unified-engine`][unified-engine]: a framework for processing files and
   configurations.
 
@@ -161,6 +126,9 @@ different parts can be used in different contexts. Some relevant ones include:
 
 * [`remark-cli`][remark-cli]: a command-line interface based on `unified` and
   `remark`
+
+Support for additional markup and output (like footnotes, frontmatter,
+directives, ToCs, GFM, MDX) is provided by various [plugins][remark-plugins].
 
 For [ALE][] integration with [Vim][], I needed a command line interface, so the
 last package in the above stack was what I wanted.
@@ -177,11 +145,11 @@ above packages and I found that understanding the application and its plugins,
 plus all the relevant settings and configuration options, required tracking
 through a lot of cross-references.
 
-## Fixing
+## Fixing Markdown
 
 Out of the box, the `remark` command gives us an automatic fixing utility.
-When you run it on a Markdown file it will parse the content into an AST using
-[`remark-parse`][remark-parse] and then serializes that AST back into text using
+When you run it on a Markdown file, it will parse the content into an AST using
+[`remark-parse`][remark-parse], then serializes that AST back into text using
 [`remark-stringify`][remark-stringify]. The result is usually a more strictly
 formatted version of the original Markdown, with things like bullet characters
 and block spacing being applied consistently.
@@ -215,16 +183,19 @@ a single space after bullets, enforces a consistency that matches well with the
 available linting rules.
 
 This formatting can also be influenced by [plugins][remark-plugins] which extend
-the parser and compiler.  Since this blog uses tables (an extension to
-[Commonmark][] provided by [Github Flavoured Markdown][gfm]), I add the
-[`remark-gfm`][remark-gfm] plugin so that the fixing routine will ensure my table
-columns are nicely padded and aligned.  I also get support for checkboxes (which
-I occasionally use) and strike-through markers (which I seldom use). There are
-some options to this module, but the defaults seem to work well.  As you will
-see below, there are corresponding linting rules that highlight issues with
-this extended Markdown.  These rules have to be loaded *after* the plugin since
-they require the content to be appropriately parsed before it can be interpreted
-by the linting routines. 
+the parser and compiler.  
+
+Since I often use Markdown tables (an extension to [Commonmark][] provided by
+[Github Flavoured Markdown][gfm]), I added the [`remark-gfm`][remark-gfm] plugin
+so that the fixing routine will ensure my table columns are nicely padded and
+aligned.  I also get support for checkboxes (which I occasionally use) and
+strike-through markers (which I seldom use). There are some options to this
+module, but the defaults seem to work well.  
+
+As you will see below, there are corresponding linting rules that highlight
+issues with the GFM extensions.  These rules have to be loaded *after* the
+plugin since they require the content to be appropriately parsed before it can
+be interpreted by the linting routines. 
 
 ## Linting Markdown
 
@@ -234,16 +205,16 @@ actual linting to configurable plugins that target specific errors or
 warnings. These must be installed and loaded before any linting can occur.
 
 There are currently 67 [official rule][remark-lint rules] plugins covering
-common issues. Which rules should I use?  Remark provides 3 preset "meta"
-packages that load and configure commonly used combinations:
+common issues.  In addition, [Remark][] provides 3 preset "meta" packages that load and configure commonly used combinations:
 
-* [`remark-preset-lint-consistent`][remark-preset-lint-consistent]: rules that enforce consistency
+* [`remark-preset-lint-consistent`][remark-preset-lint-consistent]: rules that
+  enforce consistency
 
-* [`remark-preset-lint-recommended`][remark-preset-lint-recommended]: rules that prevent mistakes or stuff
-  that fails across vendors.
+* [`remark-preset-lint-recommended`][remark-preset-lint-recommended]: rules that
+  prevent mistakes or stuff that fails across vendors.
 
-* [`remark-preset-lint-markdown-style-guide`][remark-preset-lint-markdown-style-guide]: rules that enforce the
-  markdown style guide
+* [`remark-preset-lint-markdown-style-guide`][remark-preset-lint-markdown-style-guide]:
+  rules that enforce the [Markdown Style Guide][]
 
 The table below shows some of the relationships between the different rules and
 presets.  I've omitted the `remark-lint-` prefix and used the following
@@ -328,21 +299,17 @@ key to keep the table compact.
 You can see from the above table that many of issues raised by these linting
 rules can be automatically resolved by the serializer.  Noting the overlap of
 the MSG and Recommended presets with the rules that are automatically fixed by
-the serializer, I could get a reasonably compact rule set by including those
-presets, the GFM plugin, and just 6 extra rules.
-This did included a number of rules that could not be fixed by the serializer,  but they all seemed to be sensible enough and I had no problems including them.
+the serializer, I realized I could get a reasonably compact rule set by
+including those two presets, the GFM plugin, and just six extra rules.  This also
+included some rules that could not be fixed by the serializer,  but they all
+seemed to be sensible enough and I had no problems including them.
 
-The default [`remark-stringify`][remark-stringify] settings, the default linting
-rule settings, and the
-[`remark-preset-lint-markdown-style-guide`][remark-preset-lint-markdown-style-guide]
-setting overrides, were generally fairly complimentary, and there were only
+Fortunately the default linting rule settings, the MSG preset overrides, and the
+default serializer settings, were fairly complimentary, and there were only
 a couple of instances where I had to override settings to get the desired
-behaviour.  
-
-The following is a trimmed down version of the configuration that I use, with
-the required overrides.  The [full version][my-remarkrc] includes detailed
-comments on all the official rules as a quick reference in case I need to tweak
-anything.
+behaviour.  The following is a trimmed down version of the configuration that
+I use.  The [full version][my-remarkrc] includes detailed comments on all the
+official rules as a quick reference in case I need to tweak anything.
 
 ```yaml
 settings:
@@ -377,12 +344,14 @@ plugins:
     - exceptTightLists: true
 ```
 
-In the above, we override preset configurations by loading the associated rule
-with the desired options after the preset has been loaded.
+In the above, I override the preset rule settings by loading the associated rule
+with the desired settings *after* the preset has been loaded.
 
 Unfortunately there was one rule that I could not configure to consistently
-match the serializer output: `link-title-style`. Since this could be loaded via
-a preset, I ended up suppressing this rule by explicitly setting it to `false`.
+match the serializer output:
+[`link-title-style`][remark-lint-link-title-style]. Since this was loaded via
+the MSG preset, I ended up suppressing this rule by explicitly setting it to
+`false`.
 
 ```yaml
   - - remark-lint-link-title-style
@@ -404,8 +373,8 @@ these under control at by adding the following rules:
 ```
 
 While all of the rules have some benefit, loading too many can slow down the
-linting routine while you are editing, so I generally relegate any additional
-rules to post-commit and CI hooks.
+linting routine while you are editing, so I relegated any additional rules to
+post-commit and CI hooks.
 
 To use the rules mentioned above I had to install a few packages:
 
@@ -456,13 +425,13 @@ does not work for many of the linting rules and so its not very useful for us.
 ## Integrating with Vim via ALE
 
 If you install `remark-cli`, [ALE][] will automatically detect it and start
-linting accordingly. If you run `:ALEInfo`, you will see `remark-lint` in the
+linting accordingly. If you run `:ALEInfo`, you will see "remark_lint" in the
 list of "Available Linters". 
 
 > There is some term juggling going on here. [ALE][] refers to both the "fixer"
-> and the "linter" as `remark-lint` (possibly for historical reasons). But note
+> and the "linter" as "remark-lint" (possibly for historical reasons). But note
 > that the `g:ale_markdown_remark_lint_executable` variable is set to
-> `remark`. So `remark-lint` is the one that we want, and it will use the right
+> `remark`, so "remark-lint" is the one that we want, and it will use the right
 > command.
 
 You can configure [ALE][] to use `remark-lint` as a "fixer" via a global
@@ -481,7 +450,7 @@ let b:ale_linters=['remark-lint']
 ```
 
 Finally, I have `ALEFix` bound to `\f` as part of my global `.vimrc` so fixing my
-buffer is only two key presses away:
+buffer is only two key strokes away:
 
 ```viml
 nmap <silent> <leader>f <Plug>(ale_fix)
@@ -532,9 +501,9 @@ I explicitly want to (say, for a Makefile snippet).
 
 One issue that often arises is whether or not to wrap long lines. The Markdown
 Style Guide suggests doing this at 80 chars, but some markdown processors (like
-GitLab) interpret these as hard-breaks rather than re-flowing as expected (the
-specification says you need 2 spaces or a backslash at the end of a line for
-a hard-break).
+GitLab) interpret these as hard-breaks rather than re-flowing the text as
+expected (the specification says you need 2 spaces or a backslash at the end of
+a line for a hard-break).
 
 I avoid this issue (and many arguments with other developers) by disabling the
 [`maximum-line-length`][remark-lint-maximum-line-length] plugin in my
@@ -560,7 +529,7 @@ files with very long lines bearable.
 ## Conclusion
 
 Once I worked out all the wrinkles, I found [Remark][] to a valuable addition to
-my asynchronous linting setup in [Vim][]. It has certainly has been catching many errors while writing this blog. 
+my linting setup with [Vim][]. It has certainly has been catching many errors while writing this blog. 
 
 Having the live feedback has helped to train me away from using bad Markdown and to avoid creating structures that were not going to work in the long-run.
 
